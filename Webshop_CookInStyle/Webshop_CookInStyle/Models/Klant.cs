@@ -21,8 +21,6 @@ namespace Webshop_CookInStyle.Models
         public string Email { get; set; }
         public string Mobiel { get; set; }
         public string Telefoon { get; set; }
-        public string Username { get; set; }
-        public string Wachtwoord { get; set; }
 
         // FK Postcode
         public int PostcodeID { get; set; }
