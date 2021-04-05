@@ -21,18 +21,18 @@ namespace Webshop_CookInStyle.Models
         public string Email { get; set; }
         public string Mobiel { get; set; }
         public string Telefoon { get; set; }
+        public string Username { get; set; }
+        public string Wachtwoord { get; set; }
 
         // FK Postcode
         public int PostcodeID { get; set; }
         // FK Land
         public int LandID { get; set; }
-        //FK Login
-        public int LoginID { get; set; }
 
         // NavProps
         public Postcode Postcode { get; set; }
         public Land Land { get; set; }
-        public Login Login { get; set; }
         public ICollection<LeverAdres> LeverAdressen { get; set; }
+        public ICollection<Bestelling> Bestellingen { get; set; }
     }
 }
