@@ -16,6 +16,6 @@ namespace Webshop_CookInStyle.Models
         public string Omschrijving { get; set; }
 
         //Navprop 
-        public ICollection<AllergeenProduct> Allergenen { get; set; }
+        public ICollection<AllergeenProduct> Producten { get; set; }
     }
 }

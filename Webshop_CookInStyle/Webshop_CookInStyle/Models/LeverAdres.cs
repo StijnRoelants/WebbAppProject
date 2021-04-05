@@ -18,11 +18,13 @@ namespace Webshop_CookInStyle.Models
         public int PostcodeID { get; set; }
         // FK Land 
         public int LandID { get; set; }
+        // FK Klant
         public int KlantID { get; set; }
 
         // Navprop
         public Postcode Postcode { get; set; }
         public Land Land { get; set; }
         public Klant Klant { get; set; }
+        public ICollection<Bestelling> Bestellingen { get; set; }
     }
 }

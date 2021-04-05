@@ -20,8 +20,11 @@ namespace Webshop_CookInStyle.Models
         public string Telefoon { get; set; }
         // FK Postcode
         public int PostcodeID { get; set; }
+        // FK Postcode
+        public int LandID { get; set; }
         // Navprop
         public Postcode Postcode { get; set; }
+        public Land Land { get; set; }
         public ICollection<Factuur> Facturen { get; set; }
     }
 }

@@ -34,5 +34,6 @@ namespace Webshop_CookInStyle.Models
         public Land Land { get; set; }
         public ICollection<LeverAdres> LeverAdressen { get; set; }
         public ICollection<Bestelling> Bestellingen { get; set; }
+        public ICollection<Factuur> Facturen { get; set; }
     }
 }
