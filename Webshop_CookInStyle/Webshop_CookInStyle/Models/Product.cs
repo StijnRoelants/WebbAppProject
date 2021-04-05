@@ -15,7 +15,7 @@ namespace Webshop_CookInStyle.Models
         public int ProductID { get; set; }
         public string Naam { get; set; }
         public string Omschrijving { get; set; }
-        public int Eenheidsprijs { get; set; }
+        public decimal Eenheidsprijs { get; set; }
         public bool BeschikbaarInWebshop { get; set; }
 
         // FK Eenheid

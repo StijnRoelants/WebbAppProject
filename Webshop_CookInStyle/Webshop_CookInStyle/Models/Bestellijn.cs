@@ -14,9 +14,9 @@ namespace Webshop_CookInStyle.Models
         [Key]
         public int BestellijnID { get; set; }
         public int Aantal { get; set; }
-        public int Lijnprijs { get; set; }
-        public int Eenheidsprijs { get; set; }
-        public int BtwBedrag { get; set; }
+        public decimal Lijnprijs { get; set; }
+        public decimal Eenheidsprijs { get; set; }
+        public decimal BtwBedrag { get; set; }
 
         // FK Product
         public int ProductID { get; set; }

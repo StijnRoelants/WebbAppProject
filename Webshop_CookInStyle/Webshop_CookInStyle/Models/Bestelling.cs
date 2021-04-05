@@ -15,7 +15,7 @@ namespace Webshop_CookInStyle.Models
         public int BestellingID { get; set; }
         public DateTime BestelDatum { get; set; }
         public DateTime Leverdatum { get; set; }
-        public int Totaalprijs { get; set; }
+        public decimal Totaalprijs { get; set; }
         public string Opmerking { get; set; }
 
         // FK Klant

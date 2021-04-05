@@ -15,8 +15,8 @@ namespace Webshop_CookInStyle.Models
         public int FactuurID { get; set; }
         public string Factuurnummer { get; set; }
         public DateTime FactuurDatum { get; set; }
-        public int TotaalPrijsEx { get; set; }
-        public int TotaalPrijsIncl { get; set; }
+        public decimal TotaalPrijsEx { get; set; }
+        public decimal TotaalPrijsIncl { get; set; }
         public string BtwnummerKlant { get; set; }
         public string BtwnummerFacFirma { get; set; }
         public bool IsBetaald { get; set; }
