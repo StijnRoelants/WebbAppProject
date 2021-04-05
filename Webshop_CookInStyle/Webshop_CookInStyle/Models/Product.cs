@@ -15,6 +15,7 @@ namespace Webshop_CookInStyle.Models
         public int ProductID { get; set; }
         public string Naam { get; set; }
         public string Omschrijving { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal Eenheidsprijs { get; set; }
         public bool BeschikbaarInWebshop { get; set; }
 

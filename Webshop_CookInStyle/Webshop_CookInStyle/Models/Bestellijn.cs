@@ -14,8 +14,11 @@ namespace Webshop_CookInStyle.Models
         [Key]
         public int BestellijnID { get; set; }
         public int Aantal { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal Lijnprijs { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal Eenheidsprijs { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal BtwBedrag { get; set; }
 
         // FK Product

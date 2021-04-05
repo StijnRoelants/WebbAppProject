@@ -15,7 +15,9 @@ namespace Webshop_CookInStyle.Models
         public int FactuurID { get; set; }
         public string Factuurnummer { get; set; }
         public DateTime FactuurDatum { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal TotaalPrijsEx { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal TotaalPrijsIncl { get; set; }
         public string BtwnummerKlant { get; set; }
         public string BtwnummerFacFirma { get; set; }
@@ -30,8 +32,11 @@ namespace Webshop_CookInStyle.Models
         public int FactuurfirmaID { get; set; }
 
         // Navprop
+        [ForeignKey("KlantID")]
         public Klant Klant { get; set; }
+        [ForeignKey("BestellingID")]
         public Bestelling Bestelling { get; set; }
+        [ForeignKey("FactuurfirmaID")]
         public Factuurfirma Factuurfirma { get; set; }
         public ICollection<Factuurlijn> Factuurlijnen { get; set; }
     }

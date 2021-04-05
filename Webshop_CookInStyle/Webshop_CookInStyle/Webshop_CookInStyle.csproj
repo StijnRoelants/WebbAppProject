@@ -5,6 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20210405161825_InitialCreate.cs" />
+    <Compile Remove="Migrations\20210405161825_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20210405162001_InitialCreate.cs" />
+    <Compile Remove="Migrations\20210405162001_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20210405163828_InitialCreate.cs" />
+    <Compile Remove="Migrations\20210405163828_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20210405164455_InitialCreate.cs" />
+    <Compile Remove="Migrations\20210405164455_InitialCreate.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.13" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.13" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.13" />
@@ -16,9 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\" />
-    <Folder Include="Data\" />
     <Folder Include="Conrollers\" />
+    <Folder Include="Migrations\" />
     <Folder Include="Views\" />
     <Folder Include="ViewModels\" />
   </ItemGroup>

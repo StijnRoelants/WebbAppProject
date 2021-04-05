@@ -22,8 +22,11 @@ namespace Webshop_CookInStyle.Models
         public int KlantID { get; set; }
 
         // Navprop
+        [ForeignKey("PostcodeID")]
         public Postcode Postcode { get; set; }
+        [ForeignKey("LandID")]
         public Land Land { get; set; }
+        [ForeignKey("KlantID")]
         public Klant Klant { get; set; }
         public ICollection<Bestelling> Bestellingen { get; set; }
     }
