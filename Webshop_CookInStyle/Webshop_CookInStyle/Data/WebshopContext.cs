@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +9,7 @@ using Webshop_CookInStyle.Models;
 
 namespace Webshop_CookInStyle.Data
 {
-    public class WebshopContext : DbContext
+    public class WebshopContext : IdentityDbContext<IdentityUser>
     {
         public WebshopContext (DbContextOptions<WebshopContext> options)
             :base(options)
@@ -32,6 +34,8 @@ namespace Webshop_CookInStyle.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             // LeverAdres
             modelBuilder.Entity<LeverAdres>()
                 .HasOne(x => x.Klant)
