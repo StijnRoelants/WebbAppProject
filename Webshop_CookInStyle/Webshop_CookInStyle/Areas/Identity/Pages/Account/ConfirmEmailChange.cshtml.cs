@@ -8,16 +8,17 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Webshop_CookInStyle.Models;
 
 namespace Webshop_CookInStyle.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class ConfirmEmailChangeModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<Klant> _userManager;
+        private readonly SignInManager<Klant> _signInManager;
 
-        public ConfirmEmailChangeModel(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public ConfirmEmailChangeModel(UserManager<Klant> userManager, SignInManager<Klant> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;

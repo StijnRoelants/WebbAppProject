@@ -29,6 +29,9 @@ namespace Webshop_CookInStyle.Models
         public int BestellingID { get; set; }
         // FK Factuur Firma
         public int FactuurfirmaID { get; set; }
+        // FK Klant
+        [ForeignKey("Klant")]
+        public string KlantFK { get; set; }
 
         // Navprop
         public Klant Klant { get; set; }

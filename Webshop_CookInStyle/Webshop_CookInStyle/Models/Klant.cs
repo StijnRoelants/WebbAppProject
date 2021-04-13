@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Webshop_CookInStyle.Models
 {
-    [Table("Klanten")]
+    //[Table("Klanten")]
     public class Klant : IdentityUser
     {
         public string Naam { get; set; }

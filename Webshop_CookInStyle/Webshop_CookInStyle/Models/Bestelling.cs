@@ -21,6 +21,9 @@ namespace Webshop_CookInStyle.Models
 
         // FK Leveradres
         public int LeverAdresID { get; set; }
+        // FK Klant
+        [ForeignKey("Klant")]
+        public string KlantFK { get; set; }
 
         // Navprop
         public Klant Klant { get; set; }

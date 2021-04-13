@@ -13,20 +13,21 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Webshop_CookInStyle.Models;
 
 namespace Webshop_CookInStyle.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class ExternalLoginModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<Klant> _signInManager;
+        private readonly UserManager<Klant> _userManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<ExternalLoginModel> _logger;
 
         public ExternalLoginModel(
-            SignInManager<IdentityUser> signInManager,
-            UserManager<IdentityUser> userManager,
+            SignInManager<Klant> signInManager,
+            UserManager<Klant> userManager,
             ILogger<ExternalLoginModel> logger,
             IEmailSender emailSender)
         {
@@ -121,7 +122,7 @@ namespace Webshop_CookInStyle.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
+                var user = new Klant { UserName = Input.Email, Email = Input.Email };
 
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)

@@ -18,6 +18,9 @@ namespace Webshop_CookInStyle.Models
         public int PostcodeID { get; set; }
         // FK Land 
         public int LandID { get; set; }
+        // FK Klant
+        [ForeignKey("Klant")]
+        public string KlantFK { get; set; }
 
 
         // Navprop

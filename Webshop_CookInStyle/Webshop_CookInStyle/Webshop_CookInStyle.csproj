@@ -31,7 +31,6 @@
 
   <ItemGroup>
     <Folder Include="Conrollers\" />
-    <Folder Include="Migrations\" />
     <Folder Include="Views\" />
     <Folder Include="ViewModels\" />
   </ItemGroup>

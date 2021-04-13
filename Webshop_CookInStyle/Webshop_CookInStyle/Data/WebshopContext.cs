@@ -36,6 +36,10 @@ namespace Webshop_CookInStyle.Data
         {
             base.OnModelCreating(modelBuilder);
 
+           
+            modelBuilder.Entity<Klant>().ToTable("Klanten");
+
+
             // LeverAdres
             modelBuilder.Entity<LeverAdres>()
                 .HasOne(x => x.Klant)
