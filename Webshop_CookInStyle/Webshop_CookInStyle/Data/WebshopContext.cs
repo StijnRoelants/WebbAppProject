@@ -9,7 +9,7 @@ using Webshop_CookInStyle.Models;
 
 namespace Webshop_CookInStyle.Data
 {
-    public class WebshopContext : IdentityDbContext<IdentityUser>
+    public class WebshopContext : IdentityDbContext<Klant>
     {
         public WebshopContext (DbContextOptions<WebshopContext> options)
             :base(options)

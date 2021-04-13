@@ -24,15 +24,13 @@ namespace Webshop_CookInStyle.Models
         public bool IsBetaald { get; set; }
         public string NaamKlant { get; set; }
 
-        //FK Klant
-        public int KlantID { get; set; }
+
         // FK Bestelling
         public int BestellingID { get; set; }
         // FK Factuur Firma
         public int FactuurfirmaID { get; set; }
 
         // Navprop
-        [ForeignKey("KlantID")]
         public Klant Klant { get; set; }
         [ForeignKey("BestellingID")]
         public Bestelling Bestelling { get; set; }

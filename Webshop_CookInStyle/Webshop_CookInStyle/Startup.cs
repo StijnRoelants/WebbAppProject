@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Webshop_CookInStyle.Data;
+using Webshop_CookInStyle.Models;
 
 namespace Webshop_CookInStyle
 {
@@ -33,7 +34,7 @@ namespace Webshop_CookInStyle
             services.AddDbContext<WebshopContext>(options
                 => options.UseSqlServer(Configuration.GetConnectionString("WebshopConnection")));
 
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddDefaultIdentity<Klant>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<WebshopContext>();
             services.Configure<IdentityOptions>(options =>

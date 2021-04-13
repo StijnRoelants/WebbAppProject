@@ -19,13 +19,10 @@ namespace Webshop_CookInStyle.Models
         public decimal Totaalprijs { get; set; }
         public string Opmerking { get; set; }
 
-        // FK Klant
-        public int KlantID { get; set; }
         // FK Leveradres
         public int LeverAdresID { get; set; }
 
         // Navprop
-        [ForeignKey("KlantID")]
         public Klant Klant { get; set; }
         [ForeignKey("LeverAdresID")]
         public LeverAdres LeverAdres { get; set; }

@@ -1,7 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using Webshop_CookInStyle.Models
 
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@inject SignInManager<Klant> SignInManager
+@inject UserManager<Klant> UserManager
 
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
