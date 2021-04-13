@@ -12,7 +12,9 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Webshop_CookInStyle.Data;
 using Webshop_CookInStyle.Models;
 
 namespace Webshop_CookInStyle.Areas.Identity.Pages.Account
@@ -25,16 +27,23 @@ namespace Webshop_CookInStyle.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
+        private readonly WebshopContext _context;
+
+        public Postcode postcode = null;
+        public Land land = null;
+
         public RegisterModel(
             UserManager<Klant> userManager,
             SignInManager<Klant> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            WebshopContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _context = context;
         }
 
         [BindProperty]
@@ -61,6 +70,41 @@ namespace Webshop_CookInStyle.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            [Required]
+            [DataType(DataType.Text)]
+            [Display(Name = "Voornaam")]
+            public string Voornaam { get; set; }
+
+            [Required]
+            [DataType(DataType.Text)]
+            [Display(Name = "Achternaam")]
+            public string Achternaam { get; set; }
+
+            [Required]
+            [DataType(DataType.Text)]
+            [Display(Name = "Mobiel")]
+            public string Mobiel { get; set; }
+
+            [Required]  
+            [DataType(DataType.PostalCode)]
+            [Display(Name = "Postcode")]
+            public string Postcode { get; set; }
+
+            [Required]
+            [DataType(DataType.Text)]
+            [Display(Name = "Gemeente")]
+            public string Gemeente { get; set; }
+
+            [Required]
+            [DataType(DataType.Text)]
+            [Display(Name = "Land")]
+            public string Land { get; set; }
+
+            [Required]
+            [DataType(DataType.Text)]
+            [Display(Name = "Adres")]
+            public string Adres { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -73,9 +117,27 @@ namespace Webshop_CookInStyle.Areas.Identity.Pages.Account
         {
             returnUrl = returnUrl ?? Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            postcode = await _context.Postcodes
+                .Where(x => x.Nummer == Input.Postcode)
+                .FirstOrDefaultAsync();
+            land = await _context.Landen
+                .Where(x => x.Naam.ToUpper() == Input.Land.ToUpper())
+                .FirstOrDefaultAsync();
             if (ModelState.IsValid)
             {
-                var user = new Klant { UserName = Input.Email, Email = Input.Email };
+                var user = new Klant
+                {
+                    UserName = Input.Email,
+                    Email = Input.Email,
+                    Voornaam = Input.Voornaam,
+                    Achternaam = Input.Achternaam,
+                    StraatEnNummer = Input.Adres,
+                    Mobiel = Input.Mobiel,
+                    Land = land,
+                    Postcode = postcode,
+                    PostcodeID = postcode.PostcodeID,
+                    LandID = land.LandID
+                };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
