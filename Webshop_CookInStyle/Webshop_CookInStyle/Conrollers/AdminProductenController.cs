@@ -98,12 +98,12 @@ namespace Webshop_CookInStyle.Conrollers
                 }
                 else
                 {
-                    
                     ViewBag.ErrorMessage = $"{viewModel.Allergeen.Omschrijving} bestaat reeds als allergeen";
-                    return RedirectToAction(nameof(AddAllergeen));
+                    viewModel.AllergenenList = new List<Allergeen>(_context.Allergenen);
+                    return View("AddAllergeen",viewModel);
                 }
             }
-            return RedirectToAction(nameof(AddAllergeen));
+            return View(viewModel);
         }
 
         private bool AllergeenExists(string txt)
@@ -115,7 +115,6 @@ namespace Webshop_CookInStyle.Conrollers
             else
             {
                 return _context.Allergenen.Any(x => x.Omschrijving.ToUpper() == txt.ToUpper());
-
             }
         }
 
@@ -157,6 +156,10 @@ namespace Webshop_CookInStyle.Conrollers
                 return RedirectToAction(nameof(AddAllergeen));
             }
         }
+
+        #endregion
+
+        #region Product Type
 
         #endregion
     }
