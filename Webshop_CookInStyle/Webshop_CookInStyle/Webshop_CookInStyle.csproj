@@ -30,9 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Conrollers\" />
-    <Folder Include="Views\" />
-    <Folder Include="ViewModels\" />
+    <None Include="wwwroot\Images\LogoCis.jpg" />
   </ItemGroup>
 
 </Project>
