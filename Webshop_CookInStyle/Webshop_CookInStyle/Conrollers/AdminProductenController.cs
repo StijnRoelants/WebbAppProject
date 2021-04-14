@@ -94,11 +94,13 @@ namespace Webshop_CookInStyle.Conrollers
                 {
                     _context.Add(viewModel.Allergeen);
                     await _context.SaveChangesAsync();
+                    ViewBag.Visibility = false;
                     return RedirectToAction(nameof(AddAllergeen));
                 }
                 else
                 {
                     ViewBag.ErrorMessage = $"{viewModel.Allergeen.Omschrijving} bestaat reeds als allergeen";
+                    ViewBag.Visibility = true;
                     viewModel.AllergenenList = new List<Allergeen>(_context.Allergenen);
                     return View("AddAllergeen",viewModel);
                 }

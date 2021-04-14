@@ -45,10 +45,13 @@
     <div class="col-sm-1"></div>
     <div class="col-sm-5">
         <br />
+        @if (ViewBag.Visibility == true)
+        {
+            <div class="alert alert-danger">
+                <p>@ViewBag.ErrorMessage</p>
+            </div>
+        }
 
-        <div class="alert alert-danger">
-            <p>@ViewBag.ErrorMessage</p>
-        </div>
 
 
         <br />
