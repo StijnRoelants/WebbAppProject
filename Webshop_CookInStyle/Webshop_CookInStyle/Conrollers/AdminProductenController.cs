@@ -99,10 +99,21 @@ namespace Webshop_CookInStyle.Conrollers
                 }
                 else
                 {
-                    ViewBag.ErrorMessage = $"{viewModel.Allergeen.Omschrijving} bestaat reeds als allergeen";
-                    ViewBag.Visibility = true;
-                    viewModel.AllergenenList = new List<Allergeen>(_context.Allergenen);
-                    return View("AddAllergeen",viewModel);
+                    if (string.IsNullOrWhiteSpace(viewModel.Allergeen.Omschrijving))
+                    {
+                        ViewBag.ErrorMessage = $"Gelieve een geldige text in te geven!";
+                        ViewBag.Visibility = true;
+                        viewModel.AllergenenList = new List<Allergeen>(_context.Allergenen);
+                        return View("AddAllergeen", viewModel);
+                    }
+                    else
+                    {
+                        ViewBag.ErrorMessage = $"{viewModel.Allergeen.Omschrijving} bestaat reeds als allergeen";
+                        ViewBag.Visibility = true;
+                        viewModel.AllergenenList = new List<Allergeen>(_context.Allergenen);
+                        return View("AddAllergeen", viewModel);
+                    }
+
                 }
             }
             return View(viewModel);
