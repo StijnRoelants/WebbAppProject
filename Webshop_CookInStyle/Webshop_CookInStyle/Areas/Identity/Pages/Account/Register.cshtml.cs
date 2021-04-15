@@ -125,7 +125,7 @@ namespace Webshop_CookInStyle.Areas.Identity.Pages.Account
                 .FirstOrDefaultAsync();
             if (ModelState.IsValid)
             {
-                var user = new Klant
+                var user = new Klant()
                 {
                     UserName = Input.Email,
                     Email = Input.Email,

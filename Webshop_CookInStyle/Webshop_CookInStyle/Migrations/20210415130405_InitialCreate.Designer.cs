@@ -10,7 +10,7 @@ using Webshop_CookInStyle.Data;
 namespace Webshop_CookInStyle.Migrations
 {
     [DbContext(typeof(WebshopContext))]
-    [Migration("20210413103856_InitialCreate")]
+    [Migration("20210415130405_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -173,20 +173,16 @@ namespace Webshop_CookInStyle.Migrations
 
             modelBuilder.Entity("Webshop_CookInStyle.Models.AllergeenProduct", b =>
                 {
-                    b.Property<int>("AllergeenProductID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
                     b.Property<int>("AllergeenID")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductID")
                         .HasColumnType("int");
 
-                    b.HasKey("AllergeenProductID");
+                    b.Property<int>("AllergeenProductID")
+                        .HasColumnType("int");
 
-                    b.HasIndex("AllergeenID");
+                    b.HasKey("AllergeenID", "ProductID");
 
                     b.HasIndex("ProductID");
 
@@ -663,9 +659,6 @@ namespace Webshop_CookInStyle.Migrations
                     b.Property<int>("BtwID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("BtwtypeBtwID")
-                        .HasColumnType("int");
-
                     b.Property<int>("EenheidID")
                         .HasColumnType("int");
 
@@ -683,7 +676,7 @@ namespace Webshop_CookInStyle.Migrations
 
                     b.HasKey("ProductID");
 
-                    b.HasIndex("BtwtypeBtwID");
+                    b.HasIndex("BtwID");
 
                     b.HasIndex("EenheidID");
 
@@ -923,7 +916,9 @@ namespace Webshop_CookInStyle.Migrations
                 {
                     b.HasOne("Webshop_CookInStyle.Models.Btwtype", "Btwtype")
                         .WithMany("Producten")
-                        .HasForeignKey("BtwtypeBtwID");
+                        .HasForeignKey("BtwID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Webshop_CookInStyle.Models.Eenheid", "Eenheid")
                         .WithMany("Producten")

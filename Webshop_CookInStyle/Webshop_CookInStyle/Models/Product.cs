@@ -38,5 +38,13 @@ namespace Webshop_CookInStyle.Models
         public ICollection<Factuurlijn> Factuurlijnen { get; set; }
         public ICollection<Bestellijn> Bestellijnen { get; set; }
         public ICollection<AllergeenProduct> Allergenen { get; set; }
+        /*
+        [NotMapped]
+        public List<Allergeen> TestLijst { get; set; }
+
+        public Product()
+        {
+            this.TestLijst = new List<Allergeen>();
+        }*/
     }
 }

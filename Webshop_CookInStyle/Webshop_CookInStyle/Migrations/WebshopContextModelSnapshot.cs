@@ -171,20 +171,16 @@ namespace Webshop_CookInStyle.Migrations
 
             modelBuilder.Entity("Webshop_CookInStyle.Models.AllergeenProduct", b =>
                 {
-                    b.Property<int>("AllergeenProductID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
                     b.Property<int>("AllergeenID")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductID")
                         .HasColumnType("int");
 
-                    b.HasKey("AllergeenProductID");
+                    b.Property<int>("AllergeenProductID")
+                        .HasColumnType("int");
 
-                    b.HasIndex("AllergeenID");
+                    b.HasKey("AllergeenID", "ProductID");
 
                     b.HasIndex("ProductID");
 
