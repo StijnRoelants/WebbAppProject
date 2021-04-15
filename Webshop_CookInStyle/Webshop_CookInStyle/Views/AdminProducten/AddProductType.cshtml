@@ -1,18 +1,18 @@
 ﻿@model Webshop_CookInStyle.ViewModels.AddProductTypeVM
 
 @{
-    ViewData["Title"] = "Allergenen";
+    ViewData["Title"] = "Producttypes";
 }
 
-<h1>Allergenen</h1>
+<h1>Product Types</h1>
 
-<form asp-controller="AddAllergeen" asp-action="Search" method="get">
+<form asp-controller="AdminProducten" asp-action="TSearch" method="get">
     <div class="form-actions no-color">
         <p>
-            Events zoeken:
+            Producttypes zoeken:
             <input asp-for="TypeSearch" />
             <input type="submit" value="Zoeken" class="btn btn-primary" />
-            <a asp-controller="AdminProducten" asp-action="AddAllergeen">Volledige lijst</a>
+            <a asp-controller="AdminProducten" asp-action="AddProductType">Volledige lijst</a>
         </p>
     </div>
 </form>
@@ -35,7 +35,8 @@
                             @Html.DisplayFor(modelItem => item.Omschrijving)
                         </td>
                         <td>
-                            <a asp-action="DeleteAllergeen" asp-route-id="@item.ProductTypeID">Delete</a>
+                            <a asp-action="EditType" asp-route-id="@item.ProductTypeID">Edit</a> | 
+                            <a asp-action="DeleteType" asp-route-id="@item.ProductTypeID">Delete</a>
                         </td>
                     </tr>
                 }
@@ -46,13 +47,16 @@
     <div class="col-sm-5">
         <br />
 
-        <div hidden class="alert alert-danger">
-            <p>@ViewBag.ErrorMessage</p>
-        </div>
+        @if (ViewBag.Visibility == true)
+        {
+            <div class="alert alert-danger">
+                <p>@ViewBag.ErrorMessage</p>
+            </div>
+        }
 
 
         <br />
-        <form asp-action="CreateAllergeen">
+        <form asp-action="CreateProductType">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="ProductType.Omschrijving" class="control-label"></label>

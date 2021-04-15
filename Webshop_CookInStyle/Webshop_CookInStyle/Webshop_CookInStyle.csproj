@@ -13,6 +13,12 @@
     <Compile Remove="Migrations\20210405163828_InitialCreate.Designer.cs" />
     <Compile Remove="Migrations\20210405164455_InitialCreate.cs" />
     <Compile Remove="Migrations\20210405164455_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20210415123100_BtwFK.cs" />
+    <Compile Remove="Migrations\20210415123100_BtwFK.Designer.cs" />
+    <Compile Remove="Migrations\20210415124109_ManyToMany.cs" />
+    <Compile Remove="Migrations\20210415124109_ManyToMany.Designer.cs" />
+    <Compile Remove="Migrations\20210415124227_ManyToMany.cs" />
+    <Compile Remove="Migrations\20210415124227_ManyToMany.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

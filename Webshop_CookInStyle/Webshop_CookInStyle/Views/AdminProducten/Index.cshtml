@@ -7,7 +7,7 @@
 <h1>Producten</h1>
 
 <p>
-    <a asp-action="Create">Nieuw Product</a> | <a asp-action="AddProductType">Producttype beheer</a>  | <a asp-action="AddAllergeen">Allergenen beheer</a>
+   <a asp-action="AddProductType">Producttype beheer</a>  |  <a asp-action="AddAllergeen">Allergenen beheer</a>
 </p>
 
 <form asp-controller="AdminProducten" asp-action="Search" method="get">
@@ -29,10 +29,10 @@
                         @Html.DisplayNameFor(model => model.Producten[0].Naam)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Producten[0].Eenheidsprijs)
+                        @Html.DisplayNameFor(model => model.Producten[0].ProductType.Omschrijving)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Producten[0].ProductType.Omschrijving)
+                        @Html.DisplayNameFor(model => model.Producten[0].Weergave)
                     </th>
                     <th></th>
                 </tr>
@@ -40,21 +40,20 @@
             <tbody>
                 @foreach (var item in Model.Producten)
                 {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Naam)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Eenheidsprijs)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ProductType.Omschrijving)
-                        </td>
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.ProductID">Edit</a> |
-                            <a asp-action="Delete" asp-route-id="@item.ProductID">Delete</a>
-                        </td>
-                    </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Naam)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductType.Omschrijving)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Weergave)
+                    </td>
+                    <td>
+                        <a asp-action="Detail" asp-route-id="@item.ProductID">Details</a>
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>

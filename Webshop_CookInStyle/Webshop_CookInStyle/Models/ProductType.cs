@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace Webshop_CookInStyle.Models
     {
         [Key]
         public int ProductTypeID { get; set; }
+        [DisplayName("Producttype")]
         public string Omschrijving { get; set; }
 
         // Navprop

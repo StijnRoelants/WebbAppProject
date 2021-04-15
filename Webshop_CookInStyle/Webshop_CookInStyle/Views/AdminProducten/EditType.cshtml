@@ -1,0 +1,40 @@
+﻿@model Webshop_CookInStyle.ViewModels.AddProductTypeVM
+
+<style>
+    .textarea {
+        width: 600px;
+        height: 300px;
+    }
+</style>
+
+@{
+    ViewData["Title"] = "Edit producttype";
+}
+
+<h1>Producttype aanpassen</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditType">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ProductType.ProductTypeID" />
+            <div class="form-group">
+                <label asp-for="ProductType.Omschrijving" class="control-label"></label>
+                <input asp-for="ProductType.Omschrijving" class="form-control" />
+                <span asp-validation-for="ProductType.Omschrijving" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="AddProductType">Terug</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

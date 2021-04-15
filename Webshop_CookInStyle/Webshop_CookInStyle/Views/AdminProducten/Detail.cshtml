@@ -1,0 +1,62 @@
+﻿@model Webshop_CookInStyle.ViewModels.EditProductenVM
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Product</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Product.Naam)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Product.Naam)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Product.Omschrijving)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Product.ProductType.Omschrijving)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Product.Eenheidsprijs)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Product.Weergave)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Product.Btwtype)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Product.Btwtype.Percentage)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Product.Eenheid)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Product.Eenheid.Omschrijving)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Product.Allergenen)
+        </dt>
+        @foreach (var item in Model.Product.Allergenen)
+        {
+            <dd class="col-sm-10">
+                @Html.DisplayFor(modelItem => item.Allergeen.Omschrijving)
+            </dd>
+        }
+    </dl>
+</div>
+<br />
+<br />
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Product.ProductID">Edit</a> | <a asp-action="Delete" asp-route-id="@Model.Product.ProductID">Delete</a>
+</div>
+<br/>
+<div>
+    <a asp-action="Index">Terug</a>
+</div>
