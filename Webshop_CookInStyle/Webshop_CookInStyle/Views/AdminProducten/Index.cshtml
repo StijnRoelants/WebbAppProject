@@ -90,8 +90,8 @@
                 <select asp-for="Product.EenheidID" class="form-control" asp-items="Model.Eenheden"></select>
             </div>
             <div class="form-group">
-                <label asp-for="Product.Allergenen" class="control-label">Allergenen</label>
-                <select asp-for="Product.Allergenen" class="form-control" asp-items="Model.Allergenen"></select>
+                <label asp-for="AllergeenList" class="control-label">Allergenen</label>
+                <select multiple="multiple" asp-for="AllergeenList" class="form-control" asp-items="Model.Allergenen"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

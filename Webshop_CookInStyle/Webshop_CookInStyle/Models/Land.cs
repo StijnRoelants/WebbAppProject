@@ -15,6 +15,7 @@ namespace Webshop_CookInStyle.Models
         public string Naam { get; set; }
         [MaxLength(5)]
         public string Afkorting { get; set; }
+        public string Zoeknaam { get; set; }
 
         // NavProp
         public ICollection<Klant> Klanten { get; set; }

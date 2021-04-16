@@ -217,18 +217,17 @@ namespace Webshop_CookInStyle.Migrations
                     BeschikbaarInWebshop = table.Column<bool>(nullable: false),
                     EenheidID = table.Column<int>(nullable: false),
                     ProductTypeID = table.Column<int>(nullable: false),
-                    BtwID = table.Column<int>(nullable: false),
-                    BtwtypeBtwID = table.Column<int>(nullable: true)
+                    BtwID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Producten", x => x.ProductID);
                     table.ForeignKey(
-                        name: "FK_Producten_BtwTypes_BtwtypeBtwID",
-                        column: x => x.BtwtypeBtwID,
+                        name: "FK_Producten_BtwTypes_BtwID",
+                        column: x => x.BtwID,
                         principalTable: "BtwTypes",
                         principalColumn: "BtwID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Producten_Eenheden_EenheidID",
                         column: x => x.EenheidID,
@@ -388,14 +387,13 @@ namespace Webshop_CookInStyle.Migrations
                 name: "AllergeenProducten",
                 columns: table => new
                 {
-                    AllergeenProductID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     AllergeenID = table.Column<int>(nullable: false),
-                    ProductID = table.Column<int>(nullable: false)
+                    ProductID = table.Column<int>(nullable: false),
+                    AllergeenProductID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AllergeenProducten", x => x.AllergeenProductID);
+                    table.PrimaryKey("PK_AllergeenProducten", x => new { x.AllergeenID, x.ProductID });
                     table.ForeignKey(
                         name: "FK_AllergeenProducten_Allergenen_AllergeenID",
                         column: x => x.AllergeenID,
@@ -577,11 +575,6 @@ namespace Webshop_CookInStyle.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AllergeenProducten_AllergeenID",
-                table: "AllergeenProducten",
-                column: "AllergeenID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_AllergeenProducten_ProductID",
                 table: "AllergeenProducten",
                 column: "ProductID");
@@ -757,9 +750,9 @@ namespace Webshop_CookInStyle.Migrations
                 column: "PostcodeID1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Producten_BtwtypeBtwID",
+                name: "IX_Producten_BtwID",
                 table: "Producten",
-                column: "BtwtypeBtwID");
+                column: "BtwID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Producten_EenheidID",

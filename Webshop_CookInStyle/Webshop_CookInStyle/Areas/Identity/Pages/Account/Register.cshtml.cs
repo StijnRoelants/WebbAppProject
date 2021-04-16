@@ -121,11 +121,11 @@ namespace Webshop_CookInStyle.Areas.Identity.Pages.Account
                 .Where(x => x.Nummer == Input.Postcode)
                 .FirstOrDefaultAsync();
             land = await _context.Landen
-                .Where(x => x.Naam.ToUpper() == Input.Land.ToUpper())
+                .Where(x => x.Naam.ToUpper() == Input.Land.ToUpper() || x.Zoeknaam.ToUpper() == Input.Land.ToUpper())
                 .FirstOrDefaultAsync();
             if (ModelState.IsValid)
             {
-                var user = new Klant
+                var user = new Klant()
                 {
                     UserName = Input.Email,
                     Email = Input.Email,

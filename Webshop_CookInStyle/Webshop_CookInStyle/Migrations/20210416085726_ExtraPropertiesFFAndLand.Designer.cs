@@ -10,8 +10,8 @@ using Webshop_CookInStyle.Data;
 namespace Webshop_CookInStyle.Migrations
 {
     [DbContext(typeof(WebshopContext))]
-    [Migration("20210415123244_BtwFK")]
-    partial class BtwFK
+    [Migration("20210416085726_ExtraPropertiesFFAndLand")]
+    partial class ExtraPropertiesFFAndLand
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -173,20 +173,16 @@ namespace Webshop_CookInStyle.Migrations
 
             modelBuilder.Entity("Webshop_CookInStyle.Models.AllergeenProduct", b =>
                 {
-                    b.Property<int>("AllergeenProductID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
                     b.Property<int>("AllergeenID")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductID")
                         .HasColumnType("int");
 
-                    b.HasKey("AllergeenProductID");
+                    b.Property<int>("AllergeenProductID")
+                        .HasColumnType("int");
 
-                    b.HasIndex("AllergeenID");
+                    b.HasKey("AllergeenID", "ProductID");
 
                     b.HasIndex("ProductID");
 
@@ -401,6 +397,9 @@ namespace Webshop_CookInStyle.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Factuurnummering")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Iban")
                         .HasColumnType("nvarchar(max)");
 
@@ -573,6 +572,9 @@ namespace Webshop_CookInStyle.Migrations
                         .HasMaxLength(5);
 
                     b.Property<string>("Naam")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Zoeknaam")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("LandID");

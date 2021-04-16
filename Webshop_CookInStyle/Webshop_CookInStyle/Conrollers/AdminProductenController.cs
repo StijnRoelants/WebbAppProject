@@ -20,6 +20,8 @@ namespace Webshop_CookInStyle.Conrollers
             _context = context;
         }
 
+        
+
         #region Producten
         // Inladen producten bij opstart pagina
         public async Task<IActionResult> Index()
@@ -28,7 +30,8 @@ namespace Webshop_CookInStyle.Conrollers
             viewModel.Producten = await _context.Producten.Include(x => x.ProductType).OrderBy(x => x.ProductType).ThenBy(x => x.Naam)
                 .ToListAsync();
             viewModel.Product = new Product();
-            viewModel.Allergenen = new SelectList(_context.Allergenen.OrderBy(x => x.Omschrijving), "AllergeenID", "Omschrijving");
+            viewModel.AllergeenList = new List<Allergeen>();
+            viewModel.Allergenen = new MultiSelectList(_context.Allergenen.OrderBy(x => x.Omschrijving), "AllergeenID", "Omschrijving");
             viewModel.Producttypes = new SelectList(_context.ProductTypes.OrderBy(x => x.Omschrijving), "ProductTypeID", "Omschrijving");
             viewModel.BtwTypes = new SelectList(_context.BtwTypes.OrderBy(x => x.Percentage), "BtwID", "Weergave");
             viewModel.Eenheden = new SelectList(_context.Eenheden.OrderBy(x => x.Omschrijving), "EenheidID", "Omschrijving");
@@ -76,8 +79,9 @@ namespace Webshop_CookInStyle.Conrollers
 
         public void LoadIn(IndexAdminProductenVM viewModel)
         {
+            viewModel.AllergeenList = new List<Allergeen>();
             viewModel.Producten = new List<Product>(_context.Producten.Include(x => x.ProductType).OrderBy(x => x.ProductType).ThenBy(x => x.Naam));
-            viewModel.Allergenen = new SelectList(_context.Allergenen.OrderBy(x => x.Omschrijving), "AllergeenID", "Omschrijving");
+            viewModel.Allergenen = new MultiSelectList(_context.Allergenen.OrderBy(x => x.Omschrijving), "AllergeenID", "Omschrijving");
             viewModel.Producttypes = new SelectList(_context.ProductTypes.OrderBy(x => x.Omschrijving), "ProductTypeID", "Omschrijving");
             viewModel.BtwTypes = new SelectList(_context.BtwTypes.OrderBy(x => x.Percentage), "BtwID", "Weergave");
             viewModel.Eenheden = new SelectList(_context.Eenheden.OrderBy(x => x.Omschrijving), "EenheidID", "Omschrijving");
@@ -94,7 +98,7 @@ namespace Webshop_CookInStyle.Conrollers
             EditProductenVM viewModel = new EditProductenVM();
             viewModel.Product = await _context.Producten
                 .Include(x => x.ProductType)
-                .Include(x => x.Allergenen)
+                .Include(x => x.Allergenen).ThenInclude(x => x.Allergeen)
                 .Include(x => x.Btwtype)
                 .Include(x => x.Eenheid)
                 .Where(x => x.ProductID == id)
