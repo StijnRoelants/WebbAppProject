@@ -48,5 +48,104 @@ namespace Webshop_CookInStyle.Conrollers
                 .FirstOrDefaultAsync();
             return View(viewModel);
         }
+
+        public async Task<IActionResult> EditNummering(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            IndexAdminSettingsVM viewModel = new IndexAdminSettingsVM();
+            viewModel.Factuurfirma = await _context.FactuurFirmas.FindAsync(id);
+            if (viewModel.Factuurfirma == null)
+            {
+                return NotFound();
+            }
+            return View(viewModel);
+        }
+
+        // Types aanpassen
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditNummering(int id, IndexAdminSettingsVM viewModel)
+        {
+            if (id != viewModel.Factuurfirma.FactuurfirmaID)
+            {
+                return NotFound();
+            }
+            if (ModelState.IsValid)
+            {
+                string error = FactuurnummeringCheck(viewModel);
+                if (error == "")
+                {
+                    try
+                    {
+                        _context.Update(viewModel.Factuurfirma);
+                        await _context.SaveChangesAsync();
+                        ViewBag.Visibility = false;
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!NummeringCheck(viewModel.Factuurfirma.FactuurfirmaID))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = error;
+                    ViewBag.Visibility = true;
+                    viewModel.Factuurfirma = _context.FactuurFirmas.Where(x => x.FactuurfirmaID == viewModel.Factuurfirma.FactuurfirmaID).FirstOrDefault();
+                    return View("EditNummering", viewModel);
+                }
+            }
+            return View(viewModel);
+        }
+
+        // Onderstaande methode gaat nakijken of de opbouw correct is.
+        // Factuurnummers mogen nooit lager zijn als bestaande factuurnummers om problemen met factuurnummering te voorkomen!
+        private string FactuurnummeringCheck(IndexAdminSettingsVM viewModel)
+        {
+            string error = "";
+            int nieuweNummering = 0;
+            var bedrijfsgegevens = _context.FactuurFirmas.Where(x => x.FactuurfirmaID == viewModel.Factuurfirma.FactuurfirmaID).FirstOrDefault();
+            int oudeNummering = int.Parse(bedrijfsgegevens.Factuurnummering.Substring(2));
+            if (viewModel.Factuurfirma.Factuurnummering == null)
+            {
+                return error = $"Gelieve een nieuw factuurnummering op te geven!";
+            }
+            else
+            {
+                if (int.TryParse(viewModel.Factuurfirma.Factuurnummering.Substring(2), out nieuweNummering))
+                {
+                    if (oudeNummering < nieuweNummering)
+                    {
+                        return error;
+                    }
+                    else
+                    {
+                        return error = $"Nieuwe factuurnummering ({viewModel.Factuurfirma.Factuurnummering}) kan niet lager zijn als vorige ({bedrijfsgegevens.Factuurnummering})";
+                    }
+                }
+                else
+                {
+                    return error = $"{viewModel.Factuurfirma.Factuurnummering}: Factuurnummer mag niet meer dan 2 letters bevatten";
+
+                }
+
+            }
+        }
+
+        private bool NummeringCheck(int id)
+        {
+            return _context.FactuurFirmas.Any(x => x.FactuurfirmaID == id);
+        }
     }
 }
