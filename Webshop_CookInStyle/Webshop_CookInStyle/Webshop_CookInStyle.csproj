@@ -43,8 +43,4 @@
     <None Include="wwwroot\Images\LogoCis.jpg" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
 </Project>
