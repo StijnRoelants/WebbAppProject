@@ -60,6 +60,14 @@
     </div>
     <div class="col-sm-1"></div>
     <div class="col-sm-5">
+
+        @if (ViewBag.Visibility == true)
+        {
+            <div class="alert alert-danger">
+                <p>@ViewBag.ErrorMessage</p>
+            </div>
+        }
+
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -90,8 +98,8 @@
                 <select asp-for="Product.EenheidID" class="form-control" asp-items="Model.Eenheden"></select>
             </div>
             <div class="form-group">
-                <label asp-for="AllergeenList" class="control-label">Allergenen</label>
-                <select multiple="multiple" asp-for="AllergeenList" class="form-control" asp-items="Model.Allergenen"></select>
+                <label asp-for="GeselecteerdeAllergenen" class="control-label">Allergenen</label>
+                <select multiple="multiple" asp-for="GeselecteerdeAllergenen" class="form-control" asp-items="Model.Allergenen"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

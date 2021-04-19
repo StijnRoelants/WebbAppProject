@@ -23,6 +23,8 @@
     <Compile Remove="Migrations\20210415125244_ManyToMany.Designer.cs" />
     <Compile Remove="Migrations\20210415125427_ManyToMany.cs" />
     <Compile Remove="Migrations\20210415125427_ManyToMany.Designer.cs" />
+    <Compile Remove="Migrations\20210419202712_ManyToMany.cs" />
+    <Compile Remove="Migrations\20210419202712_ManyToMany.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
