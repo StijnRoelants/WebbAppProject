@@ -31,7 +31,8 @@ namespace Webshop_CookInStyle.Conrollers
                 .ToListAsync();
             viewModel.Product = new Product();
             viewModel.AllergeenList = new List<Allergeen>();
-            viewModel.Allergenen = new MultiSelectList(_context.Allergenen.OrderBy(x => x.Omschrijving), "AllergeenID", "Omschrijving");
+            viewModel.Allergenen = new SelectList(_context.Allergenen.OrderBy(x => x.Omschrijving), "AllergeenID", "Omschrijving");
+            viewModel.GeselecteerdeAllergenen = new List<int>();
             viewModel.Producttypes = new SelectList(_context.ProductTypes.OrderBy(x => x.Omschrijving), "ProductTypeID", "Omschrijving");
             viewModel.BtwTypes = new SelectList(_context.BtwTypes.OrderBy(x => x.Percentage), "BtwID", "Weergave");
             viewModel.Eenheden = new SelectList(_context.Eenheden.OrderBy(x => x.Omschrijving), "EenheidID", "Omschrijving");
@@ -51,12 +52,58 @@ namespace Webshop_CookInStyle.Conrollers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(viewModel.Product);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (viewModel.GeselecteerdeAllergenen == null)
+                {
+                    viewModel.GeselecteerdeAllergenen = new List<int>();
+                }
+
+                if (!ProductExists(viewModel))
+                {
+                    List<AllergeenProduct> nieuweAllergenen = new List<AllergeenProduct>();
+                    foreach (int allergeenID in viewModel.GeselecteerdeAllergenen)
+                    {
+                        nieuweAllergenen.Add(new AllergeenProduct
+                        {
+                            AllergeenID = allergeenID,
+                            ProductID = viewModel.Product.ProductID
+                        });
+                    }
+                    _context.Add(viewModel.Product);
+                    await _context.SaveChangesAsync();
+
+                    Product product = await _context.Producten.Include(x => x.Allergenen)
+                        .SingleOrDefaultAsync(x => x.ProductID == viewModel.Product.ProductID);
+                    product.Allergenen.AddRange(nieuweAllergenen);
+                    _context.Update(product);
+                    await _context.SaveChangesAsync();
+                    ViewBag.ErrorMessage = $"";
+                    ViewBag.Visibility = false;
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ProductType Test = _context.ProductTypes.Where(x => x.ProductTypeID == viewModel.Product.ProductTypeID).FirstOrDefault();
+                    string PTNaam = Test.Omschrijving;
+                    ViewBag.ErrorMessage = $"Er bestaat reeds een product met de naam: {viewModel.Product.Naam} en producttype: {PTNaam}";
+                    ViewBag.Visibility = true;
+                    LoadIn(viewModel);
+                    return View("Index",viewModel);
+                }
             }
             LoadIn(viewModel);
             return View(viewModel);
+        }
+
+        private bool ProductExists(IndexAdminProductenVM viewModel)
+        {
+            if (viewModel == null)
+            {
+                return true;
+            }
+            else
+            {
+                return _context.Producten.Any(x => x.Naam.ToUpper() == viewModel.Product.Naam.ToUpper() && x.ProductTypeID == viewModel.Product.ProductTypeID);
+            }
         }
 
         // Zoekfunctie binnen producten
@@ -80,8 +127,9 @@ namespace Webshop_CookInStyle.Conrollers
         public void LoadIn(IndexAdminProductenVM viewModel)
         {
             viewModel.AllergeenList = new List<Allergeen>();
+            viewModel.GeselecteerdeAllergenen = new List<int>();
             viewModel.Producten = new List<Product>(_context.Producten.Include(x => x.ProductType).OrderBy(x => x.ProductType).ThenBy(x => x.Naam));
-            viewModel.Allergenen = new MultiSelectList(_context.Allergenen.OrderBy(x => x.Omschrijving), "AllergeenID", "Omschrijving");
+            viewModel.Allergenen = new SelectList(_context.Allergenen.OrderBy(x => x.Omschrijving), "AllergeenID", "Omschrijving");
             viewModel.Producttypes = new SelectList(_context.ProductTypes.OrderBy(x => x.Omschrijving), "ProductTypeID", "Omschrijving");
             viewModel.BtwTypes = new SelectList(_context.BtwTypes.OrderBy(x => x.Percentage), "BtwID", "Weergave");
             viewModel.Eenheden = new SelectList(_context.Eenheden.OrderBy(x => x.Omschrijving), "EenheidID", "Omschrijving");

@@ -37,7 +37,7 @@ namespace Webshop_CookInStyle.Models
         public Btwtype Btwtype { get; set; }
         public ICollection<Factuurlijn> Factuurlijnen { get; set; }
         public ICollection<Bestellijn> Bestellijnen { get; set; }
-        public ICollection<AllergeenProduct> Allergenen { get; set; }
+        public List<AllergeenProduct> Allergenen { get; set; }
         /*
         [NotMapped]
         public List<Allergeen> TestLijst { get; set; }
