@@ -62,6 +62,20 @@
                 <input asp-for="Input.Adres" class="form-control" />
                 <span asp-validation-for="Input.Adres" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="Input.IsBedrijf" class="control-label"></label>
+                <input asp-for="Input.IsBedrijf" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.BtwNummer" class="control-label"></label>
+                <input asp-for="Input.BtwNummer" class="form-control" />
+                <span asp-validation-for="Input.BtwNummer" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Firmanaam" class="control-label"></label>
+                <input asp-for="Input.Firmanaam" class="form-control" />
+                <span asp-validation-for="Input.Firmanaam" class="text-danger"></span>
+            </div>
             <button type="submit" class="btn btn-primary">Register</button>
         </form>
     </div>

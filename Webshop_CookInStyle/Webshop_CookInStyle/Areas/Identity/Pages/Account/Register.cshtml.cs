@@ -105,6 +105,17 @@ namespace Webshop_CookInStyle.Areas.Identity.Pages.Account
             [DataType(DataType.Text)]
             [Display(Name = "Adres")]
             public string Adres { get; set; }
+
+            [DataType(DataType.Text)]
+            [Display(Name = "Firmanaam")]
+            public string Firmanaam { get; set; }
+
+            [DataType(DataType.Text)]
+            [Display(Name = "Btwnummer")]
+            public string BtwNummer { get; set; }
+
+            [Display(Name = "Bedrijf")]
+            public bool IsBedrijf { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -123,6 +134,7 @@ namespace Webshop_CookInStyle.Areas.Identity.Pages.Account
             land = await _context.Landen
                 .Where(x => x.Naam.ToUpper() == Input.Land.ToUpper() || x.Zoeknaam.ToUpper() == Input.Land.ToUpper())
                 .FirstOrDefaultAsync();
+
             if (ModelState.IsValid)
             {
                 var user = new Klant()
@@ -136,8 +148,15 @@ namespace Webshop_CookInStyle.Areas.Identity.Pages.Account
                     Land = land,
                     Postcode = postcode,
                     PostcodeID = postcode.PostcodeID,
-                    LandID = land.LandID
+                    LandID = land.LandID,
+                    IsBedrijf = Input.IsBedrijf
                 };
+                user.WachtWoordReset = false;
+                if (user.IsBedrijf == true)
+                {
+                    user.Naam = Input.Firmanaam.ToString().Replace(".", "");
+                    user.BtwNummer = Input.BtwNummer;
+                }
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

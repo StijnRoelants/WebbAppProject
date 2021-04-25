@@ -1,0 +1,88 @@
+﻿@model Webshop_CookInStyle.ViewModels.IndexAdminKlantenVM
+
+@{
+    ViewData["Title"] = "Klanten beheer";
+}
+
+<style>
+    .beetjePadding {
+        padding: 5px;
+        margin-right: 15px;
+    }
+</style>
+
+    <h1>Klanten beheer</h1>
+
+    <p>
+        <a asp-action="AddKlant">Nieuwe klant invoegen</a>
+    </p>
+
+    <form asp-controller="AdminKlanten" asp-action="Search" method="get">
+        <div class="form-actions no-color">
+            <p>
+                Zoek op naam en voornaam
+                <input class="beetjePadding" asp-for="NaamSearch" />
+                Zoek op firmanaam
+                <input class="beetjePadding" asp-for="FirmanaamSearch" />
+                Zoek op btwnummer
+                <input class="beetjePadding" asp-for="BtwnummerSearch" /><br />
+                Zoekopdracht:
+                <input class="beetjePadding" asp-for="SearchQuerry" />
+                <input type="submit" value="Zoeken" class="btn btn-primary" />
+                <a asp-controller="AdminKlanten" asp-action="Index">Volledige lijst</a>
+            </p>
+        </div>
+    </form>
+    <div class="row">
+        <div class="col-sm-10">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Klanten[0].NaamWeergave)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Klanten[0].StraatEnNummer)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Klanten[0].Postcode.Weergave)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Klanten[0].Naam)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Klanten)
+                    {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NaamWeergave)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StraatEnNummer)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Postcode.Weergave)
+                        </td>
+                        @if (item.IsBedrijf == true)
+                        {
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Naam)
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                <p>n.v.t.</p>
+                            </td>
+                        }
+                        <td>
+                            <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>

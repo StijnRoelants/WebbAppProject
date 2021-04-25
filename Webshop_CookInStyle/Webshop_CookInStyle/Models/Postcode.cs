@@ -15,7 +15,7 @@ namespace Webshop_CookInStyle.Models
         public string Gemeente { get; set; }
         [DisplayName("Postcode")]
         public string Nummer { get; set; }
-        [NotMapped]
+        [NotMapped, DisplayName("Postcode")]
         public string Weergave => $"{Nummer} - {Gemeente}";
 
         // Navprops
@@ -26,7 +26,7 @@ namespace Webshop_CookInStyle.Models
         // Methodes
         public override string ToString()
         {
-            return $"{Nummer} {Gemeente}";
+            return $"{Nummer} - {Gemeente}";
         }
     }
 }

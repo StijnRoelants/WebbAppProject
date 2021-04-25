@@ -1,0 +1,90 @@
+﻿@model Webshop_CookInStyle.ViewModels.AddKlantVM
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="container">
+    <h1>Details</h1>
+
+    <div>
+        <h4>Klant</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Klant.Voornaam)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Klant.Voornaam)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Klant.Achternaam)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Klant.Achternaam)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Klant.StraatEnNummer)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Klant.StraatEnNummer)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Klant.Postcode)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Klant.Postcode.Weergave)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Klant.Land)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Klant.Land.Naam)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Klant.Mobiel)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Klant.Mobiel)
+            </dd>
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Klant.Telefoon)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Klant.Telefoon)
+            </dd>
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Klant.Email)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Klant.Email)
+            </dd>
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Klant.Naam)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Klant.Naam)
+            </dd>
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Klant.BtwNummer)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Klant.BtwNummer)
+            </dd>
+        </dl>
+    </div>
+    <br />
+    <br />
+    <div>
+        <a asp-action="EditKlant" asp-route-id="@Model.Klant.Id">Edit</a>
+    </div>
+    <br />
+    <div>
+        <a asp-action="Index">Terug</a>
+    </div>
+    <br />
+</div>

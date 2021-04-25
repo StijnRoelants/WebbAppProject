@@ -21,5 +21,11 @@ namespace Webshop_CookInStyle.Models
         public ICollection<Klant> Klanten { get; set; }
         public ICollection<LeverAdres> LeverAdressen { get; set; }
         public ICollection<Factuurfirma> Factuurfirmas { get; set; }
+
+        // Methodes
+        public override string ToString()
+        {
+            return $"{Afkorting} - {Naam}";
+        }
     }
 }
