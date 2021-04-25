@@ -1,0 +1,77 @@
+﻿@model Webshop_CookInStyle.ViewModels.AddProductTypeVM
+
+@{
+    ViewData["Title"] = "Producttypes";
+}
+
+<div class="container">
+    <h1>Product Types</h1>
+
+    <form asp-controller="AdminProducten" asp-action="TSearch" method="get">
+        <div class="form-actions no-color">
+            <p>
+                Producttypes zoeken:
+                <input asp-for="TypeSearch" />
+                <input type="submit" value="Zoeken" class="btn btn-primary" />
+                <a asp-controller="AdminProducten" asp-action="AddProductType">Volledige lijst</a>
+            </p>
+        </div>
+    </form>
+    <div class="row">
+        <div class="col-sm-6">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ProductTypes[0].Omschrijving)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ProductTypes)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Omschrijving)
+                            </td>
+                            <td>
+                                <a asp-action="EditType" asp-route-id="@item.ProductTypeID">Edit</a> |
+                                <a asp-action="DeleteType" asp-route-id="@item.ProductTypeID">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-1"></div>
+        <div class="col-sm-5">
+            <br />
+
+            @if (ViewBag.Visibility == true)
+            {
+                <div class="alert alert-danger">
+                    <p>@ViewBag.ErrorMessage</p>
+                </div>
+            }
+
+
+            <br />
+            <form asp-action="CreateProductType">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="ProductType.Omschrijving" class="control-label"></label>
+                    <input asp-for="ProductType.Omschrijving" class="form-control" />
+                    <span asp-validation-for="ProductType.Omschrijving" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+    <br>
+    <div>
+        <a asp-action="Index">Terug</a>
+    </div>
+</div>

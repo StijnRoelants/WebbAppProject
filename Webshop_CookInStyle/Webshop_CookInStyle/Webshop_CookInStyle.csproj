@@ -13,6 +13,18 @@
     <Compile Remove="Migrations\20210405163828_InitialCreate.Designer.cs" />
     <Compile Remove="Migrations\20210405164455_InitialCreate.cs" />
     <Compile Remove="Migrations\20210405164455_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20210415123100_BtwFK.cs" />
+    <Compile Remove="Migrations\20210415123100_BtwFK.Designer.cs" />
+    <Compile Remove="Migrations\20210415124109_ManyToMany.cs" />
+    <Compile Remove="Migrations\20210415124109_ManyToMany.Designer.cs" />
+    <Compile Remove="Migrations\20210415124227_ManyToMany.cs" />
+    <Compile Remove="Migrations\20210415124227_ManyToMany.Designer.cs" />
+    <Compile Remove="Migrations\20210415125244_ManyToMany.cs" />
+    <Compile Remove="Migrations\20210415125244_ManyToMany.Designer.cs" />
+    <Compile Remove="Migrations\20210415125427_ManyToMany.cs" />
+    <Compile Remove="Migrations\20210415125427_ManyToMany.Designer.cs" />
+    <Compile Remove="Migrations\20210419202712_ManyToMany.cs" />
+    <Compile Remove="Migrations\20210419202712_ManyToMany.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,9 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Conrollers\" />
-    <Folder Include="Views\" />
-    <Folder Include="ViewModels\" />
+    <None Include="wwwroot\Images\LogoCis.jpg" />
   </ItemGroup>
 
 </Project>

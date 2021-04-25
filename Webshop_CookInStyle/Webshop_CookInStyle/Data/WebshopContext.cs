@@ -74,6 +74,18 @@ namespace Webshop_CookInStyle.Data
             modelBuilder.Entity<Factuur>()
                 .HasOne(x => x.Factuurfirma)
                 .WithOne().OnDelete(DeleteBehavior.Restrict);
+
+            // Many to Many
+            modelBuilder.Entity<AllergeenProduct>()
+                .HasKey(ap => new { ap.AllergeenID, ap.ProductID });
+            modelBuilder.Entity<AllergeenProduct>()
+                .HasOne(ap => ap.Allergeen)
+                .WithMany(a => a.Producten)
+                .HasForeignKey(ap => ap.AllergeenID);
+            modelBuilder.Entity<AllergeenProduct>()
+                .HasOne(ap => ap.Product)
+                .WithMany(p => p.Allergenen)
+                .HasForeignKey(ap => ap.ProductID);
         }
 
 
