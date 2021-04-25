@@ -3,40 +3,40 @@
 @{
     ViewData["Title"] = "Factuurnummering";
 }
+<div class="container">
+    <h1>Factuurnummer aanpassen</h1>
+    <br />
+    <p class="font-weight-bold">Factuurnummer mag niet lager zijn al een bestaand factuurnummer en moet 2 alfabetische tekens bevatten </p>
+    <hr />
 
-<h1>Factuurnummer aanpassen</h1>
-<br />
-<p class="font-weight-bold">Factuurnummer mag niet lager zijn al een bestaand factuurnummer en moet 2 alfabetische tekens bevatten </p>
-<hr /> 
+    @if (ViewBag.Visibility == true)
+    {
+        <div class="alert alert-danger">
+            <p>@ViewBag.ErrorMessage</p>
+        </div>
+    }
 
-@if (ViewBag.Visibility == true)
-{
-    <div class="alert alert-danger">
-        <p>@ViewBag.ErrorMessage</p>
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="EditNummering">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Factuurfirma.FactuurfirmaID" />
+                <div class="form-group">
+                    <label asp-for="Factuurfirma.Factuurnummering" class="control-label"></label>
+                    <input asp-for="Factuurfirma.Factuurnummering" class="form-control" />
+                    <span asp-validation-for="Factuurfirma.Factuurnummering" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Opslaan" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
     </div>
-}
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="EditNummering">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Factuurfirma.FactuurfirmaID" />
-            <div class="form-group">
-                <label asp-for="Factuurfirma.Factuurnummering" class="control-label"></label>
-                <input asp-for="Factuurfirma.Factuurnummering" class="form-control" />
-                <span asp-validation-for="Factuurfirma.Factuurnummering" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Opslaan" class="btn btn-primary" />
-            </div>
-        </form>
+    <div>
+        <a asp-action="Index">Terug</a>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Terug</a>
-</div>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
