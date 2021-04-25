@@ -159,6 +159,125 @@ namespace Webshop_CookInStyle.Conrollers
             return View(viewModel);
         }
 
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            EditProductenVM viewModel = new EditProductenVM();
+            viewModel.Product = await _context.Producten
+                .Include(x => x.ProductType)
+                .Where(x => x.ProductID == id)
+                .FirstOrDefaultAsync();
+            if (viewModel.Product == null)
+            {
+                return NotFound();
+            }
+            return View(viewModel);
+        }
+
+        [HttpPost, ActionName("DeleteProduct")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteProductConfirmed(int id, EditProductenVM viewModel)
+        {
+            if (id != viewModel.Product.ProductID)
+            {
+                return NotFound();
+            }
+            if (ModelState.IsValid)
+            {
+                _context.Remove(viewModel.Product);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        public async Task<IActionResult> EditProduct(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            EditProductenVM viewModel = new EditProductenVM();
+            viewModel.Product = await _context.Producten
+                .Include(x => x.ProductType)
+                .Include(x => x.Btwtype)
+                .Include(x => x.Eenheid)
+                .Include(x => x.Allergenen)
+                .Where(x => x.ProductID == id)
+                .FirstOrDefaultAsync();
+            if (viewModel.Product == null)
+            {
+                return NotFound();
+            }
+            viewModel.Allergenen = new SelectList(_context.Allergenen.OrderBy(x => x.Omschrijving), "AllergeenID", "Omschrijving");
+            viewModel.GeselecteerdeAllergenen = new List<int>();
+            viewModel.ProductTypes = new SelectList(_context.ProductTypes.OrderBy(x => x.Omschrijving), "ProductTypeID", "Omschrijving");
+            viewModel.BtwTypes = new SelectList(_context.BtwTypes.OrderBy(x => x.Percentage), "BtwID", "Weergave");
+            viewModel.Eenheden = new SelectList(_context.Eenheden.OrderBy(x => x.Omschrijving), "EenheidID", "Omschrijving");
+            return View(viewModel);
+        }
+
+        // Types aanpassen
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditProduct(int id, EditProductenVM viewModel)
+        {
+            if (id != viewModel.Product.ProductID)
+            {
+                return NotFound();
+            }
+            if (ModelState.IsValid)
+            {
+                Product aangepastProduct = await _context.Producten
+                    .Include(x => x.Allergenen)
+                    .Include(x => x.ProductType)
+                    .Include(x => x.Btwtype)
+                    .Include(x => x.Eenheid)
+                    .Include(x => x.Allergenen)
+                    .Where(x => x.ProductID == id)
+                    .FirstOrDefaultAsync();
+
+                aangepastProduct.Naam = viewModel.Product.Naam;
+                aangepastProduct.Omschrijving = viewModel.Product.Omschrijving;
+                aangepastProduct.Eenheidsprijs = viewModel.Product.Eenheidsprijs;
+                aangepastProduct.ProductTypeID = viewModel.Product.ProductTypeID;
+                aangepastProduct.BtwID = viewModel.Product.BtwID;
+                aangepastProduct.EenheidID = viewModel.Product.EenheidID;
+                if (viewModel.GeselecteerdeAllergenen == null)
+                {
+                    viewModel.GeselecteerdeAllergenen = new List<int>();
+                }
+
+                List<AllergeenProduct> allergeenProducts = new List<AllergeenProduct>();
+                foreach (var allergeenID in viewModel.GeselecteerdeAllergenen)
+                {
+                    allergeenProducts.Add(new AllergeenProduct
+                    {
+                        ProductID = viewModel.Product.ProductID,
+                        AllergeenID = allergeenID
+                    });
+                }
+
+                aangepastProduct.Allergenen
+                    .RemoveAll(a => !allergeenProducts.Contains(a));
+                aangepastProduct.Allergenen.AddRange(
+                    allergeenProducts.Where(x => !aangepastProduct.Allergenen.Contains(x)));
+                _context.Update(aangepastProduct);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Index));
+            }
+            return View("Index", viewModel);
+        }
+
         #endregion
 
         #region Allergenen

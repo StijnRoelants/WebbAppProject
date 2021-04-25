@@ -13,9 +13,11 @@ namespace Webshop_CookInStyle.ViewModels
     {
         public Product Product { get; set; }
         public Allergeen Allergeen { get; set; }
-        public SelectList Allergenen { get; set; }
+        //public SelectList Allergenen { get; set; }
         public SelectList BtwTypes { get; set; }
         public SelectList ProductTypes { get; set; }
         public SelectList Eenheden { get; set; }
+        public IEnumerable<SelectListItem> Allergenen { get; set; }
+        public IEnumerable<int> GeselecteerdeAllergenen { get; set; }
     }
 }
