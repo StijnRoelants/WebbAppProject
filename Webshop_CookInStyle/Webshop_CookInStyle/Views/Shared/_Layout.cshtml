@@ -4,6 +4,10 @@
         width: 25%;
         height: auto;
     }
+    .paddingERP {
+        margin-left: 40px;
+        margin-right: 40px;
+    }
 </style>
 
 <html lang="en">
@@ -17,15 +21,14 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/Images/LogoCis.jpg" class="logoSize"/> </a>
+            <div class="container-fluid body-content">
+                <a asp-area="" asp-controller="Home" asp-action="Index"><img src="~/Images/LogoCis.jpg" class="logoSize"/> </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <partial name="_LoginPartial" />
-                    <ul class="navbar-nav flex-grow-1">
+                    <ul class="nav justify-content-end">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
@@ -40,7 +43,7 @@
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="container-fluid body-content">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -48,7 +51,14 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2021 - Cook in Style - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            <div class="row">
+                <div class="col-sm-6">
+                    &copy; 2021 - Cook in Style - <a asp-area="" asp-page="/Privacy">Privacy</a>
+                </div>
+                <div class="col-sm-6 nav justify-content-end">
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
         </div>
 
     </footer>
