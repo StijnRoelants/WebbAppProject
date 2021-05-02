@@ -8,6 +8,10 @@
     .tableFont {
         font-size: 12px;
     }
+
+    .heightBoxSetter {
+        height: 120px;
+    }
 </style>
 
 <h1>Producten</h1>
@@ -104,7 +108,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="GeselecteerdeAllergenen" class="control-label">Allergenen</label>
-                <select multiple="multiple" asp-for="GeselecteerdeAllergenen" class="form-control" asp-items="Model.Allergenen"></select>
+                <select asp-for="GeselecteerdeAllergenen" class="form-control heightBoxSetter" asp-items="Model.Allergenen"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

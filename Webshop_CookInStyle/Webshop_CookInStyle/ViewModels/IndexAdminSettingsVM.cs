@@ -10,8 +10,6 @@ namespace Webshop_CookInStyle.ViewModels
     public class IndexAdminSettingsVM
     {
         public Factuurfirma Factuurfirma { get; set; }
-        public List<Factuur> Facturen { get; set; }
-        public List<Land> Landen { get; set; }
         public SelectList LandList { get; set; }
         public SelectList PostcodeList { get; set; }
     }

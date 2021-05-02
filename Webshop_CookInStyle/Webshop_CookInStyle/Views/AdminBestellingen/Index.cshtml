@@ -1,0 +1,86 @@
+﻿@model Webshop_CookInStyle.ViewModels.IndexAdminBestellingenVM
+
+@{
+    ViewData["Title"] = "Bestellingen";
+}
+
+<style>
+    .tableFont {
+        font-size: 12px;
+    }
+
+    .heightBoxSetter {
+        height: 120px;
+    }
+</style>
+
+<h1>Producten</h1>
+
+<p>
+    <a asp-action="AddBestelling">Nieuwe bestelling plaatsen</a> | <a asp-controller="AdminBestellingen" asp-action="Index">Volledige lijst tonen</a>
+</p>
+<div class="row">
+    <div class="col-md-5">
+        <form asp-controller="BestellingZoeken" asp-action="Search" method="get">
+            <div class="form-actions no-color">
+                <p>
+                    Bestelling zoeken op naam of nummer:
+                    <input asp-for="ZoekenOpNaam" />
+                    <input type="submit" value="Zoeken" class="btn btn-primary" />
+                </p>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-7">
+        <form asp-controller="BestellingZoekenOpDatum" asp-action="Search" method="get">
+            <div class="form-actions no-color">
+                <p>
+                    Bestelling zoeken op datum
+                    <input asp-for="ZoekenDatumVan" />
+                    <input asp-for="ZoekenDatumTot" />
+                    <input type="submit" value="Zoeken" class="btn btn-primary" />
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Bestellingen[0].Bestelbonnummer)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Bestellingen[0].Klant.NaamWeergave)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Bestellingen[0].Leverdatum)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Bestellingen)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Bestelbonnummer)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Klant.NaamWeergave)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Leverdatum)
+                        </td>
+                        <td>
+                            <a asp-action="Detail" asp-route-id="@item.BestellingID">Details</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -265,11 +265,14 @@ namespace Webshop_CookInStyle.Conrollers
                         AllergeenID = allergeenID
                     });
                 }
+                if (viewModel.GeselecteerdeAllergenen.Count() > 0)
+                {
+                    aangepastProduct.Allergenen
+                                    .RemoveAll(a => !allergeenProducts.Contains(a));
+                    aangepastProduct.Allergenen.AddRange(
+                        allergeenProducts.Where(x => !aangepastProduct.Allergenen.Contains(x)));
+                }
 
-                aangepastProduct.Allergenen
-                    .RemoveAll(a => !allergeenProducts.Contains(a));
-                aangepastProduct.Allergenen.AddRange(
-                    allergeenProducts.Where(x => !aangepastProduct.Allergenen.Contains(x)));
                 _context.Update(aangepastProduct);
                 await _context.SaveChangesAsync();
 

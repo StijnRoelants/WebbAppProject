@@ -13,6 +13,7 @@ namespace Webshop_CookInStyle.Models
     {
         [Key]
         public int BestellingID { get; set; }
+        public string Bestelbonnummer { get; set; }
         public DateTime BestelDatum { get; set; }
         public DateTime Leverdatum { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
