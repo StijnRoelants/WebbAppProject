@@ -31,6 +31,57 @@ namespace Webshop_CookInStyle.Conrollers
             viewModel.Bestellingen = await _context.Bestellingen.Include(x => x.Klant).Where(x => x.Leverdatum >= DateTime.Now).ToListAsync();
             return View(viewModel);
         }
+
+        public async Task<IActionResult> BestellingZoeken(IndexAdminBestellingenVM viewModel)
+        {
+            if (viewModel.ZoekenOpNaam == null)
+            {
+                viewModel.Bestellingen = await _context.Bestellingen.Include(x => x.Klant).Where(x => x.Leverdatum >= DateTime.Now).ToListAsync();
+                return View(viewModel);
+            }
+            List<Bestelling> Zoekopdracht = new List<Bestelling>();
+            Zoekopdracht.AddRange(await _context.Bestellingen.Include(x => x.Klant).Where(x => x.Klant.Voornaam == viewModel.ZoekenOpNaam || x.Klant.Achternaam == viewModel.ZoekenOpNaam).ToListAsync());
+            Zoekopdracht.AddRange(await _context.Bestellingen.Include(x => x.Klant).Where(x => x.Bestelbonnummer == viewModel.ZoekenOpNaam).ToListAsync());
+            viewModel.Bestellingen = Zoekopdracht;
+            return View("Index", viewModel);
+        }
+
+        public async Task<IActionResult> BestellingZoekenOpDatum(IndexAdminBestellingenVM viewModel)
+        {
+            if (viewModel.ZoekenDatumVan == null || viewModel.ZoekenDatumTot == null)
+            {
+                viewModel.Bestellingen = await _context.Bestellingen.Include(x => x.Klant).Where(x => x.Leverdatum >= DateTime.Now).ToListAsync();
+                return View(viewModel);
+            }
+            List<Bestelling> Zoekopdracht = new List<Bestelling>();
+            Zoekopdracht.AddRange(await _context.Bestellingen.Include(x => x.Klant).Where(x => x.Leverdatum >= viewModel.ZoekenDatumVan && x.Leverdatum <= viewModel.ZoekenDatumTot).ToListAsync());
+            viewModel.Bestellingen = Zoekopdracht;
+            return View("Index", viewModel);
+        }
+        #endregion
+
+        #region Bestelling details
+
+        public async Task<IActionResult> AddBestellingDetails()
+        {
+            AddBestellingDetailsVM viewModel = new AddBestellingDetailsVM();
+            viewModel.Bestelling = new Bestelling();
+            viewModel.Klanten = new SelectList(await _context.Klanten.ToListAsync());
+            viewModel.Bestelling.Leverdatum = DateTime.Now;
+            return View(viewModel);
+        }
+
+        #endregion
+
+        #region Nieuwe bestelling plaatsen
+
+        public async Task<IActionResult> AddBestelling()
+        {
+            AddBestellingVM viewModel = new AddBestellingVM();
+            viewModel.Producten = await _context.Producten.ToListAsync();
+            return View(viewModel);
+        }
+
         #endregion
     }
 }

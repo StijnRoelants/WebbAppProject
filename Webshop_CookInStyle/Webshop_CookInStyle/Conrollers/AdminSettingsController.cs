@@ -58,7 +58,7 @@ namespace Webshop_CookInStyle.Conrollers
             }
 
             IndexAdminSettingsVM viewModel = new IndexAdminSettingsVM();
-            viewModel.Factuurfirma = await _context.FactuurFirmas.FindAsync(id);
+            viewModel.Factuurfirma = await _context.FactuurFirmas.Where(x => x.FactuurfirmaID == id).Include(x => x.Postcode).Include(x => x.Land).FirstOrDefaultAsync();
             if (viewModel.Factuurfirma == null)
             {
                 return NotFound();
@@ -77,12 +77,14 @@ namespace Webshop_CookInStyle.Conrollers
             }
             if (ModelState.IsValid)
             {
+                Factuurfirma aangepast = await _context.FactuurFirmas.Where(x => x.FactuurfirmaID == id).Include(x => x.Postcode).Include(x => x.Land).FirstOrDefaultAsync();
                 string error = FactuurnummeringCheck(viewModel);
                 if (error == "")
                 {
                     try
                     {
-                        _context.Update(viewModel.Factuurfirma);
+                        aangepast.Factuurnummering = viewModel.Factuurfirma.Factuurnummering;
+                        _context.Update(aangepast);
                         await _context.SaveChangesAsync();
                         ViewBag.Visibility = false;
                     }
@@ -118,7 +120,7 @@ namespace Webshop_CookInStyle.Conrollers
             }
 
             IndexAdminSettingsVM viewModel = new IndexAdminSettingsVM();
-            viewModel.Factuurfirma = await _context.FactuurFirmas.FindAsync(id);
+            viewModel.Factuurfirma = await _context.FactuurFirmas.Where(x => x.FactuurfirmaID == id).Include(x => x.Postcode).Include(x => x.Land).FirstOrDefaultAsync();
             if (viewModel.Factuurfirma == null)
             {
                 return NotFound();
@@ -137,12 +139,14 @@ namespace Webshop_CookInStyle.Conrollers
             }
             if (ModelState.IsValid)
             {
+                Factuurfirma aangepast = await _context.FactuurFirmas.Where(x => x.FactuurfirmaID == id).Include(x => x.Postcode).Include(x => x.Land).FirstOrDefaultAsync();
                 string error = BestelbonnummeringCheck(viewModel);
                 if (error == "")
                 {
                     try
                     {
-                        _context.Update(viewModel.Factuurfirma);
+                        aangepast.Bestelbonnummering = viewModel.Factuurfirma.Bestelbonnummering;
+                        _context.Update(aangepast);
                         await _context.SaveChangesAsync();
                         ViewBag.Visibility = false;
                     }
@@ -176,8 +180,12 @@ namespace Webshop_CookInStyle.Conrollers
         {
             string error = "";
             int nieuweNummering = 0;
-            var bedrijfsgegevens = _context.FactuurFirmas.Where(x => x.FactuurfirmaID == viewModel.Factuurfirma.FactuurfirmaID).FirstOrDefault();
-            int oudeNummering = int.Parse(bedrijfsgegevens.Factuurnummering.Substring(2));
+            var bedrijfsgegevens = _context.FactuurFirmas.AsNoTracking().Where(x => x.FactuurfirmaID == viewModel.Factuurfirma.FactuurfirmaID).Include(x => x.Land).Include(x => x.Postcode).FirstOrDefault();
+            int oudeNummering = 0;
+            if (bedrijfsgegevens.Factuurnummering != null)
+            {
+                int.TryParse(bedrijfsgegevens.Factuurnummering.Substring(2), out oudeNummering);
+            }
             if (viewModel.Factuurfirma.Factuurnummering == null)
             {
                 return error = $"Gelieve een nieuwe factuurnummering op te geven!";
@@ -208,8 +216,12 @@ namespace Webshop_CookInStyle.Conrollers
         {
             string error = "";
             int nieuweNummering = 0;
-            var bedrijfsgegevens = _context.FactuurFirmas.Where(x => x.FactuurfirmaID == viewModel.Factuurfirma.FactuurfirmaID).FirstOrDefault();
-            int oudeNummering = int.Parse(bedrijfsgegevens.Bestelbonnummering.Substring(2));
+            var bedrijfsgegevens = _context.FactuurFirmas.AsNoTracking().Where(x => x.FactuurfirmaID == viewModel.Factuurfirma.FactuurfirmaID).Include(x => x.Land).Include(x => x.Postcode).FirstOrDefault();
+            int oudeNummering = 0;
+            if (bedrijfsgegevens.Bestelbonnummering != null)
+            {
+                int.TryParse(bedrijfsgegevens.Bestelbonnummering.Substring(2), out oudeNummering);
+            }
             if (viewModel.Factuurfirma.Bestelbonnummering == null)
             {
                 return error = $"Gelieve een nieuwe Bestelbonnummer op te geven!";

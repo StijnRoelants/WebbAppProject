@@ -1,0 +1,41 @@
+﻿@model Webshop_CookInStyle.ViewModels.AddBestellingDetailsVM
+
+@{
+    ViewData["Title"] = "Bestelling | Klantgegevens";
+}
+
+<style>
+    .tableFont {
+        font-size: 12px;
+    }
+
+    .heightBoxSetter {
+        height: 120px;
+    }
+</style>
+
+<h1>Klantgegevens invullen</h1>
+
+<div class="row">
+    <div class="col-sm-8">
+    <form asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Bestelling.KlantFK" class="control-label">Producttype</label>
+            <select asp-for="Bestelling.KlantFK" class="form-control" asp-items="Model.Klanten"></select>
+        </div>
+        <div class="form-group">
+            <label asp-for="Bestelling.Leverdatum" class="control-label"></label>
+            <input asp-for="Bestelling.Leverdatum" class="form-control"/>
+            <span asp-validation-for="Bestelling.Leverdatum" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Bestelling.Opmerking" class="control-label"></label>
+            <textarea asp-for="Bestelling.Opmerking" class="form-control"></textarea>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Doorgaan" class="btn btn-primary" />
+        </div>
+    </form>
+    </div>
+</div>

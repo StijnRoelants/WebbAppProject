@@ -1,0 +1,76 @@
+﻿@model Webshop_CookInStyle.ViewModels.AddBestellingVM
+
+@{
+    ViewData["Title"] = "Bestellingen";
+}
+
+
+<h1>Bestelling Plaatsen</h1>
+
+<div class="row">
+    <div class="col-sm-6">
+        <h6 class="text-center">Drank</h6>
+        @foreach (var product in Model.Producten)
+        {
+            <p>@product.Naam</p> <p>@product.ProductType.Omschrijving</p> <p>€ @product.Eenheidsprijs</p> <a asp-action="Verminder" asp-route-id="@product.ProductID" class="btn btn-primary buttonFunction">-</a> <a asp-action="Verhoog" asp-route-id="@product.ProductID" class="btn btn-primary buttonFunction">+</a>
+        }
+    </div>
+
+    </div>
+    <div class="col-sm-1"></div>
+    <div class="col-sm-5">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Orderlijnen[0].Product.Naam)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Orderlijnen[0].Aantal)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Orderlijnen[0].Product.Eenheidsprijs)
+                    </th>
+
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Orderlijnen)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Product.Naam)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Aantal)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Lijnprijs)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div>
+            @if (Model.NieuweBestelling == null)
+            {
+                <p>Totaal bedrag : € 0,00</p>
+            }
+            else
+            {
+                <p>Totaal bedrag : € @Model.NieuweBestelling.Totaalprijs</p>
+            }
+
+
+
+        </div>
+        <div>
+            <a asp-action="Opslaan" class="btn btn-primary buttonFunction">Opslaan</a>
+        </div>
+        <div>
+            <a asp-action="Annuleren" class="btn btn-warning buttonFunction">Annuleer</a>
+        </div>
+    </div>
+</div>
+
