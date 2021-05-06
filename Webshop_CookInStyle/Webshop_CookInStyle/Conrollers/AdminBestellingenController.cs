@@ -77,8 +77,14 @@ namespace Webshop_CookInStyle.Conrollers
 
         public async Task<IActionResult> AddBestelling()
         {
+            Klant admin = await _context.Klanten.Where(x => x.UserName == HttpContext.User.Identity.Name).FirstOrDefaultAsync();
+            Bestelling bestelling = await _context.Bestellingen.Include(x => x.Bestellijnen).FirstOrDefaultAsync(x => x.Klant == admin);
+            if (true)
+            {
+
+            }
             AddBestellingVM viewModel = new AddBestellingVM();
-            viewModel.Producten = await _context.Producten.ToListAsync();
+            viewModel.Producten = await _context.Producten.Include(x => x.ProductType).Include(x => x.Allergenen).Include(x => x.Eenheid).ToListAsync();
             return View(viewModel);
         }
 
