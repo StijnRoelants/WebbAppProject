@@ -12,6 +12,11 @@
     .heightBoxSetter {
         height: 120px;
     }
+
+    .buttonSpacing {
+        width: 400px;
+        margin: 10px;
+    }
 </style>
 
 <h1>Producten</h1>
@@ -21,7 +26,7 @@
 </p>
 <div class="row">
     <div class="col-md-5">
-        <form asp-controller="BestellingZoeken" asp-action="Search" method="get">
+        <form asp-controller="AdminBestellingen" asp-action="BestellingZoeken" method="get">
             <div class="form-actions no-color">
                 <p>
                     Bestelling zoeken op naam of nummer:
@@ -32,7 +37,7 @@
         </form>
     </div>
     <div class="col-md-7">
-        <form asp-controller="BestellingZoekenOpDatum" asp-action="Search" method="get">
+        <form asp-controller="AdminBestellingen" asp-action="BestellingZoekenOpDatum" method="get">
             <div class="form-actions no-color">
                 <p>
                     Bestelling zoeken op datum
