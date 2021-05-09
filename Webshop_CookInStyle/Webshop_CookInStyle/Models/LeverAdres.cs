@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -30,5 +31,9 @@ namespace Webshop_CookInStyle.Models
         public Land Land { get; set; }
         public Klant Klant { get; set; }
         public ICollection<Bestelling> Bestellingen { get; set; }
+
+
+        [NotMapped, DisplayName("Adres")]
+        public string Weergave => $"{Straat} - {Postcode.Weergave}";
     }
 }

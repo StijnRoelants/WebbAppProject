@@ -16,26 +16,94 @@
 
 <h1>Klantgegevens invullen</h1>
 
-<div class="row">
-    <div class="col-sm-8">
-    <form asp-action="Create">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group">
-            <label asp-for="Bestelling.KlantFK" class="control-label">Producttype</label>
-            <select asp-for="Bestelling.KlantFK" class="form-control" asp-items="Model.Klanten"></select>
+@if (Model.Bericht != null)
+{
+    <div class="row">
+        <div class="col-lg-12">
+            <p>@Model.Bericht</p>
         </div>
-        <div class="form-group">
-            <label asp-for="Bestelling.Leverdatum" class="control-label"></label>
-            <input asp-for="Bestelling.Leverdatum" class="form-control"/>
-            <span asp-validation-for="Bestelling.Leverdatum" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="Bestelling.Opmerking" class="control-label"></label>
-            <textarea asp-for="Bestelling.Opmerking" class="form-control"></textarea>
-        </div>
-        <div class="form-group">
-            <input type="submit" value="Doorgaan" class="btn btn-primary" />
-        </div>
-    </form>
     </div>
-</div>
+}
+
+
+<div class="row">
+    <div class="col-lg-2"></div>
+    <div class="col-lg-4">
+        <form asp-action="CheckEnAfsluiten">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Bestelling.KlantFK" class="control-label">Producttype</label>
+                <select asp-for="Bestelling.KlantFK" class="form-control" asp-items="Model.Klanten"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Bestelling.Leverdatum" class="control-label"></label>
+                <input asp-for="Bestelling.Leverdatum" class="form-control" />
+                <span asp-validation-for="Bestelling.Leverdatum" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Bestelling.Opmerking" class="control-label"></label>
+                <textarea asp-for="Bestelling.Opmerking" class="form-control heightBoxSetter"></textarea>
+            </div>
+            <div class="form-group">
+                <label asp-for="LeverAdresIsStandaard" class="control-label">Leveradres is factuuradres?</label>
+                <input asp-for="LeverAdresIsStandaard" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Doorgaan" asp-action="CheckEnAfsluiten" asp-route-id="@Model.Bestelling.BestellingID" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+    <div class="col-lg-1"></div>
+    <div class="col-lg-5">
+        <p> Bestellling: @Model.Bestelling.Bestelbonnummer </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Bestellijnen[0].Product.Naam)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Bestellijnen[0].Aantal)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Bestellijnen[0].Product.Eenheidsprijs)
+                    </th>
+
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Bestellijnen)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Product.Naam)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Aantal)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Lijnprijs)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div>
+        </div>
+        <div>
+            @if (Model.Bestelling == null)
+            {
+                <p>Totaal bedrag : € 0,00</p>
+            }
+            else
+            {
+                <br />
+                <p>BTW 6% : € @Model.Btw6.ToString("0.00")</p>
+                <br />
+                <p>BTW 21% : € @Model.Btw21.ToString("0.00")</p>
+                <br />
+                <p>Totaal bedrag : € @Model.Bestelling.Totaalprijs.ToString("0.00")</p>
+            }
+        </div>
+    </div>

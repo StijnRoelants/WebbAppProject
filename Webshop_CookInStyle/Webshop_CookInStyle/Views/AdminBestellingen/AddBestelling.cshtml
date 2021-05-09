@@ -82,12 +82,12 @@
             }
             else
             {
-                <p>Totaal bedrag : € @Model.NieuweBestelling.Totaalprijs</p>
+                <p>Totaal bedrag incl. btw : € @Model.NieuweBestelling.Totaalprijs.ToString("0.00")</p>
             }
         </div>
         <div class="d-flex justify-content-between">
             <div>
-                <a asp-action="Opslaan" class="btn btn-primary buttonFunction spacingButtonBig">Opslaan</a>
+                <a asp-action="AddBestellingDetails" asp-route-id="@Model.NieuweBestelling.BestellingID" class="btn btn-primary buttonFunction spacingButtonBig">Verdergaan</a>
             </div>
             <div>
                 <a asp-action="Annuleren" class="btn btn-warning buttonFunction spacingButtonBig">Annuleer</a>

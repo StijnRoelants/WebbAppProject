@@ -13,7 +13,10 @@ namespace Webshop_CookInStyle.ViewModels
         public Bestelling Bestelling { get; set; }
         public DateTime BestelDatum { get; set; }
         public DateTime LeverDatum { get; set; }
-        public Factuurfirma Factuurfirma { get; set; }
-        public List<LeverAdres> LeverAdressen { get; set; }
+        public bool LeverAdresIsStandaard { get; set; }
+        public List<Bestellijn> Bestellijnen { get; set; }
+        public decimal Btw6 { get; set; }
+        public decimal Btw21 { get; set; }
+        public string Bericht { get; set; }
     }
 }

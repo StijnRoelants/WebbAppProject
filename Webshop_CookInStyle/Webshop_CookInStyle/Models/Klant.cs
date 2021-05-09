@@ -46,6 +46,9 @@ namespace Webshop_CookInStyle.Models
         [NotMapped, DisplayName("Naam")]
         public string NaamWeergave => $"{Achternaam} {Voornaam}";
 
+        [NotMapped, DisplayName("Naam")]
+        public string NaamWeergaveExtended => $"{Achternaam} {Voornaam} - {StraatEnNummer} - {Postcode.Weergave}";
+
         // Methodes
         public override string ToString()
         {
