@@ -15,6 +15,7 @@ namespace Webshop_CookInStyle.ViewModels
         public Bestelling Bestelling { get; set; }
         public Klant Klant { get; set; }
         public LeverAdres LeverAdres { get; set; }
+        public bool AdresOpslaan { get; set; }
 
     }
 }

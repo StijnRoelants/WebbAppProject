@@ -11,37 +11,39 @@
             <form asp-action="SelectAdres">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
+                    <input type="hidden" asp-for="Bestelling.BestellingID" />
                     <label asp-for="Bestelling.LeverAdres" class="control-label"></label>
                     <select asp-for="Bestelling.LeverAdres" class="form-control" asp-items="Model.Leveradressen"></select>
                 </div>
                 <div class="form-group">
-                    <input type="submit" value="Create" asp-action="SelectAdres" asp-route-id="@Model.Klant.Id" class="btn btn-primary" />
+                    <input type="submit" value="Create" asp-action="SelectAdres" class="btn btn-primary" />
                 </div>
             </form>
             <br />
             <h2>Maak een nieuw leveradres</h2>
             <form asp-action="CreateAdres">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Bestelling.BestellingID" />
                 <div class="form-group">
                     <label asp-for="LeverAdres.Omschrijving" class="control-label"></label>
                     <input asp-for="LeverAdres.Omschrijving" class="form-control" />
                     <span asp-validation-for="LeverAdres.Omschrijving" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="LeverAdres.Straat" class="control-label"></label>
+                    <label asp-for="LeverAdres.Straat" class="control-label">Straat en nummer</label>
                     <input asp-for="LeverAdres.Straat" class="form-control" />
                     <span asp-validation-for="LeverAdres.Straat" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="LeverAdres.Postcode" class="control-label"></label>
-                    <select asp-for="LeverAdres.Postcode" class="form-control" asp-items="Model.Postcodes"></select>
+                    <label asp-for="LeverAdres.PostcodeID" class="control-label"></label>
+                    <select asp-for="LeverAdres.PostcodeID" class="form-control" asp-items="Model.Postcodes"></select>
                 </div>
                 <div class="form-group">
-                    <label asp-for="LeverAdres.Land" class="control-label"></label>
-                    <select asp-for="LeverAdres.Land" class="form-control" asp-items="Model.Landen"></select>
+                    <label asp-for="LeverAdres.LandID" class="control-label"></label>
+                    <select asp-for="LeverAdres.LandID" class="form-control" asp-items="Model.Landen"></select>
                 </div>
                 <div class="form-group">
-                    <input type="submit" value="Create" asp-action="CreateAdres" asp-route-id="@Model.Klant.Id" class="btn btn-primary" />
+                    <input type="submit" value="Create" asp-action="CreateAdres" class="btn btn-primary" />
                 </div>
             </form>
         </div>

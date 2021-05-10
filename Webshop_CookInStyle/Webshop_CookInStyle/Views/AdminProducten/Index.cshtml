@@ -15,9 +15,28 @@
 </style>
 
 <h1>Producten</h1>
+@if (Model.Bericht != null)
+{
+    if (Model.BerichIsError == true)
+    {
+        <div class="row">
+            <div class="col-lg-12 alert alert-danger text-center">
+                <p>@Model.Bericht</p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-lg-12 alert alert-success text-center">
+                <p>@Model.Bericht</p>
+            </div>
+        </div>
+    }
+}
 
 <p>
-   <a asp-action="AddProductType">Producttype beheer</a>  |  <a asp-action="AddAllergeen">Allergenen beheer</a>
+    <a asp-action="AddProductType">Producttype beheer</a>  |  <a asp-action="AddAllergeen">Allergenen beheer</a>
 </p>
 
 <form asp-controller="AdminProducten" asp-action="Search" method="get">
@@ -50,20 +69,20 @@
             <tbody>
                 @foreach (var item in Model.Producten)
                 {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Naam)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ProductType.Omschrijving)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Weergave)
-                    </td>
-                    <td>
-                        <a asp-action="Detail" asp-route-id="@item.ProductID">Details</a>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Naam)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ProductType.Omschrijving)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Weergave)
+                        </td>
+                        <td>
+                            <a asp-action="Detail" asp-route-id="@item.ProductID">Details</a>
+                        </td>
+                    </tr>
                 }
             </tbody>
         </table>

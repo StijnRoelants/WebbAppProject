@@ -34,6 +34,6 @@ namespace Webshop_CookInStyle.Models
 
 
         [NotMapped, DisplayName("Adres")]
-        public string Weergave => $"{Straat} - {Postcode.Weergave}";
+        public string Weergave => $"{Omschrijving} - {Straat}";
     }
 }

@@ -19,6 +19,7 @@ namespace Webshop_CookInStyle.Models
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Totaalprijs { get; set; }
         public string Opmerking { get; set; }
+        public bool IsVoltooid { get; set; }
 
         // FK Leveradres
         public int LeverAdresID { get; set; }
