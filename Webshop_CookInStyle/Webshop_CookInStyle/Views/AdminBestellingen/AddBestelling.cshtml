@@ -1,0 +1,97 @@
+﻿@model Webshop_CookInStyle.ViewModels.AddBestellingVM
+
+@{
+    ViewData["Title"] = "Bestellingen";
+}
+
+<style>
+    .spacingButtons {
+        margin: 10px;
+    }
+    .sizeProductFont {
+        font-size: 15px;
+    }
+
+    .spacingButtonBig {
+        width: 400px;
+        margin: 10px;
+    }
+</style>
+
+<h1>Bestelling Plaatsen</h1>
+<br />
+<div class="row">
+    <div class="col-lg-6">
+        @foreach (var product in Model.Producten)
+        {
+            <div class="d-flex justify-content-between">
+                <div >
+                    <p class="sizeProductFont">@product.Naam - @product.ProductType.Omschrijving - € @product.Eenheidsprijs / @product.Eenheid.Omschrijving </p>
+                </div>
+                <div >
+                    <a asp-action="Verminder" asp-route-id="@product.ProductID" class="btn btn-primary buttonFunction spacingButtons">-</a> <a asp-action="Verhoog" asp-route-id="@product.ProductID" class="btn btn-primary buttonFunction spacingButtons">+</a>
+                </div>
+            </div>
+            <br />
+
+        }
+    </div>
+    <div class="col-lg-1">
+        </div>
+    <div class="col-lg-5">
+        <p> Bestellling: @Model.NieuweBestelling.Bestelbonnummer </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Orderlijnen[0].Product.Naam)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Orderlijnen[0].Aantal)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Orderlijnen[0].Product.Eenheidsprijs)
+                    </th>
+
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Orderlijnen)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Product.Naam)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Aantal)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Lijnprijs)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    <div>
+    </div>
+        <div>
+            @if (Model.NieuweBestelling == null)
+            {
+                <p>Totaal bedrag : € 0,00</p>
+            }
+            else
+            {
+                <p>Totaal bedrag incl. btw : € @Model.NieuweBestelling.Totaalprijs.ToString("0.00")</p>
+            }
+        </div>
+        <div class="d-flex justify-content-between">
+            <div>
+                <a asp-action="AddBestellingDetails" asp-route-id="@Model.NieuweBestelling.BestellingID" class="btn btn-primary buttonFunction spacingButtonBig">Verdergaan</a>
+            </div>
+            <div>
+                <a asp-action="Annuleren" class="btn btn-warning buttonFunction spacingButtonBig">Annuleer</a>
+            </div>
+        </div>
+    </div>
+    </div>

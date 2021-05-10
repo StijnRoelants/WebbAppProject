@@ -1,0 +1,42 @@
+﻿@model Webshop_CookInStyle.ViewModels.IndexAdminSettingsVM
+
+@{
+    ViewData["Title"] = "Bestelbonnummering";
+}
+<div class="container">
+    <h1>Bestelbonnummer aanpassen</h1>
+    <br />
+    <p class="font-weight-bold">Bestelbonnummer mag niet lager zijn al een bestaand nummer en moet 2 alfabetische tekens bevatten </p>
+    <hr />
+
+    @if (ViewBag.Visibility == true)
+    {
+        <div class="alert alert-danger">
+            <p>@ViewBag.ErrorMessage</p>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="EditNummeringBestelbon">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Factuurfirma.FactuurfirmaID" />
+                <div class="form-group">
+                    <label asp-for="Factuurfirma.Bestelbonnummering" class="control-label"></label>
+                    <input asp-for="Factuurfirma.Bestelbonnummering" class="form-control" />
+                    <span asp-validation-for="Factuurfirma.Bestelbonnummering" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Opslaan" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <a asp-action="Index">Terug</a>
+    </div>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

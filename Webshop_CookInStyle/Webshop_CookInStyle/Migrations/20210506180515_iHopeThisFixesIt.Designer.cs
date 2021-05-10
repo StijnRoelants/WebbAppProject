@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Webshop_CookInStyle.Data;
 
 namespace Webshop_CookInStyle.Migrations
 {
     [DbContext(typeof(WebshopContext))]
-    partial class WebshopContextModelSnapshot : ModelSnapshot
+    [Migration("20210506180515_iHopeThisFixesIt")]
+    partial class iHopeThisFixesIt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -233,9 +235,6 @@ namespace Webshop_CookInStyle.Migrations
 
                     b.Property<string>("Bestelbonnummer")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsVoltooid")
-                        .HasColumnType("bit");
 
                     b.Property<string>("KlantFK")
                         .HasColumnType("nvarchar(450)");

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Webshop_CookInStyle.Data;
 
 namespace Webshop_CookInStyle.Migrations
 {
     [DbContext(typeof(WebshopContext))]
-    partial class WebshopContextModelSnapshot : ModelSnapshot
+    [Migration("20210502112632_AanpassingenFfEnBestelling")]
+    partial class AanpassingenFfEnBestelling
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -234,13 +236,16 @@ namespace Webshop_CookInStyle.Migrations
                     b.Property<string>("Bestelbonnummer")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsVoltooid")
-                        .HasColumnType("bit");
-
                     b.Property<string>("KlantFK")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("KlantId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("LeverAdresID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("LeverAdresID1")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Leverdatum")
@@ -254,9 +259,16 @@ namespace Webshop_CookInStyle.Migrations
 
                     b.HasKey("BestellingID");
 
-                    b.HasIndex("KlantFK");
+                    b.HasIndex("KlantFK")
+                        .IsUnique()
+                        .HasFilter("[KlantFK] IS NOT NULL");
 
-                    b.HasIndex("LeverAdresID");
+                    b.HasIndex("KlantId");
+
+                    b.HasIndex("LeverAdresID")
+                        .IsUnique();
+
+                    b.HasIndex("LeverAdresID1");
 
                     b.ToTable("Bestellingen");
                 });
@@ -309,6 +321,9 @@ namespace Webshop_CookInStyle.Migrations
                     b.Property<int>("BestellingID")
                         .HasColumnType("int");
 
+                    b.Property<int?>("BestellingID1")
+                        .HasColumnType("int");
+
                     b.Property<string>("BtwnummerFacFirma")
                         .HasColumnType("nvarchar(max)");
 
@@ -321,6 +336,9 @@ namespace Webshop_CookInStyle.Migrations
                     b.Property<int>("FactuurfirmaID")
                         .HasColumnType("int");
 
+                    b.Property<int?>("FactuurfirmaID1")
+                        .HasColumnType("int");
+
                     b.Property<string>("Factuurnummer")
                         .HasColumnType("nvarchar(max)");
 
@@ -328,6 +346,9 @@ namespace Webshop_CookInStyle.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("KlantFK")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("KlantId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("NaamKlant")
@@ -341,11 +362,21 @@ namespace Webshop_CookInStyle.Migrations
 
                     b.HasKey("FactuurID");
 
-                    b.HasIndex("BestellingID");
+                    b.HasIndex("BestellingID")
+                        .IsUnique();
 
-                    b.HasIndex("FactuurfirmaID");
+                    b.HasIndex("BestellingID1");
 
-                    b.HasIndex("KlantFK");
+                    b.HasIndex("FactuurfirmaID")
+                        .IsUnique();
+
+                    b.HasIndex("FactuurfirmaID1");
+
+                    b.HasIndex("KlantFK")
+                        .IsUnique()
+                        .HasFilter("[KlantFK] IS NOT NULL");
+
+                    b.HasIndex("KlantId");
 
                     b.ToTable("Facturen");
                 });
@@ -570,7 +601,13 @@ namespace Webshop_CookInStyle.Migrations
                     b.Property<string>("KlantFK")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("KlantId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("LandID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("LandID1")
                         .HasColumnType("int");
 
                     b.Property<string>("Omschrijving")
@@ -579,16 +616,29 @@ namespace Webshop_CookInStyle.Migrations
                     b.Property<int>("PostcodeID")
                         .HasColumnType("int");
 
+                    b.Property<int?>("PostcodeID1")
+                        .HasColumnType("int");
+
                     b.Property<string>("Straat")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("LeverAdresID");
 
-                    b.HasIndex("KlantFK");
+                    b.HasIndex("KlantFK")
+                        .IsUnique()
+                        .HasFilter("[KlantFK] IS NOT NULL");
 
-                    b.HasIndex("LandID");
+                    b.HasIndex("KlantId");
 
-                    b.HasIndex("PostcodeID");
+                    b.HasIndex("LandID")
+                        .IsUnique();
+
+                    b.HasIndex("LandID1");
+
+                    b.HasIndex("PostcodeID")
+                        .IsUnique();
+
+                    b.HasIndex("PostcodeID1");
 
                     b.ToTable("LeverAdressen");
                 });
@@ -749,35 +799,55 @@ namespace Webshop_CookInStyle.Migrations
             modelBuilder.Entity("Webshop_CookInStyle.Models.Bestelling", b =>
                 {
                     b.HasOne("Webshop_CookInStyle.Models.Klant", "Klant")
-                        .WithMany("Bestellingen")
-                        .HasForeignKey("KlantFK")
+                        .WithOne()
+                        .HasForeignKey("Webshop_CookInStyle.Models.Bestelling", "KlantFK")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Webshop_CookInStyle.Models.LeverAdres", "LeverAdres")
+                    b.HasOne("Webshop_CookInStyle.Models.Klant", null)
                         .WithMany("Bestellingen")
-                        .HasForeignKey("LeverAdresID")
+                        .HasForeignKey("KlantId");
+
+                    b.HasOne("Webshop_CookInStyle.Models.LeverAdres", "LeverAdres")
+                        .WithOne()
+                        .HasForeignKey("Webshop_CookInStyle.Models.Bestelling", "LeverAdresID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Webshop_CookInStyle.Models.LeverAdres", null)
+                        .WithMany("Bestellingen")
+                        .HasForeignKey("LeverAdresID1");
                 });
 
             modelBuilder.Entity("Webshop_CookInStyle.Models.Factuur", b =>
                 {
                     b.HasOne("Webshop_CookInStyle.Models.Bestelling", "Bestelling")
-                        .WithMany("Facturen")
-                        .HasForeignKey("BestellingID")
+                        .WithOne()
+                        .HasForeignKey("Webshop_CookInStyle.Models.Factuur", "BestellingID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Webshop_CookInStyle.Models.Bestelling", null)
+                        .WithMany("Facturen")
+                        .HasForeignKey("BestellingID1");
 
                     b.HasOne("Webshop_CookInStyle.Models.Factuurfirma", "Factuurfirma")
-                        .WithMany("Facturen")
-                        .HasForeignKey("FactuurfirmaID")
+                        .WithOne()
+                        .HasForeignKey("Webshop_CookInStyle.Models.Factuur", "FactuurfirmaID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Webshop_CookInStyle.Models.Klant", "Klant")
+                    b.HasOne("Webshop_CookInStyle.Models.Factuurfirma", null)
                         .WithMany("Facturen")
-                        .HasForeignKey("KlantFK")
+                        .HasForeignKey("FactuurfirmaID1");
+
+                    b.HasOne("Webshop_CookInStyle.Models.Klant", "Klant")
+                        .WithOne()
+                        .HasForeignKey("Webshop_CookInStyle.Models.Factuur", "KlantFK")
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Webshop_CookInStyle.Models.Klant", null)
+                        .WithMany("Facturen")
+                        .HasForeignKey("KlantId");
                 });
 
             modelBuilder.Entity("Webshop_CookInStyle.Models.Factuurfirma", b =>
@@ -828,21 +898,33 @@ namespace Webshop_CookInStyle.Migrations
             modelBuilder.Entity("Webshop_CookInStyle.Models.LeverAdres", b =>
                 {
                     b.HasOne("Webshop_CookInStyle.Models.Klant", "Klant")
-                        .WithMany("LeverAdressen")
-                        .HasForeignKey("KlantFK")
+                        .WithOne()
+                        .HasForeignKey("Webshop_CookInStyle.Models.LeverAdres", "KlantFK")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Webshop_CookInStyle.Models.Land", "Land")
+                    b.HasOne("Webshop_CookInStyle.Models.Klant", null)
                         .WithMany("LeverAdressen")
-                        .HasForeignKey("LandID")
+                        .HasForeignKey("KlantId");
+
+                    b.HasOne("Webshop_CookInStyle.Models.Land", "Land")
+                        .WithOne()
+                        .HasForeignKey("Webshop_CookInStyle.Models.LeverAdres", "LandID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Webshop_CookInStyle.Models.Postcode", "Postcode")
+                    b.HasOne("Webshop_CookInStyle.Models.Land", null)
                         .WithMany("LeverAdressen")
-                        .HasForeignKey("PostcodeID")
+                        .HasForeignKey("LandID1");
+
+                    b.HasOne("Webshop_CookInStyle.Models.Postcode", "Postcode")
+                        .WithOne()
+                        .HasForeignKey("Webshop_CookInStyle.Models.LeverAdres", "PostcodeID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Webshop_CookInStyle.Models.Postcode", null)
+                        .WithMany("LeverAdressen")
+                        .HasForeignKey("PostcodeID1");
                 });
 
             modelBuilder.Entity("Webshop_CookInStyle.Models.Product", b =>

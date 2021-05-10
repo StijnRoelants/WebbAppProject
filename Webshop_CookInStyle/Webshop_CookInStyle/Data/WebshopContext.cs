@@ -39,8 +39,54 @@ namespace Webshop_CookInStyle.Data
            
             modelBuilder.Entity<Klant>().ToTable("Klanten");
 
+            modelBuilder.Entity<LeverAdres>()
+                .HasOne(x => x.Klant)
+                .WithMany(x => x.LeverAdressen).OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<LeverAdres>()
+                .HasOne(x => x.Land)
+                .WithMany(x => x.LeverAdressen).OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<LeverAdres>()
+                .HasOne(x => x.Postcode)
+                .WithMany(x => x.LeverAdressen).OnDelete(DeleteBehavior.Restrict);
+
+            // Bestelling
+            modelBuilder.Entity<Bestelling>()
+                .HasOne(x => x.Klant)
+                .WithMany(x => x.Bestellingen).OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Bestelling>()
+                .HasOne(x => x.LeverAdres)
+                .WithMany(x => x.Bestellingen).OnDelete(DeleteBehavior.Restrict);
+
+            // Factuur
+            modelBuilder.Entity<Factuur>()
+                .HasOne(x => x.Klant)
+                .WithMany(x => x.Facturen).OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Factuur>()
+                .HasOne(x => x.Bestelling)
+                .WithMany(x => x.Facturen).OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Factuur>()
+                .HasOne(x => x.Factuurfirma)
+                .WithMany(x => x.Facturen).OnDelete(DeleteBehavior.Restrict);
+
+            // Many to Many
+            modelBuilder.Entity<AllergeenProduct>()
+                .HasKey(ap => new { ap.AllergeenID, ap.ProductID });
+            modelBuilder.Entity<AllergeenProduct>()
+                .HasOne(ap => ap.Allergeen)
+                .WithMany(a => a.Producten)
+                .HasForeignKey(ap => ap.AllergeenID);
+            modelBuilder.Entity<AllergeenProduct>()
+                .HasOne(ap => ap.Product)
+                .WithMany(p => p.Allergenen)
+                .HasForeignKey(ap => ap.ProductID);
 
             // LeverAdres
+            /*
             modelBuilder.Entity<LeverAdres>()
                 .HasOne(x => x.Klant)
                 .WithOne().OnDelete(DeleteBehavior.Cascade);
@@ -85,7 +131,7 @@ namespace Webshop_CookInStyle.Data
             modelBuilder.Entity<AllergeenProduct>()
                 .HasOne(ap => ap.Product)
                 .WithMany(p => p.Allergenen)
-                .HasForeignKey(ap => ap.ProductID);
+                .HasForeignKey(ap => ap.ProductID);*/
         }
 
 

@@ -30,7 +30,8 @@ namespace Webshop_CookInStyle.Conrollers
                     Naam = "Uw bedrijfsnaam",
                     PostcodeID = 1684,
                     LandID = 1,
-                    Factuurnummering = "VF20210001"
+                    Factuurnummering = "VF20210001",
+                    Bestelbonnummering = "BB20210001"
                 };
 
                 _context.Add(firma);
@@ -57,7 +58,7 @@ namespace Webshop_CookInStyle.Conrollers
             }
 
             IndexAdminSettingsVM viewModel = new IndexAdminSettingsVM();
-            viewModel.Factuurfirma = await _context.FactuurFirmas.FindAsync(id);
+            viewModel.Factuurfirma = await _context.FactuurFirmas.Where(x => x.FactuurfirmaID == id).Include(x => x.Postcode).Include(x => x.Land).FirstOrDefaultAsync();
             if (viewModel.Factuurfirma == null)
             {
                 return NotFound();
@@ -76,12 +77,14 @@ namespace Webshop_CookInStyle.Conrollers
             }
             if (ModelState.IsValid)
             {
+                Factuurfirma aangepast = await _context.FactuurFirmas.Where(x => x.FactuurfirmaID == id).Include(x => x.Postcode).Include(x => x.Land).FirstOrDefaultAsync();
                 string error = FactuurnummeringCheck(viewModel);
                 if (error == "")
                 {
                     try
                     {
-                        _context.Update(viewModel.Factuurfirma);
+                        aangepast.Factuurnummering = viewModel.Factuurfirma.Factuurnummering;
+                        _context.Update(aangepast);
                         await _context.SaveChangesAsync();
                         ViewBag.Visibility = false;
                     }
@@ -109,17 +112,83 @@ namespace Webshop_CookInStyle.Conrollers
             return View(viewModel);
         }
 
+        public async Task<IActionResult> EditNummeringBestelbon(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            IndexAdminSettingsVM viewModel = new IndexAdminSettingsVM();
+            viewModel.Factuurfirma = await _context.FactuurFirmas.Where(x => x.FactuurfirmaID == id).Include(x => x.Postcode).Include(x => x.Land).FirstOrDefaultAsync();
+            if (viewModel.Factuurfirma == null)
+            {
+                return NotFound();
+            }
+            return View(viewModel);
+        }
+
+        // Nummering aanpassen
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditNummeringBestelbon(int id, IndexAdminSettingsVM viewModel)
+        {
+            if (id != viewModel.Factuurfirma.FactuurfirmaID)
+            {
+                return NotFound();
+            }
+            if (ModelState.IsValid)
+            {
+                Factuurfirma aangepast = await _context.FactuurFirmas.Where(x => x.FactuurfirmaID == id).Include(x => x.Postcode).Include(x => x.Land).FirstOrDefaultAsync();
+                string error = BestelbonnummeringCheck(viewModel);
+                if (error == "")
+                {
+                    try
+                    {
+                        aangepast.Bestelbonnummering = viewModel.Factuurfirma.Bestelbonnummering;
+                        _context.Update(aangepast);
+                        await _context.SaveChangesAsync();
+                        ViewBag.Visibility = false;
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!NummeringCheck(viewModel.Factuurfirma.FactuurfirmaID))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = error;
+                    ViewBag.Visibility = true;
+                    viewModel.Factuurfirma = _context.FactuurFirmas.Where(x => x.FactuurfirmaID == viewModel.Factuurfirma.FactuurfirmaID).FirstOrDefault();
+                    return View("EditNummeringBestelbon", viewModel);
+                }
+            }
+            return View(viewModel);
+        }
+
         // Onderstaande methode gaat nakijken of de opbouw correct is.
         // Factuurnummers mogen nooit lager zijn als bestaande factuurnummers om problemen met factuurnummering te voorkomen!
         private string FactuurnummeringCheck(IndexAdminSettingsVM viewModel)
         {
             string error = "";
             int nieuweNummering = 0;
-            var bedrijfsgegevens = _context.FactuurFirmas.Where(x => x.FactuurfirmaID == viewModel.Factuurfirma.FactuurfirmaID).FirstOrDefault();
-            int oudeNummering = int.Parse(bedrijfsgegevens.Factuurnummering.Substring(2));
+            var bedrijfsgegevens = _context.FactuurFirmas.AsNoTracking().Where(x => x.FactuurfirmaID == viewModel.Factuurfirma.FactuurfirmaID).Include(x => x.Land).Include(x => x.Postcode).FirstOrDefault();
+            int oudeNummering = 0;
+            if (bedrijfsgegevens.Factuurnummering != null)
+            {
+                int.TryParse(bedrijfsgegevens.Factuurnummering.Substring(2), out oudeNummering);
+            }
             if (viewModel.Factuurfirma.Factuurnummering == null)
             {
-                return error = $"Gelieve een nieuw factuurnummering op te geven!";
+                return error = $"Gelieve een nieuwe factuurnummering op te geven!";
             }
             else
             {
@@ -138,6 +207,41 @@ namespace Webshop_CookInStyle.Conrollers
                 {
                     return error = $"{viewModel.Factuurfirma.Factuurnummering}: Factuurnummer mag niet meer dan 2 letters bevatten";
 
+                }
+
+            }
+        }
+
+        private string BestelbonnummeringCheck(IndexAdminSettingsVM viewModel)
+        {
+            string error = "";
+            int nieuweNummering = 0;
+            var bedrijfsgegevens = _context.FactuurFirmas.AsNoTracking().Where(x => x.FactuurfirmaID == viewModel.Factuurfirma.FactuurfirmaID).Include(x => x.Land).Include(x => x.Postcode).FirstOrDefault();
+            int oudeNummering = 0;
+            if (bedrijfsgegevens.Bestelbonnummering != null)
+            {
+                int.TryParse(bedrijfsgegevens.Bestelbonnummering.Substring(2), out oudeNummering);
+            }
+            if (viewModel.Factuurfirma.Bestelbonnummering == null)
+            {
+                return error = $"Gelieve een nieuwe Bestelbonnummer op te geven!";
+            }
+            else
+            {
+                if (int.TryParse(viewModel.Factuurfirma.Bestelbonnummering.Substring(2), out nieuweNummering))
+                {
+                    if (oudeNummering < nieuweNummering)
+                    {
+                        return error;
+                    }
+                    else
+                    {
+                        return error = $"Nieuwe Bestelbonnummer ({viewModel.Factuurfirma.Bestelbonnummering}) kan niet lager zijn als vorige ({bedrijfsgegevens.Bestelbonnummering})";
+                    }
+                }
+                else
+                {
+                    return error = $"{viewModel.Factuurfirma.Bestelbonnummering}: Bestelbonnummer mag niet meer dan 2 letters bevatten";
                 }
 
             }

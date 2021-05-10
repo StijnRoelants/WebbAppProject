@@ -22,5 +22,7 @@ namespace Webshop_CookInStyle.ViewModels
         public IEnumerable<int> GeselecteerdeAllergenen  { get; set; }
         public SelectList BtwTypes { get; set; }
         public SelectList Eenheden { get; set; }
+        public string Bericht { get; set; }
+        public bool BerichIsError { get; set; }
     }
 }

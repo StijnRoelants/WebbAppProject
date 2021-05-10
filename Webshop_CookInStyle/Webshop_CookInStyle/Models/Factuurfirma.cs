@@ -23,6 +23,7 @@ namespace Webshop_CookInStyle.Models
         public string Email { get; set; }
         public string Telefoon { get; set; }
         public string Factuurnummering { get; set; }
+        public string Bestelbonnummering { get; set; }
         // FK Postcode
         public int PostcodeID { get; set; }
         // FK Postcode

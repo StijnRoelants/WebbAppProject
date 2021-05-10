@@ -160,6 +160,9 @@ namespace Webshop_CookInStyle.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
+                    LeverAdres leverAdres = new LeverAdres { KlantFK = user.Id, LandID = user.LandID, PostcodeID = user.PostcodeID, Straat = user.StraatEnNummer, Omschrijving = "Standaard" };
+                    _context.Add(leverAdres);
+                    _context.SaveChanges();
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

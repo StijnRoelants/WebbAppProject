@@ -13,11 +13,13 @@ namespace Webshop_CookInStyle.Models
     {
         [Key]
         public int BestellingID { get; set; }
+        public string Bestelbonnummer { get; set; }
         public DateTime BestelDatum { get; set; }
         public DateTime Leverdatum { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Totaalprijs { get; set; }
         public string Opmerking { get; set; }
+        public bool IsVoltooid { get; set; }
 
         // FK Leveradres
         public int LeverAdresID { get; set; }

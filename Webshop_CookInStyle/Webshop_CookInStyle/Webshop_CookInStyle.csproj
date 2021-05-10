@@ -25,6 +25,8 @@
     <Compile Remove="Migrations\20210415125427_ManyToMany.Designer.cs" />
     <Compile Remove="Migrations\20210419202712_ManyToMany.cs" />
     <Compile Remove="Migrations\20210419202712_ManyToMany.Designer.cs" />
+    <Compile Remove="Migrations\20210506175457_Leveradressen.cs" />
+    <Compile Remove="Migrations\20210506175457_Leveradressen.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

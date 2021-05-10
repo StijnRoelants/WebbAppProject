@@ -76,16 +76,18 @@ namespace Webshop_CookInStyle.Conrollers
                     product.Allergenen.AddRange(nieuweAllergenen);
                     _context.Update(product);
                     await _context.SaveChangesAsync();
-                    ViewBag.ErrorMessage = $"";
-                    ViewBag.Visibility = false;
-                    return RedirectToAction(nameof(Index));
+                    IndexAdminProductenVM vm = new IndexAdminProductenVM();
+                    LoadIn(vm);
+                    vm.Bericht = $"Product: {product.Naam} werd succesvol opgeslagen!";
+                    vm.BerichIsError = false;
+                    return View("Index",vm);
                 }
                 else
                 {
                     ProductType Test = _context.ProductTypes.Where(x => x.ProductTypeID == viewModel.Product.ProductTypeID).FirstOrDefault();
                     string PTNaam = Test.Omschrijving;
-                    ViewBag.ErrorMessage = $"Er bestaat reeds een product met de naam: {viewModel.Product.Naam} en producttype: {PTNaam}";
-                    ViewBag.Visibility = true;
+                    viewModel.Bericht = $"Er bestaat reeds een product met de naam: {viewModel.Product.Naam} en producttype: {PTNaam}";
+                    viewModel.BerichIsError = true;
                     LoadIn(viewModel);
                     return View("Index",viewModel);
                 }
@@ -230,13 +232,15 @@ namespace Webshop_CookInStyle.Conrollers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditProduct(int id, EditProductenVM viewModel)
         {
+            Product aangepastProduct = null;
+            IndexAdminProductenVM vm = new IndexAdminProductenVM();
             if (id != viewModel.Product.ProductID)
             {
                 return NotFound();
             }
             if (ModelState.IsValid)
             {
-                Product aangepastProduct = await _context.Producten
+                aangepastProduct = await _context.Producten
                     .Include(x => x.Allergenen)
                     .Include(x => x.ProductType)
                     .Include(x => x.Btwtype)
@@ -265,17 +269,26 @@ namespace Webshop_CookInStyle.Conrollers
                         AllergeenID = allergeenID
                     });
                 }
+                if (viewModel.GeselecteerdeAllergenen.Count() > 0)
+                {
+                    aangepastProduct.Allergenen
+                                    .RemoveAll(a => !allergeenProducts.Contains(a));
+                    aangepastProduct.Allergenen.AddRange(
+                        allergeenProducts.Where(x => !aangepastProduct.Allergenen.Contains(x)));
+                }
 
-                aangepastProduct.Allergenen
-                    .RemoveAll(a => !allergeenProducts.Contains(a));
-                aangepastProduct.Allergenen.AddRange(
-                    allergeenProducts.Where(x => !aangepastProduct.Allergenen.Contains(x)));
                 _context.Update(aangepastProduct);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Index));
+                LoadIn(vm);
+                vm.BerichIsError = false;
+                vm.Bericht = $"Product: {aangepastProduct.Naam} werd succesvol aangepast!";
+                return View("Index", vm);
             }
-            return View("Index", viewModel);
+            LoadIn(vm);
+            vm.BerichIsError = true;
+            vm.Bericht = $"Product: {aangepastProduct.Naam} is niet aangepast!";
+            return View("Index", vm);
         }
 
         #endregion
