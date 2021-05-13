@@ -467,7 +467,6 @@ namespace Webshop_CookInStyle.Conrollers
         }
 
 
-
         #endregion
 
         #region Bestelling details
@@ -478,6 +477,81 @@ namespace Webshop_CookInStyle.Conrollers
             return View(viewModel);
         }
 
+        // bestelling wordt rechtstreeks op pagina verwijderd, eerst check via Javascript
+        public async Task<IActionResult> DeleteBestelling(int id)
+        {
+            Bestelling teVerwijderen = await _context.Bestellingen.Where(x => x.BestellingID == id).FirstOrDefaultAsync();
+            string nummerDeleted = teVerwijderen.Bestelbonnummer;
+            _context.Remove(teVerwijderen);
+            _context.SaveChanges();
+
+            IndexAdminBestellingenVM vm = new IndexAdminBestellingenVM();
+            vm.Bestellingen = await _context.Bestellingen.Include(x => x.Klant).Where(x => x.Leverdatum >= DateTime.Now).OrderBy(x => x.Leverdatum).ThenBy(x => x.Bestelbonnummer).ToListAsync();
+            vm.ZoekenDatumVan = DateTime.Now;
+            vm.ZoekenDatumTot = DateTime.Now.AddDays(15);
+            vm.Bericht = $"Bestelling {nummerDeleted} werd succesvol verwijderd!";
+            return View("Index", vm);
+        }
+
+        // Inladen van klant gegevens van een bestelling, voor aanpassing velden
+        public async Task<IActionResult> EditKlant(int id)
+        {
+            EditBestellingVM viewModel = new EditBestellingVM();
+            viewModel.Bestelling = await _context.Bestellingen.Where(x => x.BestellingID == id).Include(x => x.Klant.Postcode).Include(x => x.Klant.Land).Include(x => x.LeverAdres).FirstOrDefaultAsync();
+            Klant klant = await _context.Klanten.Where(x => x.Id == viewModel.Bestelling.KlantFK).FirstOrDefaultAsync();
+            viewModel.Postcodes = new SelectList(await _context.Postcodes.OrderBy(x => x.Nummer).ToListAsync(), "PostcodeID", "Weergave");
+            viewModel.Landen = new SelectList(await _context.Landen.OrderBy(x => x.Naam).ToListAsync(), "LandID", "Naam");
+            viewModel.Leveradressen = new SelectList(await _context.LeverAdressen.Where(x => x.KlantFK == klant.Id).OrderBy(x => x.Omschrijving).ToListAsync(), "LeverAdresID", "Weergave");
+            viewModel.LeverAdres = new LeverAdres();
+            return View(viewModel);
+        }
+
+        // Aanpassingen opslaan met een bestaand leveradres
+        public async Task<IActionResult> AanpassingOpslaan(EditBestellingVM viewModel)
+        {
+            Bestelling bestelling = await _context.Bestellingen.Where(x => x.BestellingID == viewModel.Bestelling.BestellingID).FirstOrDefaultAsync();
+            bestelling.Opmerking = viewModel.Bestelling.Opmerking;
+            bestelling.LeverAdresID = viewModel.Bestelling.LeverAdresID;
+            if (viewModel.AanTePassen > DateTime.Now)
+            {
+                bestelling.Leverdatum = viewModel.Bestelling.Leverdatum;
+            }
+            _context.Update(bestelling);
+            _context.SaveChanges();
+
+            IndexAdminBestellingenVM vm = new IndexAdminBestellingenVM();
+            vm.Bestellingen = await _context.Bestellingen.Include(x => x.Klant).Where(x => x.Leverdatum >= DateTime.Now).OrderBy(x => x.Leverdatum).ThenBy(x => x.Bestelbonnummer).ToListAsync();
+            vm.ZoekenDatumVan = DateTime.Now;
+            vm.ZoekenDatumTot = DateTime.Now.AddDays(15);
+            vm.Bericht = $"Bestelling {bestelling.Bestelbonnummer} werd succesvol aangepast!";
+            return View("Index", vm);
+        }
+
+        // Aanpassingen opslaan met een NIEUW leveradres
+        public async Task<IActionResult> NieuwAdres(EditBestellingVM viewModel)
+        {
+            Bestelling bestelling = await _context.Bestellingen.Where(x => x.BestellingID == viewModel.Bestelling.BestellingID).FirstOrDefaultAsync();
+            Klant klant = await _context.Klanten.Where(x => x.Id == bestelling.KlantFK).FirstOrDefaultAsync();
+            LeverAdres nieuwLeverAdres = new LeverAdres { KlantFK = klant.Id, Straat = viewModel.LeverAdres.Straat, Omschrijving = viewModel.LeverAdres.Omschrijving, PostcodeID = viewModel.LeverAdres.PostcodeID, LandID = viewModel.LeverAdres.LandID };
+            _context.Add(nieuwLeverAdres);
+            bestelling.Opmerking = viewModel.Bestelling.Opmerking;
+            bestelling.LeverAdres = nieuwLeverAdres;
+            if (viewModel.AanTePassen > DateTime.Now)
+            {
+                bestelling.Leverdatum = viewModel.Bestelling.Leverdatum;
+            }
+            _context.Update(bestelling);
+            _context.SaveChanges();
+
+            IndexAdminBestellingenVM vm = new IndexAdminBestellingenVM();
+            vm.Bestellingen = await _context.Bestellingen.Include(x => x.Klant).Where(x => x.Leverdatum >= DateTime.Now).OrderBy(x => x.Leverdatum).ThenBy(x => x.Bestelbonnummer).ToListAsync();
+            vm.ZoekenDatumVan = DateTime.Now;
+            vm.ZoekenDatumTot = DateTime.Now.AddDays(15);
+            vm.Bericht = $"Bestelling {bestelling.Bestelbonnummer} werd succesvol aangepast!";
+            return View("Index", vm);
+        }
+
+        // opbouw test
         public void ModelOpbouw(BestellingDetailsVM viewModel, int? id)
         {
             viewModel.Bestelling =  _context.Bestellingen.Where(x => x.BestellingID == id).Include(x => x.LeverAdres.Postcode).FirstOrDefault();
@@ -486,6 +560,7 @@ namespace Webshop_CookInStyle.Conrollers
             viewModel.LeverAdres = viewModel.Bestelling.LeverAdres;
         }
 
+        // Lijnen omvormen naar string voor weergave in detail
         private List<string> BestelijnenGenereren(int? id)
         {
             List<Bestellijn> lijnen = _context.Bestellijnen.Where(x => x.BestellingID == id).Include(x => x.Product.Eenheid).Include(x => x.Product.ProductType).OrderBy(x => x.Product.ProductType.Volgnummer).ToList();
@@ -500,6 +575,8 @@ namespace Webshop_CookInStyle.Conrollers
             }
             return Lijst;
         }
+
+
 
 
         #endregion

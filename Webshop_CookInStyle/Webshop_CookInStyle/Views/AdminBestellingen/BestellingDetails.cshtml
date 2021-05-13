@@ -4,9 +4,20 @@
     ViewData["Title"] = "Bestelling Details";
 }
 
+@section scripts{
+    <script src="~/js/DeleteConfirm.js"></script>
+}
+
+<form id="form1" runat="server">
+    <div>
+        <asp:Button OnClientClick="return CompareConfirm();"
+                    Text="Confirm" runat="server" onclick="Unnamed1_Click" />
+    </div>
+</form>
+
 <div class="container">
     <h1>Bestelling: @Model.Bestelling.Bestelbonnummer</h1>
-    <br />  
+    <br />
     <div class="row">
         <div class="col-lg-4">
             <h4>Klant gegevens</h4>
@@ -98,11 +109,28 @@
                 }
             </dl>
         </div>
-        <br />
-        <br />
-        <div>
-            <a asp-action="Index" class="btn btn-primary">Terug</a> <a asp-action="EditBestelling" asp-route-id="@Model.Bestelling.BestellingID" class="btn btn-primary" >Bestelling aanpassen</a> <a asp-action="Delete bestelling" asp-route-id="@Model.Bestelling.BestellingID" class="btn btn-danger">Bestelling verwijderen</a>
+    </div>
+    <br />
+    <br />
+    <div class="row">
+        <div class="col-lg-12">
+            <a asp-action="Index" class="btn btn-primary">Terug</a>
+            <a asp-action="EditKlant" asp-route-id="@Model.Bestelling.BestellingID" class="btn btn-primary">Klantgegevens aanpassen</a>
+            <a asp-action="EditBestelling" asp-route-id="@Model.Bestelling.BestellingID" class="btn btn-primary">Bestelling aanpassen</a>
         </div>
-        <br />
+    </div>
+    <br />
+    <br />
+    <div class="row">
+        <div class="col-lg-12">
+            <span id="deleteSpan">
+                <a href="#" onclick="confirmDelete(true)" class="btn btn-danger">Bestelling verwijderen</a>
+            </span>
+            <span id="confirmDeleteSpan" style="display:none">
+                <span><strong>Bent u zeker dat u bestelling @Model.Bestelling.Bestelbonnummer wilt verwijderen?</strong></span>
+                <a asp-action="DeleteBestelling" asp-route-id="@Model.Bestelling.BestellingID" class="btn btn-danger">Bevestig</a>
+                <a href="#" onclick="confirmDelete(false)" class="btn btn-primary">Annuleer</a>
+            </span>
+        </div>
     </div>
 </div>

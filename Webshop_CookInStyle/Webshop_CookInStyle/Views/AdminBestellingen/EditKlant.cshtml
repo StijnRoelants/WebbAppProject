@@ -1,0 +1,82 @@
+﻿@model Webshop_CookInStyle.ViewModels.EditBestellingVM
+
+@{
+    ViewData["Title"] = "Bestelling | Klantgegevens";
+}
+
+<style>
+    .heightBoxSetter {
+        height: 120px;
+    }
+</style>
+
+<h1>Klantgegevens aanpassen</h1>
+
+
+<div class="row">
+    <div class="col-lg-2"></div>
+    <div class="col-lg-4">
+        <h4>Aanpassen met een bestaand leveradres</h4>
+        <form asp-action="AanpassingOpslaan">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Bestelling.BestellingID" />
+            <div class="form-group">
+                <label asp-for="Bestelling.LeverAdresID" class="control-label">Producttype</label>
+                <select asp-for="Bestelling.LeverAdresID" class="form-control" asp-items="Model.Leveradressen"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="AanTePassen" class="control-label">Leverdatum, enkel aanpassen indien nodi</label>
+                <input asp-for="AanTePassen" class="form-control" />
+                <span asp-validation-for="AanTePassen" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Bestelling.Opmerking" class="control-label"></label>
+                <textarea asp-for="Bestelling.Opmerking" class="form-control heightBoxSetter"></textarea>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Bestelling opslaan" asp-action="AanpassingOpslaan" class="btn btn-primary" />
+            </div>
+        </form>
+        <br />
+        <h4>Aanpassen met een nieuw leveradres</h4>
+        <form asp-action="NieuwAdres">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Bestelling.BestellingID" />
+            <div class="form-group">
+                <label asp-for="AanTePassen" class="control-label">Leverdatum, enkel aanpassen indien nodi</label>
+                <input asp-for="AanTePassen" class="form-control" />
+                <span asp-validation-for="AanTePassen" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Bestelling.Opmerking" class="control-label"></label>
+                <textarea asp-for="Bestelling.Opmerking" class="form-control heightBoxSetter"></textarea>
+            </div>
+            <div class="form-group">
+                <label asp-for="LeverAdres.Omschrijving" class="control-label"></label>
+                <input asp-for="LeverAdres.Omschrijving" class="form-control" />
+                <span asp-validation-for="LeverAdres.Omschrijving" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LeverAdres.Straat" class="control-label">Straat en nummer</label>
+                <input asp-for="LeverAdres.Straat" class="form-control" />
+                <span asp-validation-for="LeverAdres.Straat" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LeverAdres.PostcodeID" class="control-label"></label>
+                <select asp-for="LeverAdres.PostcodeID" class="form-control" asp-items="Model.Postcodes"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="LeverAdres.LandID" class="control-label"></label>
+                <select asp-for="LeverAdres.LandID" class="form-control" asp-items="Model.Landen"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Opslaan met nieuw leveradres" asp-action="NieuwAdres" class="btn btn-primary" />
+            </div>
+        </form>
+        <a asp-action="Index" class="btn btn-primary">Terug</a>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -15,6 +15,7 @@ namespace Webshop_CookInStyle.Models
         public int BestellingID { get; set; }
         public string Bestelbonnummer { get; set; }
         public DateTime BestelDatum { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:G}")]
         public DateTime Leverdatum { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Totaalprijs { get; set; }
