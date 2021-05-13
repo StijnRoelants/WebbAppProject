@@ -8,38 +8,61 @@
     .spacingButtons {
         margin: 10px;
     }
+
     .sizeProductFont {
-        font-size: 15px;
+        font-size: 16px;
     }
 
     .spacingButtonBig {
         width: 400px;
         margin: 10px;
     }
+
+    .formAantal {
+        width: 15vw;
+    }
 </style>
 
 <h1>Bestelling Plaatsen</h1>
 <br />
+<div class="row d-flex justify-content-center">
+    <form asp-controller="AdminBestellingen" asp-action="ProductZoeken" method="get">
+        <div class="form-actions no-color">
+            <p>
+                Producten zoeken op naam of type zoeken:
+                <input asp-for="Zoekopdracht" />
+                <input type="submit" value="Zoeken" class="btn btn-primary" />
+                <a asp-controller="AdminBestellingen" asp-action="AddBestelling" class="btn btn-primary">Volledige lijst</a>
+            </p>
+        </div>
+    </form>
+</div>
+<br />
 <div class="row">
-    <div class="col-lg-6">
+    <div class="col-lg-1"></div>
+    <div class="col-lg-4">
         @foreach (var product in Model.Producten)
         {
-            <div class="d-flex justify-content-between">
-                <div >
-                    <p class="sizeProductFont">@product.Naam - @product.ProductType.Omschrijving - € @product.Eenheidsprijs / @product.Eenheid.Omschrijving </p>
+            <form asp-action="Verhoog">
+                <div class="control-label">
+                    <label class="sizeProductFont text-center">@product.Naam - @product.ProductType.Omschrijving - € @product.Eenheidsprijs / @product.Eenheid.Omschrijving </label>
                 </div>
-                <div >
-                    <a asp-action="Verminder" asp-route-id="@product.ProductID" class="btn btn-primary buttonFunction spacingButtons">-</a> <a asp-action="Verhoog" asp-route-id="@product.ProductID" class="btn btn-primary buttonFunction spacingButtons">+</a>
+                <div class="form-group">
+                    <input asp-for="Aantal" class="form-control formAantal" />
                 </div>
-            </div>
+                <div class="form-group">
+                    <input type="submit" value="Verminder" asp-action="Verminder" asp-route-id="@product.ProductID" class="btn btn-primary buttonFunction spacingButtons" />
+                    <input type="submit" value="Toevoegen" asp-action="Verhoog" asp-route-id="@product.ProductID" class="btn btn-primary buttonFunction spacingButtons" />
+                </div>
+                <hr />
+            </form>
             <br />
-
         }
     </div>
     <div class="col-lg-1">
-        </div>
+    </div>
     <div class="col-lg-5">
-        <p> Bestellling: @Model.NieuweBestelling.Bestelbonnummer </p>
+        <h4> Bestellling: @Model.NieuweBestelling.Bestelbonnummer </h4>
         <table class="table">
             <thead>
                 <tr>
@@ -73,8 +96,8 @@
                 }
             </tbody>
         </table>
-    <div>
-    </div>
+        <div>
+        </div>
         <div>
             @if (Model.NieuweBestelling == null)
             {
@@ -85,13 +108,13 @@
                 <p>Totaal bedrag incl. btw : € @Model.NieuweBestelling.Totaalprijs.ToString("0.00")</p>
             }
         </div>
-        <div class="d-flex justify-content-between">
-            <div>
-                <a asp-action="AddBestellingDetails" asp-route-id="@Model.NieuweBestelling.BestellingID" class="btn btn-primary buttonFunction spacingButtonBig">Verdergaan</a>
-            </div>
-            <div>
-                <a asp-action="Annuleren" class="btn btn-warning buttonFunction spacingButtonBig">Annuleer</a>
-            </div>
+
+        <div class="row d-flex justify-content-center">
+            <a asp-action="AddBestellingDetails" asp-route-id="@Model.NieuweBestelling.BestellingID" class="btn btn-primary buttonFunction spacingButtonBig">Verdergaan</a>
+        </div>
+        <div class="row d-flex justify-content-center">
+            <a asp-action="Annuleren" class="btn btn-warning buttonFunction spacingButtonBig">Annuleer</a>
+
         </div>
     </div>
-    </div>
+</div>

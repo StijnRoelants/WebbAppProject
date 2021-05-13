@@ -46,6 +46,10 @@ namespace Webshop_CookInStyle.Models
         [NotMapped, DisplayName("Naam")]
         public string NaamWeergave => $"{Achternaam} {Voornaam} - {StraatEnNummer}";
 
+        [NotMapped, DisplayName("Naam")]
+        public string NaamWeergaveSmall => $"{Achternaam} {Voornaam}";
+
+
 
 
         // Methodes

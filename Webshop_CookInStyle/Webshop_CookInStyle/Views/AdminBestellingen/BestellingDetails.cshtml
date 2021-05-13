@@ -1,0 +1,108 @@
+﻿@model Webshop_CookInStyle.ViewModels.BestellingDetailsVM
+
+@{
+    ViewData["Title"] = "Bestelling Details";
+}
+
+<div class="container">
+    <h1>Bestelling: @Model.Bestelling.Bestelbonnummer</h1>
+    <br />  
+    <div class="row">
+        <div class="col-lg-4">
+            <h4>Klant gegevens</h4>
+            <hr />
+            <dl>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Klant.Naam)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Klant.NaamWeergaveSmall)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Klant.StraatEnNummer)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Klant.StraatEnNummer)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Klant.Postcode)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Klant.Postcode.Weergave)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Klant.Email)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Klant.Email)
+                </dd>
+            </dl>
+            <br />
+            <h4>Leveradres</h4>
+            <hr />
+            <dl>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.LeverAdres.Omschrijving)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.LeverAdres.Omschrijving)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.LeverAdres.Straat)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.LeverAdres.Straat)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.LeverAdres.Postcode)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.LeverAdres.Postcode.Weergave)
+                </dd>
+            </dl>
+        </div>
+        <div class="col-lg-1"></div>
+        <div class="col-lg-7">
+            <h4>Bestelling gegevens</h4>
+            <hr />
+            <dl>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Bestelling.BestelDatum)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Bestelling.BestelDatum)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Bestelling.Leverdatum)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Bestelling.Leverdatum)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Bestelling.Opmerking)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Bestelling.Opmerking)
+                </dd>
+                <dt class="col-sm-2">
+                    <p>Bestelling:</p>
+                </dt>
+                @foreach (var item in Model.Bestellijnen)
+                {
+                    <dt class="col-sm-2">
+                        <p><br />  </p>
+                    </dt>
+                    <dd class="col-sm-10">
+                        <p>@item</p>
+                    </dd>
+                }
+            </dl>
+        </div>
+        <br />
+        <br />
+        <div>
+            <a asp-action="Index" class="btn btn-primary">Terug</a> <a asp-action="EditBestelling" asp-route-id="@Model.Bestelling.BestellingID" class="btn btn-primary" >Bestelling aanpassen</a> <a asp-action="Delete bestelling" asp-route-id="@Model.Bestelling.BestellingID" class="btn btn-danger">Bestelling verwijderen</a>
+        </div>
+        <br />
+    </div>
+</div>
