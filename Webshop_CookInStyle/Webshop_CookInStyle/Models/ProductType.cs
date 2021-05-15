@@ -14,6 +14,7 @@ namespace Webshop_CookInStyle.Models
         public int ProductTypeID { get; set; }
         [DisplayName("Producttype")]
         public string Omschrijving { get; set; }
+        public int Volgnummer { get; set; }
 
         // Navprop
         public ICollection<Product> Producten { get; set; }

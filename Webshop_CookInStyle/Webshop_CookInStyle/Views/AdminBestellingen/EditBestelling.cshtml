@@ -26,13 +26,14 @@
 <h1>Bestelling Plaatsen</h1>
 <br />
 <div class="row d-flex justify-content-center">
-    <form asp-controller="AdminBestellingen" asp-action="ProductZoeken" method="get">
+    <form asp-controller="AdminBestellingen" asp-action="ProductZoekenInEdit" method="get">
         <div class="form-actions no-color">
             <p>
                 Producten zoeken op naam of type zoeken:
                 <input asp-for="Zoekopdracht" />
+                <input type="hidden" asp-for="NieuweBestelling.BestellingID" />
                 <input type="submit" value="Zoeken" class="btn btn-primary" />
-                <a asp-controller="AdminBestellingen" asp-action="AddBestelling" class="btn btn-primary">Volledige lijst</a>
+                <a asp-controller="AdminBestellingen" asp-action="EditBestelling" class="btn btn-primary">Volledige lijst</a>
             </p>
         </div>
     </form>
@@ -49,10 +50,11 @@
                 </div>
                 <div class="form-group">
                     <input asp-for="Aantal" class="form-control formAantal" />
+                    <input type="hidden" asp-for="NieuweBestelling.BestellingID" />
                 </div>
                 <div class="form-group">
-                    <input type="submit" value="Verminder" asp-action="Verminder" asp-route-id="@product.ProductID" class="btn btn-primary buttonFunction spacingButtons" />
-                    <input type="submit" value="Toevoegen" asp-action="Verhoog" asp-route-id="@product.ProductID" class="btn btn-primary buttonFunction spacingButtons" />
+                    <input type="submit" value="Verminder" asp-action="VerminderEdit" asp-route-id="@product.ProductID" class="btn btn-primary buttonFunction spacingButtons" />
+                    <input type="submit" value="Toevoegen" asp-action="VerhoogEdit" asp-route-id="@product.ProductID" class="btn btn-primary buttonFunction spacingButtons" />
                 </div>
                 <hr />
             </form>
@@ -110,11 +112,11 @@
         </div>
 
         <div class="row d-flex justify-content-center">
-            <a asp-action="AddBestellingDetails" asp-route-id="@Model.NieuweBestelling.BestellingID" class="btn btn-primary buttonFunction spacingButtonBig">Verdergaan</a>
-        </div>
-        <div class="row d-flex justify-content-center">
-            <a asp-action="Annuleren" class="btn btn-warning buttonFunction spacingButtonBig">Annuleer</a>
-
+            <a asp-action="AanpassingOpslaanEdit" asp-route-id="@Model.NieuweBestelling.BestellingID" class="btn btn-primary buttonFunction spacingButtonBig">Opslaan</a>
         </div>
     </div>
+</div>
+
+<div>
+    <a asp-action="BestellingDetails" asp-route-id="@Model.NieuweBestelling.BestellingID" class="btn btn-primary">Terug</a>
 </div>

@@ -20,9 +20,17 @@
 </style>
 
 <h1>Producten</h1>
-
+@if (Model.Bericht != null)
+{
+    <div class="row">
+        <div class="col-lg-12 alert alert-success text-center">
+            <p>@Model.Bericht</p>
+        </div>
+    </div>
+}
+<br />
 <p>
-    <a asp-action="AddBestelling">Nieuwe bestelling plaatsen</a> | <a asp-controller="AdminBestellingen" asp-action="Index">Volledige lijst tonen</a>
+    <a asp-action="AddBestelling" class="btn btn-success">Nieuwe bestelling plaatsen</a> <a asp-controller="AdminBestellingen" asp-action="Index" class="btn btn-primary">Volledige lijst tonen</a>
 </p>
 <div class="row">
     <div class="col-md-5">
@@ -41,8 +49,8 @@
             <div class="form-actions no-color">
                 <p>
                     Bestelling zoeken op datum
-                    <input asp-for="ZoekenDatumVan" />
-                    <input asp-for="ZoekenDatumTot" />
+                    <input asp-for="ZoekenDatumVan" asp-format="{0:dd/MM/yyyy}" />
+                    <input asp-for="ZoekenDatumTot" asp-format="{0:dd/MM/yyyy}"/>
                     <input type="submit" value="Zoeken" class="btn btn-primary" />
                 </p>
             </div>
@@ -81,7 +89,7 @@
                             @Html.DisplayFor(modelItem => item.Leverdatum)
                         </td>
                         <td>
-                            <a asp-action="Detail" asp-route-id="@item.BestellingID">Details</a>
+                            <a asp-action="BestellingDetails" asp-route-id="@item.BestellingID">Details</a>
                         </td>
                     </tr>
                 }

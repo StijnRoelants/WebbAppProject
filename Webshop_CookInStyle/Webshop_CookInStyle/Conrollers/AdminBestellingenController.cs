@@ -1,14 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Webshop_CookInStyle.Data;
 using Webshop_CookInStyle.Models;
@@ -28,7 +25,7 @@ namespace Webshop_CookInStyle.Conrollers
 
         #region Index-Page
 
-        // Inladen van de pagina lijst van bestelling 2 komnende weken om performatie steeds te behouden kan door user vergroot worden 
+        // Inladen van de pagina lijst van bestelling 2 komnende weken om performatie steeds te behouden kan door user vergroot worden
         public async Task<IActionResult> Index()
         {
             IndexAdminBestellingenVM viewModel = new IndexAdminBestellingenVM();
@@ -47,8 +44,8 @@ namespace Webshop_CookInStyle.Conrollers
                 return View(viewModel);
             }
             List<Bestelling> Zoekopdracht = new List<Bestelling>();
-            Zoekopdracht.AddRange(await _context.Bestellingen.Include(x => x.Klant).Where(x => x.Klant.Voornaam.Contains( viewModel.ZoekenOpNaam )|| x.Klant.Achternaam == viewModel.ZoekenOpNaam).ToListAsync());
-            Zoekopdracht.AddRange(await _context.Bestellingen.Include(x => x.Klant).Where(x => x.Bestelbonnummer.Contains( viewModel.ZoekenOpNaam )).ToListAsync());
+            Zoekopdracht.AddRange(await _context.Bestellingen.Include(x => x.Klant).Where(x => x.Klant.Voornaam.Contains(viewModel.ZoekenOpNaam) || x.Klant.Achternaam == viewModel.ZoekenOpNaam).ToListAsync());
+            Zoekopdracht.AddRange(await _context.Bestellingen.Include(x => x.Klant).Where(x => x.Bestelbonnummer.Contains(viewModel.ZoekenOpNaam)).ToListAsync());
             viewModel.Bestellingen = Zoekopdracht;
             return View("Index", viewModel);
         }
@@ -66,7 +63,8 @@ namespace Webshop_CookInStyle.Conrollers
             viewModel.Bestellingen = Zoekopdracht;
             return View("Index", viewModel);
         }
-        #endregion
+
+        #endregion Index-Page
 
         #region Nieuwe bestelling plaatsen
 
@@ -84,34 +82,61 @@ namespace Webshop_CookInStyle.Conrollers
             }
             viewModel.NieuweBestelling = bestelling;
             viewModel.Orderlijnen = bestelling.Bestellijnen.ToList();
-            viewModel.Producten = await _context.Producten.Include(x => x.ProductType).Include(x => x.Allergenen).Include(x => x.Eenheid).OrderBy(x => x.ProductType).ThenBy(x => x.Naam).ToListAsync();
+            viewModel.Producten = await _context.Producten.Include(x => x.ProductType).Include(x => x.Allergenen).Include(x => x.Eenheid).OrderBy(x => x.ProductType.Volgnummer).ThenBy(x => x.Naam).ToListAsync();
             return View(viewModel);
         }
 
-        // Lijnaantal verhogen wanneer het de eerste lijn van een bestelling is wordt er voor de bestelling een bonnummer gemaakt
-        public async Task<IActionResult> Verhoog(int? id)
+        public async Task<IActionResult> ProductZoeken(AddBestellingVM viewModel)
         {
+            if (viewModel.Zoekopdracht != null)
+            {
+                Klant admin = await _context.Klanten.Where(x => x.UserName == HttpContext.User.Identity.Name).Include(x => x.LeverAdressen).FirstOrDefaultAsync();
+                LeverAdres tempLeverAdres = admin.LeverAdressen.First();
+                Bestelling bestelling = await _context.Bestellingen.Include(x => x.Bestellijnen).FirstOrDefaultAsync(x => x.Klant == admin && x.IsVoltooid == false);
+                if (bestelling == null)
+                {
+                    bestelling = new Bestelling { Bestelbonnummer = "In afwachting", BestelDatum = DateTime.Now, Klant = admin, Totaalprijs = 0, Opmerking = "", LeverAdres = tempLeverAdres, IsVoltooid = false };
+                    bestelling.Bestellijnen = new List<Bestellijn>();
+                }
+                AddBestellingVM vm = new AddBestellingVM();
+                vm.NieuweBestelling = bestelling;
+                vm.Orderlijnen = await _context.Bestellijnen.Where(x => x.BestellingID == bestelling.BestellingID).Include(x => x.Product.ProductType).ToListAsync();
+                vm.Producten = await _context.Producten.Where(x => x.Naam.Contains(viewModel.Zoekopdracht) || x.ProductType.Omschrijving.Contains(viewModel.Zoekopdracht))
+                    .Include(x => x.ProductType).Include(x => x.Allergenen).Include(x => x.Eenheid).OrderBy(x => x.ProductType.Volgnummer).ThenBy(x => x.Naam).ToListAsync();
+                if (vm.Producten.Count != 0)
+                {
+                    return View("AddBestelling", vm);
+                }
+            }
 
+            return RedirectToAction("AddBestelling");
+        }
+
+        // Lijnaantal verhogen wanneer het de eerste lijn van een bestelling is wordt er voor de bestelling een bonnummer gemaakt
+        public async Task<IActionResult> Verhoog(int? id, AddBestellingVM viewModel)
+        {
             if (id == null)
             {
                 return NotFound();
             }
+
             #region inladen
-            AddBestellingVM viewModel = new AddBestellingVM();
+
+            //AddBestellingVM viewModel = new AddBestellingVM();
             Klant admin = await _context.Klanten.Where(x => x.UserName == HttpContext.User.Identity.Name).Include(x => x.LeverAdressen).FirstOrDefaultAsync();
             LeverAdres tempLeverAdres = admin.LeverAdressen.First();
             Product product = await _context.Producten.Where(x => x.ProductID == id).Include(x => x.Btwtype).FirstOrDefaultAsync();
-            
+            int aantal = CheckAantal(viewModel);
             Bestelling bestelling = await _context.Bestellingen.Include(x => x.Bestellijnen).FirstOrDefaultAsync(x => x.Klant == admin && x.IsVoltooid == false);
-            #endregion
+
+            #endregion inladen
+
             if (bestelling == null)
             {
                 string nummer = BestelnummerOphalen();
                 bestelling = new Bestelling { Bestelbonnummer = nummer, BestelDatum = DateTime.Now, Klant = admin, Totaalprijs = 0, Opmerking = "", LeverAdres = tempLeverAdres, IsVoltooid = false };
-                int parsen = product.Btwtype.Percentage;
-                decimal btw = Convert.ToDecimal(parsen);
-                decimal btwlijn = product.Eenheidsprijs / 100 * btw;
-                Bestellijn nieuweLijn = new Bestellijn { Aantal = 1, Bestelling = bestelling, BestellingID = bestelling.BestellingID, Product = product, ProductID = product.ProductID, BtwBedrag = btwlijn, Lijnprijs = product.Eenheidsprijs + btwlijn, Eenheidsprijs = product.Eenheidsprijs };
+                Bestellijn nieuweLijn = new Bestellijn { Aantal = aantal, Bestelling = bestelling, BestellingID = bestelling.BestellingID, Product = product, ProductID = product.ProductID, Eenheidsprijs = product.Eenheidsprijs };
+                LijnPrijsBerekenen(nieuweLijn, product);
                 _context.Bestellijnen.Add(nieuweLijn);
             }
             else
@@ -121,21 +146,20 @@ namespace Webshop_CookInStyle.Conrollers
                     Bestellijn bestellijn = await _context.Bestellijnen.FirstOrDefaultAsync(x => x.BestellingID == bestelling.BestellingID && x.ProductID == product.ProductID);
                     if (bestellijn == null)
                     {
-                        
-                        bestellijn = new Bestellijn { Aantal = 1, Bestelling = bestelling, BestellingID = bestelling.BestellingID, Product = product, ProductID = product.ProductID, BtwBedrag = product.Btwtype.Percentage, Lijnprijs = 0, Eenheidsprijs = product.Eenheidsprijs };
+                        bestellijn = new Bestellijn { Aantal = aantal, Bestelling = bestelling, BestellingID = bestelling.BestellingID, Product = product, ProductID = product.ProductID, BtwBedrag = product.Btwtype.Percentage, Lijnprijs = 0, Eenheidsprijs = product.Eenheidsprijs };
                         LijnPrijsBerekenen(bestellijn, product);
                         _context.Bestellijnen.Add(bestellijn);
                     }
                     else
                     {
-                        bestellijn.Aantal++;
+                        bestellijn.Aantal += aantal;
                         LijnPrijsBerekenen(bestellijn, product);
                         _context.Bestellijnen.Update(bestellijn);
                     }
                 }
                 else
                 {
-                    Bestellijn nieuweLijn = new Bestellijn { Aantal = 1, Bestelling = bestelling, BestellingID = bestelling.BestellingID, Product = product, ProductID = product.ProductID, BtwBedrag = product.Btwtype.Percentage, Lijnprijs = 0, Eenheidsprijs = product.Eenheidsprijs };
+                    Bestellijn nieuweLijn = new Bestellijn { Aantal = aantal, Bestelling = bestelling, BestellingID = bestelling.BestellingID, Product = product, ProductID = product.ProductID, BtwBedrag = product.Btwtype.Percentage, Lijnprijs = 0, Eenheidsprijs = product.Eenheidsprijs };
                     LijnPrijsBerekenen(nieuweLijn, product);
                     _context.Bestellijnen.Add(nieuweLijn);
                 }
@@ -145,7 +169,7 @@ namespace Webshop_CookInStyle.Conrollers
 
             viewModel.NieuweBestelling = await _context.Bestellingen.Include(x => x.Bestellijnen).FirstOrDefaultAsync(x => x.Klant == admin && x.IsVoltooid == false);
             viewModel.Orderlijnen = bestelling.Bestellijnen.ToList();
-            viewModel.Producten = await _context.Producten.Include(x => x.ProductType).Include(x => x.Allergenen).Include(x => x.Eenheid).OrderBy(x => x.ProductType).ThenBy(x => x.Naam).ToListAsync();
+            viewModel.Producten = await _context.Producten.Include(x => x.ProductType).Include(x => x.Allergenen).Include(x => x.Eenheid).OrderBy(x => x.ProductType.Volgnummer).ThenBy(x => x.Naam).ToListAsync();
             return View("AddBestelling", viewModel);
         }
 
@@ -177,23 +201,29 @@ namespace Webshop_CookInStyle.Conrollers
             AddBestellingVM viewModel = new AddBestellingVM();
             viewModel.NieuweBestelling = nieuweBestelling;
             viewModel.Orderlijnen = nieuweBestelling.Bestellijnen.ToList();
-            viewModel.Producten = await _context.Producten.Include(x => x.ProductType).Include(x => x.Allergenen).Include(x => x.Eenheid).OrderBy(x => x.ProductType).ThenBy(x => x.Naam).ToListAsync();
+            viewModel.Producten = await _context.Producten.Include(x => x.ProductType).Include(x => x.Allergenen).Include(x => x.Eenheid).OrderBy(x => x.ProductType.Volgnummer).ThenBy(x => x.Naam).ToListAsync();
             Bestelling bestelling = await _context.Bestellingen.Include(x => x.Bestellijnen).FirstOrDefaultAsync(x => x.Klant == admin && x.IsVoltooid == false);
             return View("AddBestelling", viewModel);
         }
 
         // Lijn in mindering brengen, wanneer er een lijn met dit product niet voorkomt gewoon herladen
         // bij 0 aantal van de lijn wordt de lijn verwijderd van de db
-        public async Task<IActionResult> Verminder (int? id)
+        public async Task<IActionResult> Verminder(int? id, AddBestellingVM viewModel)
         {
-            AddBestellingVM viewModel = new AddBestellingVM();
+            //AddBestellingVM viewModel = new AddBestellingVM();
             Klant admin = await _context.Klanten.Where(x => x.UserName == HttpContext.User.Identity.Name).Include(x => x.LeverAdressen).FirstOrDefaultAsync();
             Product product = await _context.Producten.Where(x => x.ProductID == id).Include(x => x.Btwtype).FirstOrDefaultAsync();
             Bestelling bestelling = await _context.Bestellingen.Include(x => x.Bestellijnen).FirstOrDefaultAsync(x => x.Klant == admin && x.IsVoltooid == false);
             Bestellijn teVermindereLijn = await _context.Bestellijnen.FirstOrDefaultAsync(x => x.ProductID == product.ProductID && x.BestellingID == bestelling.BestellingID);
+            int aantal = CheckAantal(viewModel);
+
             if (teVermindereLijn != null)
             {
-                teVermindereLijn.Aantal--;
+                if (aantal > teVermindereLijn.Aantal)
+                {
+                    aantal = teVermindereLijn.Aantal;
+                }
+                teVermindereLijn.Aantal -= aantal;
                 if (teVermindereLijn.Aantal == 0)
                 {
                     _context.Bestellijnen.Remove(teVermindereLijn);
@@ -208,14 +238,14 @@ namespace Webshop_CookInStyle.Conrollers
             {
                 viewModel.NieuweBestelling = await _context.Bestellingen.Include(x => x.Bestellijnen).FirstOrDefaultAsync(x => x.Klant == admin && x.IsVoltooid == false);
                 viewModel.Orderlijnen = bestelling.Bestellijnen.ToList();
-                viewModel.Producten = await _context.Producten.Include(x => x.ProductType).Include(x => x.Allergenen).Include(x => x.Eenheid).OrderBy(x => x.ProductType).ThenBy(x => x.Naam).ToListAsync();
+                viewModel.Producten = await _context.Producten.Include(x => x.ProductType).Include(x => x.Allergenen).Include(x => x.Eenheid).OrderBy(x => x.ProductType.Volgnummer).ThenBy(x => x.Naam).ToListAsync();
                 return View("AddBestelling", viewModel);
             }
             TotalenBerkenen(bestelling);
             _context.SaveChanges();
             viewModel.NieuweBestelling = await _context.Bestellingen.Include(x => x.Bestellijnen).FirstOrDefaultAsync(x => x.Klant == admin && x.IsVoltooid == false);
             viewModel.Orderlijnen = bestelling.Bestellijnen.ToList();
-            viewModel.Producten = await _context.Producten.Include(x => x.ProductType).Include(x => x.Allergenen).Include(x => x.Eenheid).OrderBy(x => x.ProductType).ThenBy(x => x.Naam).ToListAsync();
+            viewModel.Producten = await _context.Producten.Include(x => x.ProductType).Include(x => x.Allergenen).Include(x => x.Eenheid).OrderBy(x => x.ProductType.Volgnummer).ThenBy(x => x.Naam).ToListAsync();
             return View("AddBestelling", viewModel);
         }
 
@@ -224,8 +254,21 @@ namespace Webshop_CookInStyle.Conrollers
         {
             decimal btw = Convert.ToDecimal(product.Btwtype.Percentage);
             decimal aantal = Convert.ToDecimal(lijn.Aantal);
-            lijn.BtwBedrag = (product.Eenheidsprijs / (100+btw) * btw) * aantal;
+            lijn.BtwBedrag = (product.Eenheidsprijs / (100 + btw) * btw) * aantal;
             lijn.Lijnprijs = product.Eenheidsprijs * aantal;
+        }
+
+        // Aantallen voor bestelling
+        private int CheckAantal(AddBestellingVM viewModel)
+        {
+            if (viewModel.Aantal == 0)
+            {
+                return 1;
+            }
+            else
+            {
+                return viewModel.Aantal;
+            }
         }
 
         // Bestelling totaal berekenen
@@ -284,7 +327,7 @@ namespace Webshop_CookInStyle.Conrollers
             _context.SaveChanges();
         }
 
-        #endregion
+        #endregion Nieuwe bestelling plaatsen
 
         #region Bestelling details + Leveradres
 
@@ -320,12 +363,12 @@ namespace Webshop_CookInStyle.Conrollers
             aangepasteBestelling.IsVoltooid = true;
             _context.Bestellingen.Update(aangepasteBestelling);
             _context.SaveChanges();
-            viewModel.Bestelling = await _context.Bestellingen.Where(x => x.BestellingID == id).Include(x => x.Bestellijnen).FirstOrDefaultAsync();
-            viewModel.Bestellijnen = await _context.Bestellijnen.Where(x => x.BestellingID == id).Include(x => x.Product).ToListAsync();
-            viewModel.Klanten = new SelectList(await _context.Klanten.Include(x => x.Postcode).ToListAsync(), "Id", "NaamWeergave");
-            viewModel.Bericht = $"Bestelling {aangepasteBestelling.Bestelbonnummer} werd succesvol opgeslagen!";
-            BtwWeergave(viewModel);
-            return View("AddBestellingDetails", viewModel);
+            IndexAdminBestellingenVM vm = new IndexAdminBestellingenVM();
+            vm.Bestellingen = await _context.Bestellingen.Include(x => x.Klant).Where(x => x.Leverdatum >= DateTime.Now).OrderBy(x => x.Leverdatum).ThenBy(x => x.Bestelbonnummer).ToListAsync();
+            vm.ZoekenDatumVan = DateTime.Now;
+            vm.ZoekenDatumTot = DateTime.Now.AddDays(15);
+            vm.Bericht = $"Bestelling {aangepasteBestelling.Bestelbonnummer} werd succesvol opgeslagen!";
+            return View("Index", vm);
         }
 
         // Eerst bestellings details opslaan om vervolgens nieuwe view in te laden
@@ -352,53 +395,52 @@ namespace Webshop_CookInStyle.Conrollers
         }
 
         // Bestelling voltooien met een bestaand leveradres uit lijst
-        public async Task<IActionResult> SelectAdres(LeverAdresAanpassenVM vm)
+        public async Task<IActionResult> SelectAdres(LeverAdresAanpassenVM viewModel)
         {
-            Bestelling bestelling = await _context.Bestellingen.Where(x => x.BestellingID == vm.Bestelling.BestellingID).Include(x => x.Klant).FirstOrDefaultAsync();
+            Bestelling bestelling = await _context.Bestellingen.Where(x => x.BestellingID == viewModel.Bestelling.BestellingID).Include(x => x.Klant).FirstOrDefaultAsync();
             Klant klant = await _context.Klanten.Where(x => x.Id == bestelling.KlantFK).FirstOrDefaultAsync();
-            bestelling.LeverAdres = vm.Bestelling.LeverAdres;
+            bestelling.LeverAdres = viewModel.Bestelling.LeverAdres;
             bestelling.IsVoltooid = true;
             _context.Bestellingen.Update(bestelling);
             _context.SaveChanges();
-            AddBestellingDetailsVM newVm = new AddBestellingDetailsVM();
-            newVm.Bestelling = await _context.Bestellingen.Where(x => x.BestellingID == vm.Bestelling.BestellingID).Include(x => x.Bestellijnen).FirstOrDefaultAsync();
-            newVm.Bestellijnen = await _context.Bestellijnen.Where(x => x.BestellingID == vm.Bestelling.BestellingID).Include(x => x.Product).ToListAsync();
-            newVm.Klanten = new SelectList(await _context.Klanten.Include(x => x.Postcode).ToListAsync(), "Id", "NaamWeergave");
-            newVm.Bericht = $"Bestelling {bestelling.Bestelbonnummer} werd succesvol opgeslagen!";
-            return View("AddBestellingDetails", newVm);
+            IndexAdminBestellingenVM vm = new IndexAdminBestellingenVM();
+            vm.Bestellingen = await _context.Bestellingen.Include(x => x.Klant).Where(x => x.Leverdatum >= DateTime.Now).OrderBy(x => x.Leverdatum).ThenBy(x => x.Bestelbonnummer).ToListAsync();
+            vm.ZoekenDatumVan = DateTime.Now;
+            vm.ZoekenDatumTot = DateTime.Now.AddDays(15);
+            vm.Bericht = $"Bestelling {bestelling.Bestelbonnummer} werd succesvol opgeslagen!";
+            return View("Index", vm);
         }
 
         // bestelling voltooien met een nieuw leveradres
-        public async Task<IActionResult> CreateAdres(LeverAdresAanpassenVM vm)
+        public async Task<IActionResult> CreateAdres(LeverAdresAanpassenVM viewModel)
         {
-            Bestelling bestelling = await _context.Bestellingen.Where(x => x.BestellingID == vm.Bestelling.BestellingID).FirstOrDefaultAsync();
+            Bestelling bestelling = await _context.Bestellingen.Where(x => x.BestellingID == viewModel.Bestelling.BestellingID).FirstOrDefaultAsync();
             Klant klant = await _context.Klanten.Where(x => x.Id == bestelling.KlantFK).FirstOrDefaultAsync();
             if (ModelState.IsValid)
             {
-                LeverAdres leverAdres = new LeverAdres { Omschrijving = vm.LeverAdres.Omschrijving, Straat = vm.LeverAdres.Straat, KlantFK = klant.Id, PostcodeID = vm.LeverAdres.PostcodeID, LandID = vm.LeverAdres.LandID };
+                LeverAdres leverAdres = new LeverAdres { Omschrijving = viewModel.LeverAdres.Omschrijving, Straat = viewModel.LeverAdres.Straat, KlantFK = klant.Id, PostcodeID = viewModel.LeverAdres.PostcodeID, LandID = viewModel.LeverAdres.LandID };
                 bestelling.LeverAdres = leverAdres;
                 bestelling.IsVoltooid = true;
                 _context.LeverAdressen.Add(leverAdres);
                 _context.Bestellingen.Update(bestelling);
                 _context.SaveChanges();
-                AddBestellingDetailsVM newVm = new AddBestellingDetailsVM();
-                newVm.Bestelling = await _context.Bestellingen.Where(x => x.BestellingID == vm.Bestelling.BestellingID).Include(x => x.Bestellijnen).FirstOrDefaultAsync();
-                newVm.Bestellijnen = await _context.Bestellijnen.Where(x => x.BestellingID == vm.Bestelling.BestellingID).Include(x => x.Product).ToListAsync();
-                newVm.Klanten = new SelectList(await _context.Klanten.Include(x => x.Postcode).ToListAsync(), "Id", "NaamWeergave");
-                newVm.Bericht = $"Bestelling {bestelling.Bestelbonnummer} werd succesvol opgeslagen!";
-                return View("AddBestellingDetails", newVm);
+                IndexAdminBestellingenVM vm = new IndexAdminBestellingenVM();
+                vm.Bestellingen = await _context.Bestellingen.Include(x => x.Klant).Where(x => x.Leverdatum >= DateTime.Now).OrderBy(x => x.Leverdatum).ThenBy(x => x.Bestelbonnummer).ToListAsync();
+                vm.ZoekenDatumVan = DateTime.Now;
+                vm.ZoekenDatumTot = DateTime.Now.AddDays(15);
+                vm.Bericht = $"Bestelling {bestelling.Bestelbonnummer} werd succesvol opgeslagen!";
+                return View("Index", vm);
             }
             else
             {
                 LeverAdresAanpassenVM viewModelNew = new LeverAdresAanpassenVM();
-                bestelling = await _context.Bestellingen.Where(x => x.BestellingID == vm.Bestelling.BestellingID).FirstOrDefaultAsync();
+                bestelling = await _context.Bestellingen.Where(x => x.BestellingID == viewModel.Bestelling.BestellingID).FirstOrDefaultAsync();
                 klant = await _context.Klanten.Where(x => x.Id == bestelling.KlantFK).FirstOrDefaultAsync();
                 viewModelNew.Leveradressen = new SelectList(await _context.LeverAdressen.Where(x => x.KlantFK == klant.Id).Include(x => x.Postcode).OrderBy(x => x.Omschrijving).ToListAsync(), "LeverAdresID", "Weergave");
                 viewModelNew.Klant = klant;
                 viewModelNew.Bestelling = bestelling;
                 return View("LeverAdresAanpassen", viewModelNew);
             }
-
         }
 
         // inladen van btw gegevens
@@ -421,8 +463,247 @@ namespace Webshop_CookInStyle.Conrollers
             viewModel.Btw21 = eenentwintigProcent;
         }
 
+        #endregion Bestelling details + Leveradres
+
+        #region Bestelling details
+
+        public async Task<IActionResult> BestellingDetails(int? id)
+        {
+            BestellingDetailsVM viewModel = new BestellingDetailsVM();
+            ModelOpbouw(viewModel, id);
+            return View(viewModel);
+        }
+
+        // bestelling wordt rechtstreeks op pagina verwijderd, eerst check via Javascript
+        public async Task<IActionResult> DeleteBestelling(int id)
+        {
+            Bestelling teVerwijderen = await _context.Bestellingen.Where(x => x.BestellingID == id).FirstOrDefaultAsync();
+            string nummerDeleted = teVerwijderen.Bestelbonnummer;
+            _context.Remove(teVerwijderen);
+            _context.SaveChanges();
+
+            IndexAdminBestellingenVM vm = new IndexAdminBestellingenVM();
+            vm.Bestellingen = await _context.Bestellingen.Include(x => x.Klant).Where(x => x.Leverdatum >= DateTime.Now).OrderBy(x => x.Leverdatum).ThenBy(x => x.Bestelbonnummer).ToListAsync();
+            vm.ZoekenDatumVan = DateTime.Now;
+            vm.ZoekenDatumTot = DateTime.Now.AddDays(15);
+            vm.Bericht = $"Bestelling {nummerDeleted} werd succesvol verwijderd!";
+            return View("Index", vm);
+        }
+
+        // Inladen van klant gegevens van een bestelling, voor aanpassing velden
+        public async Task<IActionResult> EditKlant(int id)
+        {
+            EditBestellingVM viewModel = new EditBestellingVM();
+            viewModel.Bestelling = await _context.Bestellingen.Where(x => x.BestellingID == id).Include(x => x.Klant.Postcode).Include(x => x.Klant.Land).Include(x => x.LeverAdres).FirstOrDefaultAsync();
+            Klant klant = await _context.Klanten.Where(x => x.Id == viewModel.Bestelling.KlantFK).FirstOrDefaultAsync();
+            viewModel.Postcodes = new SelectList(await _context.Postcodes.OrderBy(x => x.Nummer).ToListAsync(), "PostcodeID", "Weergave");
+            viewModel.Landen = new SelectList(await _context.Landen.OrderBy(x => x.Naam).ToListAsync(), "LandID", "Naam");
+            viewModel.Leveradressen = new SelectList(await _context.LeverAdressen.Where(x => x.KlantFK == klant.Id).OrderBy(x => x.Omschrijving).ToListAsync(), "LeverAdresID", "Weergave");
+            viewModel.LeverAdres = new LeverAdres();
+            return View(viewModel);
+        }
+
+        // Aanpassingen opslaan met een bestaand leveradres
+        public async Task<IActionResult> AanpassingOpslaan(EditBestellingVM viewModel)
+        {
+            Bestelling bestelling = await _context.Bestellingen.Where(x => x.BestellingID == viewModel.Bestelling.BestellingID).FirstOrDefaultAsync();
+            bestelling.Opmerking = viewModel.Bestelling.Opmerking;
+            bestelling.LeverAdresID = viewModel.Bestelling.LeverAdresID;
+            if (viewModel.AanTePassen > DateTime.Now)
+            {
+                bestelling.Leverdatum = viewModel.Bestelling.Leverdatum;
+            }
+            _context.Update(bestelling);
+            _context.SaveChanges();
+
+            IndexAdminBestellingenVM vm = new IndexAdminBestellingenVM();
+            vm.Bestellingen = await _context.Bestellingen.Include(x => x.Klant).Where(x => x.Leverdatum >= DateTime.Now).OrderBy(x => x.Leverdatum).ThenBy(x => x.Bestelbonnummer).ToListAsync();
+            vm.ZoekenDatumVan = DateTime.Now;
+            vm.ZoekenDatumTot = DateTime.Now.AddDays(15);
+            vm.Bericht = $"Bestelling {bestelling.Bestelbonnummer} werd succesvol aangepast!";
+            return View("Index", vm);
+        }
+
+        // Aanpassingen opslaan met een NIEUW leveradres
+        public async Task<IActionResult> NieuwAdres(EditBestellingVM viewModel)
+        {
+            Bestelling bestelling = await _context.Bestellingen.Where(x => x.BestellingID == viewModel.Bestelling.BestellingID).FirstOrDefaultAsync();
+            Klant klant = await _context.Klanten.Where(x => x.Id == bestelling.KlantFK).FirstOrDefaultAsync();
+            LeverAdres nieuwLeverAdres = new LeverAdres { KlantFK = klant.Id, Straat = viewModel.LeverAdres.Straat, Omschrijving = viewModel.LeverAdres.Omschrijving, PostcodeID = viewModel.LeverAdres.PostcodeID, LandID = viewModel.LeverAdres.LandID };
+            _context.Add(nieuwLeverAdres);
+            bestelling.Opmerking = viewModel.Bestelling.Opmerking;
+            bestelling.LeverAdres = nieuwLeverAdres;
+            if (viewModel.AanTePassen > DateTime.Now)
+            {
+                bestelling.Leverdatum = viewModel.Bestelling.Leverdatum;
+            }
+            _context.Update(bestelling);
+            _context.SaveChanges();
+
+            IndexAdminBestellingenVM vm = new IndexAdminBestellingenVM();
+            vm.Bestellingen = await _context.Bestellingen.Include(x => x.Klant).Where(x => x.Leverdatum >= DateTime.Now).OrderBy(x => x.Leverdatum).ThenBy(x => x.Bestelbonnummer).ToListAsync();
+            vm.ZoekenDatumVan = DateTime.Now;
+            vm.ZoekenDatumTot = DateTime.Now.AddDays(15);
+            vm.Bericht = $"Bestelling {bestelling.Bestelbonnummer} werd succesvol aangepast!";
+            return View("Index", vm);
+        }
+
+        // opbouw test
+        public void ModelOpbouw(BestellingDetailsVM viewModel, int? id)
+        {
+            viewModel.Bestelling = _context.Bestellingen.Where(x => x.BestellingID == id).Include(x => x.LeverAdres.Postcode).FirstOrDefault();
+            viewModel.Klant = _context.Klanten.Where(x => x.Id == viewModel.Bestelling.KlantFK).Include(x => x.Postcode).FirstOrDefault();
+            viewModel.Bestellijnen = BestelijnenGenereren(id);
+            viewModel.LeverAdres = viewModel.Bestelling.LeverAdres;
+        }
+
+        // Lijnen omvormen naar string voor weergave in detail
+        private List<string> BestelijnenGenereren(int? id)
+        {
+            List<Bestellijn> lijnen = _context.Bestellijnen.Where(x => x.BestellingID == id).Include(x => x.Product.Eenheid).Include(x => x.Product.ProductType).OrderBy(x => x.Product.ProductType.Volgnummer).ToList();
+            List<string> Lijst = new List<string>();
+            if (lijnen != null)
+            {
+                foreach (var item in lijnen)
+                {
+                    string lijn = "";
+                    Lijst.Add(lijn = $"{item.Product.Naam}\t {item.Aantal}/{item.Product.Eenheid.Omschrijving} - € {item.Lijnprijs}");
+                }
+            }
+            return Lijst;
+        }
+
+        #endregion Bestelling details
+
+        #region Bestelling aanpassen
+
+        // inladen van pagina
+        public async Task<IActionResult> EditBestelling(int id)
+        {
+            AddBestellingVM viewModel = new AddBestellingVM();
+            Bestelling bestelling = await _context.Bestellingen.Where(x => x.BestellingID == id).Include(x => x.Bestellijnen).FirstOrDefaultAsync();
+            Klant admin = await _context.Klanten.Where(x => x.Id == bestelling.KlantFK).Include(x => x.LeverAdressen).FirstOrDefaultAsync();
+            viewModel.NieuweBestelling = bestelling;
+            viewModel.Orderlijnen = bestelling.Bestellijnen.ToList();
+            viewModel.Producten = await _context.Producten.Include(x => x.ProductType).Include(x => x.Allergenen).Include(x => x.Eenheid).OrderBy(x => x.ProductType.Volgnummer).ThenBy(x => x.Naam).ToListAsync();
+            return View(viewModel);
+        }
+
+        // Zoeken in edit
+        public async Task<IActionResult> ProductZoekenInEdit(AddBestellingVM viewModel)
+        {
+            if (viewModel.Zoekopdracht != null)
+            {
+                Bestelling bestelling = await _context.Bestellingen.Where(x => x.BestellingID == viewModel.NieuweBestelling.BestellingID).Include(x => x.Bestellijnen).FirstOrDefaultAsync();
+                Klant admin = await _context.Klanten.Where(x => x.Id == bestelling.KlantFK).Include(x => x.LeverAdressen).FirstOrDefaultAsync();
+
+                AddBestellingVM vm = new AddBestellingVM();
+                vm.NieuweBestelling = bestelling;
+                vm.Orderlijnen = await _context.Bestellijnen.Where(x => x.BestellingID == bestelling.BestellingID).Include(x => x.Product.ProductType).ToListAsync();
+                vm.Producten = await _context.Producten.Where(x => x.Naam.Contains(viewModel.Zoekopdracht) || x.ProductType.Omschrijving.Contains(viewModel.Zoekopdracht))
+                    .Include(x => x.ProductType).Include(x => x.Allergenen).Include(x => x.Eenheid).OrderBy(x => x.ProductType.Volgnummer).ThenBy(x => x.Naam).ToListAsync();
+                if (vm.Producten.Count != 0)
+                {
+                    return View("EditBestelling", vm);
+                }
+            }
+
+            return RedirectToAction("EditBestelling");
+        }
+
+        // zelfde functie maar aangepast voor edit
+        public async Task<IActionResult> VerhoogEdit(int? id, AddBestellingVM viewModel)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            #region inladen
+
+            //AddBestellingVM viewModel = new AddBestellingVM();
+            Bestelling bestelling = await _context.Bestellingen.Where(x => x.BestellingID == viewModel.NieuweBestelling.BestellingID).Include(x => x.Bestellijnen).FirstOrDefaultAsync();
+            Klant admin = await _context.Klanten.Where(x => x.Id == bestelling.KlantFK).Include(x => x.LeverAdressen).FirstOrDefaultAsync();
+            Product product = await _context.Producten.Where(x => x.ProductID == id).Include(x => x.Btwtype).FirstOrDefaultAsync();
+            int aantal = CheckAantal(viewModel);
+
+            #endregion inladen
+
+            Bestellijn bestellijn = await _context.Bestellijnen.FirstOrDefaultAsync(x => x.BestellingID == bestelling.BestellingID && x.ProductID == product.ProductID);
+            if (bestellijn == null)
+            {
+                bestellijn = new Bestellijn { Aantal = aantal, Bestelling = bestelling, BestellingID = bestelling.BestellingID, Product = product, ProductID = product.ProductID, BtwBedrag = product.Btwtype.Percentage, Lijnprijs = 0, Eenheidsprijs = product.Eenheidsprijs };
+                LijnPrijsBerekenen(bestellijn, product);
+                _context.Bestellijnen.Add(bestellijn);
+            }
+            else
+            {
+                bestellijn.Aantal += aantal;
+                LijnPrijsBerekenen(bestellijn, product);
+                _context.Bestellijnen.Update(bestellijn);
+            }
+            TotalenBerkenen(bestelling);
+            _context.SaveChanges();
+
+            viewModel.NieuweBestelling = bestelling;
+            viewModel.Orderlijnen = bestelling.Bestellijnen.ToList();
+            viewModel.Producten = await _context.Producten.Include(x => x.ProductType).Include(x => x.Allergenen).Include(x => x.Eenheid).OrderBy(x => x.ProductType.Volgnummer).ThenBy(x => x.Naam).ToListAsync();
+            return View("EditBestelling", viewModel);
+        }
 
 
-        #endregion
+        // zelfde functie maar aangepast voor edit
+        public async Task<IActionResult> VerminderEdit(int? id, AddBestellingVM viewModel)
+        {
+            Bestelling bestelling = await _context.Bestellingen.Where(x => x.BestellingID == viewModel.NieuweBestelling.BestellingID).Include(x => x.Bestellijnen).FirstOrDefaultAsync();
+            Klant admin = await _context.Klanten.Where(x => x.Id == bestelling.KlantFK).Include(x => x.LeverAdressen).FirstOrDefaultAsync();
+            Product product = await _context.Producten.Where(x => x.ProductID == id).Include(x => x.Btwtype).FirstOrDefaultAsync();
+            Bestellijn teVermindereLijn = await _context.Bestellijnen.FirstOrDefaultAsync(x => x.ProductID == product.ProductID && x.BestellingID == bestelling.BestellingID);
+            int aantal = CheckAantal(viewModel);
+
+            if (teVermindereLijn != null)
+            {
+                if (aantal > teVermindereLijn.Aantal)
+                {
+                    aantal = teVermindereLijn.Aantal;
+                }
+                teVermindereLijn.Aantal -= aantal;
+                if (teVermindereLijn.Aantal == 0)
+                {
+                    _context.Bestellijnen.Remove(teVermindereLijn);
+                }
+                else
+                {
+                    LijnPrijsBerekenen(teVermindereLijn, product);
+                    _context.Bestellijnen.Update(teVermindereLijn);
+                }
+            }
+            else
+            {
+                viewModel.NieuweBestelling = await _context.Bestellingen.Include(x => x.Bestellijnen).FirstOrDefaultAsync(x => x.Klant == admin && x.IsVoltooid == false);
+                viewModel.Orderlijnen = bestelling.Bestellijnen.ToList();
+                viewModel.Producten = await _context.Producten.Include(x => x.ProductType).Include(x => x.Allergenen).Include(x => x.Eenheid).OrderBy(x => x.ProductType.Volgnummer).ThenBy(x => x.Naam).ToListAsync();
+                return View("EditBestelling", viewModel);
+            }
+            TotalenBerkenen(bestelling);
+            _context.SaveChanges();
+            viewModel.NieuweBestelling = bestelling;
+            viewModel.Orderlijnen = bestelling.Bestellijnen.ToList();
+            viewModel.Producten = await _context.Producten.Include(x => x.ProductType).Include(x => x.Allergenen).Include(x => x.Eenheid).OrderBy(x => x.ProductType.Volgnummer).ThenBy(x => x.Naam).ToListAsync();
+            return View("EditBestelling", viewModel);
+        }
+        
+        // terug naar index pagina met feedback
+        public async Task<IActionResult> AanpassingOpslaanEdit(int id)
+        {
+            Bestelling bestelling = await _context.Bestellingen.Where(x => x.BestellingID == id).FirstOrDefaultAsync();
+            IndexAdminBestellingenVM vm = new IndexAdminBestellingenVM();
+            vm.Bestellingen = await _context.Bestellingen.Include(x => x.Klant).Where(x => x.Leverdatum >= DateTime.Now).OrderBy(x => x.Leverdatum).ThenBy(x => x.Bestelbonnummer).ToListAsync();
+            vm.ZoekenDatumVan = DateTime.Now;
+            vm.ZoekenDatumTot = DateTime.Now.AddDays(15);
+            vm.Bericht = $"Bestelling {bestelling.Bestelbonnummer} werd succesvol aangepast!";
+            return View("Index", vm);
+        }
+        #endregion Bestelling aanpassen
     }
 }

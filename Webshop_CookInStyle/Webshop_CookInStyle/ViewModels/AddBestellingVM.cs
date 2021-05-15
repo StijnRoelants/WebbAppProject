@@ -12,5 +12,7 @@ namespace Webshop_CookInStyle.ViewModels
         public List<Klant> Klanten { get; set; }
         public Bestelling NieuweBestelling { get; set; }
         public List<Bestellijn> Orderlijnen { get; set; }
+        public int Aantal { get; set; }
+        public string Zoekopdracht { get; set; }
     }
 }

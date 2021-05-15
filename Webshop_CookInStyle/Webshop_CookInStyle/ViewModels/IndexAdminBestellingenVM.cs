@@ -12,5 +12,6 @@ namespace Webshop_CookInStyle.ViewModels
         public string ZoekenOpNaam { get; set; }
         public DateTime ZoekenDatumVan { get; set; }
         public DateTime ZoekenDatumTot { get; set; }
+        public string Bericht { get; set; }
     }
 }
