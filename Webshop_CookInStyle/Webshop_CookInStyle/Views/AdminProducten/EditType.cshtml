@@ -10,11 +10,12 @@
 @{
     ViewData["Title"] = "Edit producttype";
 }
-<div class="container">
+<div class="container card">
+    <div class="row card-body">
     <h1>Producttype aanpassen</h1>
-
+        </div>
     <hr />
-    <div class="row">
+    <div class="row card-body">
         <div class="col-md-4">
             <form asp-action="EditType">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -31,8 +32,8 @@
         </div>
     </div>
 
-    <div>
-        <a asp-action="AddProductType">Terug</a>
+    <div class="row card-body">
+        <a asp-action="AddProductType" class="btn btn-primary">Terug</a>
     </div>
 </div>
 @section Scripts {

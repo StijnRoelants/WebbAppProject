@@ -4,10 +4,11 @@
     ViewData["Title"] = "Details";
 }
 
-<div class="container">
-    <h1>Details</h1>
-
-    <div>
+<div class="container card">
+    <div class="row card-body">
+        <h1>Details</h1>
+    </div>
+    <div class="row card-body">
         <h4>Klant</h4>
         <hr />
         <dl class="row">
@@ -77,14 +78,10 @@
             </dd>
         </dl>
     </div>
-    <br />
-    <br />
-    <div>
-        <a asp-action="EditKlant" asp-route-id="@Model.Klant.Id">Edit</a>
+    <div class="row card-body">
+        <a asp-action="EditKlant" asp-route-id="@Model.Klant.Id" class=" btn btn-info">Edit</a>
     </div>
-    <br />
-    <div>
-        <a asp-action="Index">Terug</a>
+    <div class="row card-body">
+        <a asp-action="Index" class="btn btn-primary">Terug</a>
     </div>
-    <br />
 </div>

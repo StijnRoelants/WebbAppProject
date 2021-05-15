@@ -4,6 +4,10 @@
     ViewData["Title"] = "Delete Confirm";
 }
 
+@section scripts{
+    <script src="~/js/DeleteConfirm.js"></script>
+}
+
 <h1>Verwijderen</h1>
 
 <h3>Bent u zeker dat u het volgende product wenst te verwijderen</h3>
@@ -29,4 +33,5 @@
         <input type="submit" value="Delete" class="btn btn-danger" /> |
         <a asp-action="Index">Terug</a>
     </form>
+
 </div>

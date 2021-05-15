@@ -22,99 +22,104 @@
         width: 15vw;
     }
 </style>
-
-<h1>Bestelling Plaatsen</h1>
-<br />
-<div class="row d-flex justify-content-center">
-    <form asp-controller="AdminBestellingen" asp-action="ProductZoeken" method="get">
-        <div class="form-actions no-color">
-            <p>
-                Producten zoeken op naam of type zoeken:
-                <input asp-for="Zoekopdracht" />
-                <input type="submit" value="Zoeken" class="btn btn-primary" />
-                <a asp-controller="AdminBestellingen" asp-action="AddBestelling" class="btn btn-primary">Volledige lijst</a>
-            </p>
+<div class="container card">
+    <div class="row card-body">
+        <h1>Bestelling Plaatsen</h1>
+    </div>
+    <div class="row card-body">
+        <form asp-controller="AdminBestellingen" asp-action="ProductZoeken" method="get">
+            <div class="form-actions no-color">
+                <p>
+                    Producten zoeken op naam of type zoeken:
+                    <input asp-for="Zoekopdracht" />
+                    <input type="submit" value="Zoeken" class="btn btn-primary" />
+                    <a asp-controller="AdminBestellingen" asp-action="AddBestelling" class="btn btn-primary">Volledige lijst</a>
+                </p>
+            </div>
+        </form>
+    </div>
+    <div class="row card-body">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-4">
+            @foreach (var product in Model.Producten)
+            {
+                <form asp-action="Verhoog">
+                    <div class="control-label">
+                        <label class="sizeProductFont text-center">@product.Naam - @product.ProductType.Omschrijving - € @product.Eenheidsprijs / @product.Eenheid.Omschrijving </label>
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="Aantal" class="form-control formAantal" />
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Verminder" asp-action="Verminder" asp-route-id="@product.ProductID" class="btn btn-inverse-dark buttonFunction spacingButtons" />
+                        <input type="submit" value="Toevoegen" asp-action="Verhoog" asp-route-id="@product.ProductID" class="btn btn-info buttonFunction spacingButtons" />
+                    </div>
+                    <hr />
+                </form>
+                <br />
+            }
         </div>
-    </form>
-</div>
-<br />
-<div class="row">
-    <div class="col-lg-1"></div>
-    <div class="col-lg-4">
-        @foreach (var product in Model.Producten)
-        {
-            <form asp-action="Verhoog">
-                <div class="control-label">
-                    <label class="sizeProductFont text-center">@product.Naam - @product.ProductType.Omschrijving - € @product.Eenheidsprijs / @product.Eenheid.Omschrijving </label>
-                </div>
-                <div class="form-group">
-                    <input asp-for="Aantal" class="form-control formAantal" />
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="Verminder" asp-action="Verminder" asp-route-id="@product.ProductID" class="btn btn-primary buttonFunction spacingButtons" />
-                    <input type="submit" value="Toevoegen" asp-action="Verhoog" asp-route-id="@product.ProductID" class="btn btn-primary buttonFunction spacingButtons" />
-                </div>
-                <hr />
-            </form>
-            <br />
-        }
-    </div>
-    <div class="col-lg-1">
-    </div>
-    <div class="col-lg-5">
-        <h4> Bestellling: @Model.NieuweBestelling.Bestelbonnummer </h4>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Orderlijnen[0].Product.Naam)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Orderlijnen[0].Aantal)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Orderlijnen[0].Product.Eenheidsprijs)
-                    </th>
-
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Orderlijnen)
-                {
+        <div class="col-lg-1">
+        </div>
+        <div class="col-lg-5">
+            <h4> Bestellling: @Model.NieuweBestelling.Bestelbonnummer </h4>
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Product.Naam)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Aantal)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Lijnprijs)
-                        </td>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Orderlijnen[0].Product.Naam)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Orderlijnen[0].Aantal)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Orderlijnen[0].Product.Eenheidsprijs)
+                        </th>
+
+                        <th></th>
                     </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Orderlijnen)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Product.Naam)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Aantal)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Lijnprijs)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div>
+            </div>
+            <div>
+                @if (Model.NieuweBestelling == null)
+                {
+                    <p>Totaal bedrag : € 0,00</p>
                 }
-            </tbody>
-        </table>
-        <div>
-        </div>
-        <div>
-            @if (Model.NieuweBestelling == null)
-            {
-                <p>Totaal bedrag : € 0,00</p>
-            }
-            else
-            {
-                <p>Totaal bedrag incl. btw : € @Model.NieuweBestelling.Totaalprijs.ToString("0.00")</p>
-            }
-        </div>
+                else
+                {
+                    <p>Totaal bedrag incl. btw : € @Model.NieuweBestelling.Totaalprijs.ToString("0.00")</p>
+                }
+            </div>
 
-        <div class="row d-flex justify-content-center">
-            <a asp-action="AddBestellingDetails" asp-route-id="@Model.NieuweBestelling.BestellingID" class="btn btn-primary buttonFunction spacingButtonBig">Verdergaan</a>
-        </div>
-        <div class="row d-flex justify-content-center">
-            <a asp-action="Annuleren" class="btn btn-warning buttonFunction spacingButtonBig">Annuleer</a>
+            <div class="row d-flex justify-content-center">
+                <a asp-action="AddBestellingDetails" asp-route-id="@Model.NieuweBestelling.BestellingID" class="btn btn-primary buttonFunction spacingButtonBig">Verdergaan</a>
+            </div>
+            <div class="row d-flex justify-content-center">
+                <a asp-action="Annuleren" class="btn btn-warning buttonFunction spacingButtonBig">Annuleer</a>
 
+            </div>
         </div>
     </div>
+</div> 
+
+<div class="row">
+   
 </div>

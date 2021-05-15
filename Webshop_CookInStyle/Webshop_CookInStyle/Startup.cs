@@ -37,6 +37,8 @@ namespace Webshop_CookInStyle
             services.AddDefaultIdentity<Klant>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<WebshopContext>();
+
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequireDigit = true;

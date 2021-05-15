@@ -1,22 +1,19 @@
 ﻿@model Webshop_CookInStyle.ViewModels.EditProductenVM
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Productdetails";
 }
 
-<div class="container">
-    <h1>Details</h1>
-
-    <div>
-        <h4>Product</h4>
+<div class="container card">
+    <div class="row card-body">
+        <h1>Details</h1>
+    </div>
+    <div class="row card-body">
+        <h4>Product: @Model.Product.Naam</h4>
         <hr />
-        <dl class="row">
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Product.Naam)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Product.Naam)
-            </dd>
+    </div>
+    <div class="row card-body">
+        <dl class="row card-body">
             <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.Product.Omschrijving)
             </dt>
@@ -61,13 +58,20 @@
             }
         </dl>
     </div>
-    <br />
-    <br />
-    <div>
-        <a asp-action="EditProduct" asp-route-id="@Model.Product.ProductID">Edit</a> | <a asp-action="DeleteProduct" asp-route-id="@Model.Product.ProductID">Delete</a>
+    <div class="row card-body">
+        <span id="deleteSpan">
+            <a href="#" onclick="confirmDelete(true)" class="btn btn-danger">Product verwijderen</a>
+        </span>
+        <span id="confirmDeleteSpan" style="display:none">
+            <span><strong>Bent u zeker dat u "@Model.Product.Naam" wilt verwijderen?</strong></span>
+            <a asp-action="DeleteProduct" asp-route-id="@Model.Product.ProductID" class="btn btn-danger">Bevestig</a>
+            <a href="#" onclick="confirmDelete(false)" class="btn btn-primary">Annuleer</a>
+        </span>
     </div>
-    <br />
-    <div>
-        <a asp-action="Index">Terug</a>
+    <div class="row card-body">
+        <a asp-action="EditProduct" asp-route-id="@Model.Product.ProductID" class="btn btn-info">Edit</a>
+    </div>
+    <div class="row card-body">
+        <a asp-action="Index" class="btn btn-primary">Terug</a>
     </div>
 </div>

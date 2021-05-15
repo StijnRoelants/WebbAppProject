@@ -14,129 +14,136 @@
     }
 
 </style>
-
-<h1>Producten</h1>
-@if (Model.Bericht != null)
-{
-    if (Model.BerichIsError == true)
-    {
-        <div class="row">
-            <div class="col-lg-12 alert alert-danger text-center">
-                <p>@Model.Bericht</p>
-            </div>
-        </div>
-    }
-    else
-    {
-        <div class="row">
-            <div class="col-lg-12 alert alert-success text-center">
-                <p>@Model.Bericht</p>
-            </div>
-        </div>
-    }
-}
-
-<p>
-    <a asp-action="AddProductType">Producttype beheer</a>  |  <a asp-action="AddAllergeen">Allergenen beheer</a>
-</p>
-
-<form asp-controller="AdminProducten" asp-action="Search" method="get">
-    <div class="form-actions no-color">
+<div class="card">
+    <div class="row card-body">
+        <h1>Producten</h1>
+    </div>
+    <div class="row card-body d-flex justify-content-center">
+        @if (Model.Bericht != null)
+        {
+            if (Model.BerichIsError == true)
+            {
+                <div class="row">
+                    <div class="alert alert-danger text-center">
+                        <p>@Model.Bericht</p>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    <div class="alert alert-success text-center">
+                        <p>@Model.Bericht</p>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+    <div class="row card-body">
         <p>
-            Producten zoeken:
-            <input asp-for="Productsearch" />
-            <input type="submit" value="Zoeken" class="btn btn-primary" />
-            <a asp-controller="AdminProducten" asp-action="Index">Volledige lijst</a>
+            <a asp-action="AddProductType" class="btn btn-success">Producttype beheer</a> <a asp-action="AddAllergeen" class="btn btn-success">Allergenen beheer</a>
         </p>
     </div>
-</form>
-<div class="row">
-    <div class="col-sm-8">
-        <table class="table table-hover">
-            <thead class="thead-light">
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Producten[0].Naam)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Producten[0].ProductType.Omschrijving)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Producten[0].Weergave)
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Producten)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Naam)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ProductType.Omschrijving)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Weergave)
-                        </td>
-                        <td>
-                            <a asp-action="Detail" asp-route-id="@item.ProductID">Details</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-    <div class="col-sm-4">
+    <div class="row card-body">
 
-        @if (ViewBag.Visibility == true)
-        {
-            <div class="alert alert-danger">
-                <p>@ViewBag.ErrorMessage</p>
-            </div>
-        }
-
-        <form asp-action="Create" class="">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Product.Naam" class="control-label"></label>
-                <input asp-for="Product.Naam" class="form-control" />
-                <span asp-validation-for="Product.Naam" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Product.Omschrijving" class="control-label"></label>
-                <textarea asp-for="Product.Omschrijving" class="form-control"></textarea>
-                <span asp-validation-for="Product.Omschrijving" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Product.Eenheidsprijs" class="control-label"></label>
-                <input asp-for="Product.Eenheidsprijs" class="form-control" />
-                <span asp-validation-for="Product.Eenheidsprijs" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Product.ProductTypeID" class="control-label">Producttype</label>
-                <select asp-for="Product.ProductTypeID" class="form-control" asp-items="Model.Producttypes"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Product.BtwID" class="control-label">Btw-type</label>
-                <select asp-for="Product.BtwID" class="form-control" asp-items="Model.BtwTypes"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Product.EenheidID" class="control-label">Eenheid</label>
-                <select asp-for="Product.EenheidID" class="form-control" asp-items="Model.Eenheden"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="GeselecteerdeAllergenen" class="control-label">Allergenen</label>
-                <select asp-for="GeselecteerdeAllergenen" class="form-control heightBoxSetter" asp-items="Model.Allergenen"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+        <form asp-controller="AdminProducten" asp-action="Search" method="get">
+            <div class="form-actions no-color">
+                <p>
+                    Producten zoeken:
+                    <input asp-for="Productsearch" />
+                    <input type="submit" value="Zoeken" class="btn btn-primary" />
+                    <a asp-controller="AdminProducten" asp-action="Index" class="btn btn-primary">Volledige lijst</a>
+                </p>
             </div>
         </form>
     </div>
-</div>
+    <div class="row card-body">
+        <div class="col-sm-8">
+            <table class="table table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Producten[0].Naam)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Producten[0].ProductType.Omschrijving)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Producten[0].Weergave)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Producten)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Naam)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProductType.Omschrijving)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Weergave)
+                            </td>
+                            <td>
+                                <a asp-action="Detail" asp-route-id="@item.ProductID">Details</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-4">
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+            @if (ViewBag.Visibility == true)
+            {
+                <div class="alert alert-danger">
+                    <p>@ViewBag.ErrorMessage</p>
+                </div>
+            }
+
+            <form asp-action="Create" class="">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Product.Naam" class="control-label"></label>
+                    <input asp-for="Product.Naam" class="form-control" />
+                    <span asp-validation-for="Product.Naam" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Product.Omschrijving" class="control-label"></label>
+                    <textarea asp-for="Product.Omschrijving" class="form-control"></textarea>
+                    <span asp-validation-for="Product.Omschrijving" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Product.Eenheidsprijs" class="control-label"></label>
+                    <input asp-for="Product.Eenheidsprijs" class="form-control" />
+                    <span asp-validation-for="Product.Eenheidsprijs" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Product.ProductTypeID" class="control-label">Producttype</label>
+                    <select asp-for="Product.ProductTypeID" class="form-control" asp-items="Model.Producttypes"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Product.BtwID" class="control-label">Btw-type</label>
+                    <select asp-for="Product.BtwID" class="form-control" asp-items="Model.BtwTypes"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Product.EenheidID" class="control-label">Eenheid</label>
+                    <select asp-for="Product.EenheidID" class="form-control" asp-items="Model.Eenheden"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="GeselecteerdeAllergenen" class="control-label">Allergenen</label>
+                    <select asp-for="GeselecteerdeAllergenen" class="form-control heightBoxSetter" asp-items="Model.Allergenen"></select>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+        @section Scripts {
+            @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+        }

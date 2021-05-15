@@ -4,20 +4,23 @@
     ViewData["Title"] = "Producttypes";
 }
 
-<div class="container">
-    <h1>Product Types</h1>
-
-    <form asp-controller="AdminProducten" asp-action="TSearch" method="get">
-        <div class="form-actions no-color">
-            <p>
-                Producttypes zoeken:
-                <input asp-for="TypeSearch" />
-                <input type="submit" value="Zoeken" class="btn btn-primary" />
-                <a asp-controller="AdminProducten" asp-action="AddProductType">Volledige lijst</a>
-            </p>
-        </div>
-    </form>
-    <div class="row">
+<div class="container card">
+    <div class="row card-body">
+        <h1>Product Types</h1>
+    </div>
+    <div class="row card-body">
+        <form asp-controller="AdminProducten" asp-action="TSearch" method="get">
+            <div class="form-actions no-color">
+                <p>
+                    Producttypes zoeken:
+                    <input asp-for="TypeSearch" />
+                    <input type="submit" value="Zoeken" class="btn btn-primary" />
+                    <a asp-controller="AdminProducten" asp-action="AddProductType" class="btn btn-primary">Volledige lijst</a>
+                </p>
+            </div>
+        </form>
+    </div>
+    <div class="row card-body">
         <div class="col-sm-6">
             <table class="table table-hover">
                 <thead class="thead-light">
@@ -71,8 +74,8 @@
         </div>
     </div>
     <br>
-    <div>
-        <a asp-action="Index">Terug</a>
+    <div class="row card-body">
+        <a asp-action="Index" class="btn btn-primary">Terug</a>
     </div>
 </div>
 

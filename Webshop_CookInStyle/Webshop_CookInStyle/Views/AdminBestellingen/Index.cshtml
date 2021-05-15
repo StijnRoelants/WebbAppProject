@@ -18,82 +18,87 @@
         margin: 10px;
     }
 </style>
-
-<h1>Producten</h1>
-@if (Model.Bericht != null)
-{
-    <div class="row">
-        <div class="col-lg-12 alert alert-success text-center">
-            <p>@Model.Bericht</p>
+<div class="container card">
+    <div class="row card-body">
+        <h1>Bestellingen</h1>
+    </div>
+    <div class="row card-body">
+        @if (Model.Bericht != null)
+        {
+            <div class="col-lg-12 alert alert-success text-center">
+                <p>@Model.Bericht</p>
+            </div>
+        }
+    </div>
+    <div class="row card-body">
+        <p>
+            <a asp-action="AddBestelling" class="btn btn-success">Nieuwe bestelling plaatsen</a> <a asp-controller="AdminBestellingen" asp-action="Index" class="btn btn-primary">Volledige lijst tonen</a>
+        </p>
+    </div>
+    <div class="row card-body">
+        <div class="col-md-12">
+            <form asp-controller="AdminBestellingen" asp-action="BestellingZoeken" method="get">
+                <div class="form-actions no-color">
+                    <p>
+                        Bestelling zoeken op naam of nummer:
+                        <input asp-for="ZoekenOpNaam" />
+                        <input type="submit" value="Zoeken" class="btn btn-primary" />
+                    </p>
+                </div>
+            </form>
         </div>
     </div>
-}
-<br />
-<p>
-    <a asp-action="AddBestelling" class="btn btn-success">Nieuwe bestelling plaatsen</a> <a asp-controller="AdminBestellingen" asp-action="Index" class="btn btn-primary">Volledige lijst tonen</a>
-</p>
-<div class="row">
-    <div class="col-md-5">
-        <form asp-controller="AdminBestellingen" asp-action="BestellingZoeken" method="get">
-            <div class="form-actions no-color">
-                <p>
-                    Bestelling zoeken op naam of nummer:
-                    <input asp-for="ZoekenOpNaam" />
-                    <input type="submit" value="Zoeken" class="btn btn-primary" />
-                </p>
-            </div>
-        </form>
+    <div class="row card-body">
+        <div class="col-md-12">
+            <form asp-controller="AdminBestellingen" asp-action="BestellingZoekenOpDatum" method="get">
+                <div class="form-actions no-color">
+                    <p>
+                        Bestelling zoeken op datum
+                        <input asp-for="ZoekenDatumVan" asp-format="{0:dd/MM/yyyy}" />
+                        <input asp-for="ZoekenDatumTot" asp-format="{0:dd/MM/yyyy}" />
+                        <input type="submit" value="Zoeken" class="btn btn-primary" />
+                    </p>
+                </div>
+            </form>
+        </div>
     </div>
-    <div class="col-md-7">
-        <form asp-controller="AdminBestellingen" asp-action="BestellingZoekenOpDatum" method="get">
-            <div class="form-actions no-color">
-                <p>
-                    Bestelling zoeken op datum
-                    <input asp-for="ZoekenDatumVan" asp-format="{0:dd/MM/yyyy}" />
-                    <input asp-for="ZoekenDatumTot" asp-format="{0:dd/MM/yyyy}"/>
-                    <input type="submit" value="Zoeken" class="btn btn-primary" />
-                </p>
-            </div>
-        </form>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-sm-12">
-        <table class="table table-hover">
-            <thead class="thead-light">
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Bestellingen[0].Bestelbonnummer)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Bestellingen[0].Klant.NaamWeergave)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Bestellingen[0].Leverdatum)
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Bestellingen)
-                {
+    <div class="row card-body">
+        <div class="col-sm-12">
+            <table class="table table-hover">
+                <thead class="thead-light">
                     <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Bestelbonnummer)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Klant.NaamWeergave)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Leverdatum)
-                        </td>
-                        <td>
-                            <a asp-action="BestellingDetails" asp-route-id="@item.BestellingID">Details</a>
-                        </td>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Bestellingen[0].Bestelbonnummer)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Bestellingen[0].Klant.NaamWeergave)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Bestellingen[0].Leverdatum)
+                        </th>
+                        <th></th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Bestellingen)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Bestelbonnummer)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Klant.NaamWeergave)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Leverdatum)
+                            </td>
+                            <td>
+                                <a asp-action="BestellingDetails" asp-route-id="@item.BestellingID">Details</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

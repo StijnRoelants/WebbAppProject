@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,9 +19,8 @@ namespace Webshop_CookInStyle.Conrollers
             _context = context;
         }
 
-        
-
         #region Producten
+
         // Inladen producten bij opstart pagina
         public async Task<IActionResult> Index()
         {
@@ -80,7 +78,7 @@ namespace Webshop_CookInStyle.Conrollers
                     LoadIn(vm);
                     vm.Bericht = $"Product: {product.Naam} werd succesvol opgeslagen!";
                     vm.BerichIsError = false;
-                    return View("Index",vm);
+                    return View("Index", vm);
                 }
                 else
                 {
@@ -89,7 +87,7 @@ namespace Webshop_CookInStyle.Conrollers
                     viewModel.Bericht = $"Er bestaat reeds een product met de naam: {viewModel.Product.Naam} en producttype: {PTNaam}";
                     viewModel.BerichIsError = true;
                     LoadIn(viewModel);
-                    return View("Index",viewModel);
+                    return View("Index", viewModel);
                 }
             }
             LoadIn(viewModel);
@@ -120,7 +118,7 @@ namespace Webshop_CookInStyle.Conrollers
             }
             else
             {
-                viewModel.Producten = await _context.Producten.Include(x=>x.ProductType)
+                viewModel.Producten = await _context.Producten.Include(x => x.ProductType)
                     .ToListAsync();
             }
             return View("Index", viewModel);
@@ -161,43 +159,17 @@ namespace Webshop_CookInStyle.Conrollers
             return View(viewModel);
         }
 
-        public async Task<IActionResult> DeleteProduct(int id)
+        public async Task<IActionResult> DeleteProduct(int id, EditProductenVM viewModel)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            EditProductenVM viewModel = new EditProductenVM();
-            viewModel.Product = await _context.Producten
-                .Include(x => x.ProductType)
-                .Where(x => x.ProductID == id)
-                .FirstOrDefaultAsync();
-            if (viewModel.Product == null)
-            {
-                return NotFound();
-            }
-            return View(viewModel);
-        }
-
-        [HttpPost, ActionName("DeleteProduct")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteProductConfirmed(int id, EditProductenVM viewModel)
-        {
-            if (id != viewModel.Product.ProductID)
-            {
-                return NotFound();
-            }
-            if (ModelState.IsValid)
-            {
-                _context.Remove(viewModel.Product);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            else
-            {
-                return RedirectToAction(nameof(Index));
-            }
+            Product toDelete = await _context.Producten.Where(x => x.ProductID == id).FirstOrDefaultAsync();
+            string naam = toDelete.Naam;
+            _context.Remove(toDelete);
+            await _context.SaveChangesAsync();
+            IndexAdminProductenVM vm = new IndexAdminProductenVM();
+            LoadIn(vm);
+            vm.BerichIsError = false;
+            vm.Bericht = $"Product: {naam} werd succesvol verwijderd!";
+            return View("Index", vm);
         }
 
         public async Task<IActionResult> EditProduct(int? id)
@@ -291,9 +263,10 @@ namespace Webshop_CookInStyle.Conrollers
             return View("Index", vm);
         }
 
-        #endregion
+        #endregion Producten
 
         #region Allergenen
+
         // Inladen Allergenen bij opstart pagina
         public async Task<IActionResult> AddAllergeen()
         {
@@ -303,7 +276,6 @@ namespace Webshop_CookInStyle.Conrollers
                 .ToListAsync();
             return View(viewModel);
         }
-
 
         // Zoekfunctie binnen Allergeen
         public async Task<IActionResult> ASearch(AddAllergeenVM viewModel)
@@ -322,7 +294,6 @@ namespace Webshop_CookInStyle.Conrollers
                     .ToListAsync();
             }
             return View("AddAllergeen", viewModel);
-
         }
 
         // Nieuw Allergeen aanmaken
@@ -362,7 +333,6 @@ namespace Webshop_CookInStyle.Conrollers
                         viewModel.AllergenenList = new List<Allergeen>(_context.Allergenen);
                         return View("AddAllergeen", viewModel);
                     }
-
                 }
             }
             return View(viewModel);
@@ -419,7 +389,7 @@ namespace Webshop_CookInStyle.Conrollers
             }
         }
 
-        #endregion
+        #endregion Allergenen
 
         #region Product Type
 
@@ -432,7 +402,6 @@ namespace Webshop_CookInStyle.Conrollers
                 .ToListAsync();
             return View(viewModel);
         }
-
 
         // Zoekfunctie binnen types
         public async Task<IActionResult> TSearch(AddProductTypeVM viewModel)
@@ -451,7 +420,6 @@ namespace Webshop_CookInStyle.Conrollers
                     .ToListAsync();
             }
             return View("AddProductType", viewModel);
-
         }
 
         // Nieuw types aanmaken
@@ -491,7 +459,6 @@ namespace Webshop_CookInStyle.Conrollers
                         viewModel.ProductTypes = new List<ProductType>(_context.ProductTypes);
                         return View("AddProductType", viewModel);
                     }
-
                 }
             }
             return View(viewModel);
@@ -602,6 +569,6 @@ namespace Webshop_CookInStyle.Conrollers
             return _context.ProductTypes.Any(x => x.ProductTypeID == id);
         }
 
-        #endregion
+        #endregion Product Type
     }
 }
