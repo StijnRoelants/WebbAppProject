@@ -13,7 +13,9 @@ namespace Webshop_CookInStyle.Models
     {
         [Key]
         public int LeverAdresID { get; set; }
+        [Required]
         public string Straat { get; set; }
+        [Required]
         public string Omschrijving { get; set; }
         // FK Postcode
         public int PostcodeID { get; set; }

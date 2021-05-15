@@ -13,6 +13,7 @@ namespace Webshop_CookInStyle.Models
     {
         [Key]
         public int AllergeenID { get; set; }
+        [Required]
         public string Omschrijving { get; set; }
 
         //Navprop 
