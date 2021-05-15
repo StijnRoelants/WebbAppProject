@@ -12,6 +12,7 @@
     .heightBoxSetter {
         height: 120px;
     }
+
 </style>
 
 <h1>Producten</h1>
@@ -51,8 +52,8 @@
 </form>
 <div class="row">
     <div class="col-sm-8">
-        <table class="table">
-            <thead>
+        <table class="table table-hover">
+            <thead class="thead-light">
                 <tr>
                     <th>
                         @Html.DisplayNameFor(model => model.Producten[0].Naam)
@@ -96,7 +97,7 @@
             </div>
         }
 
-        <form asp-action="Create">
+        <form asp-action="Create" class="">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Product.Naam" class="control-label"></label>

@@ -4,23 +4,25 @@
     ViewData["Title"] = "Allergenen";
 }
 
-<div class="container">
-    <h1>Allergenen</h1>
+<div class="container card">
+    <div class="row card-body ">
+        <h1>Allergenen</h1>
 
-    <form asp-controller="AdminProducten" asp-action="ASearch" method="get">
-        <div class="form-actions no-color">
-            <p>
-                Allergenen zoeken:
-                <input asp-for="AllergeenSearch" />
-                <input type="submit" value="Zoeken" class="btn btn-primary" />
-                <a asp-controller="AdminProducten" asp-action="AddAllergeen">Volledige lijst</a>
-            </p>
+        <form asp-controller="AdminProducten" asp-action="ASearch" method="get">
+            <div class="form-actions no-color">
+                <p>
+                    Allergenen zoeken:
+                    <input asp-for="AllergeenSearch" />
+                    <input type="submit" value="Zoeken" class="btn btn-primary" />
+                    <a asp-controller="AdminProducten" asp-action="AddAllergeen">Volledige lijst</a>
+                </p>
+            </div>
+        </form>
         </div>
-    </form>
-    <div class="row">
+    <div class="row card-body">
         <div class="col-sm-6">
-            <table class="table">
-                <thead>
+            <table class="table table-hover">
+                <thead class="thead-light">
                     <tr>
                         <th>
                             @Html.DisplayNameFor(model => model.AllergenenList[0].Omschrijving)
@@ -67,12 +69,14 @@
                     <input type="submit" value="Create" class="btn btn-primary" />
                 </div>
             </form>
+            <br />
+            <div>
+                <a asp-action="Index">Terug</a>
+            </div>
         </div>
+
     </div>
-    <br>
-    <div>
-        <a asp-action="Index">Terug</a>
-    </div>
+
 </div>
 
 @section Scripts {
