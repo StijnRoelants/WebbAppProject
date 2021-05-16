@@ -25,7 +25,8 @@ namespace Webshop_CookInStyle.Conrollers
         public async Task<IActionResult> Index()
         {
             IndexAdminProductenVM viewModel = new IndexAdminProductenVM();
-            viewModel.Producten = await _context.Producten.Include(x => x.ProductType).OrderBy(x => x.ProductType).ThenBy(x => x.Naam)
+            viewModel.Producten = await _context.Producten.Include(x => x.ProductType)
+                .OrderBy(x => x.ProductType.Volgnummer).ThenBy(x => x.Naam)
                 .ToListAsync();
             viewModel.Product = new Product();
             viewModel.AllergeenList = new List<Allergeen>();
@@ -128,7 +129,9 @@ namespace Webshop_CookInStyle.Conrollers
         {
             viewModel.AllergeenList = new List<Allergeen>();
             viewModel.GeselecteerdeAllergenen = new List<int>();
-            viewModel.Producten = new List<Product>(_context.Producten.Include(x => x.ProductType).OrderBy(x => x.ProductType).ThenBy(x => x.Naam));
+            viewModel.Producten = _context.Producten.Include(x => x.ProductType)
+                                                    .OrderBy(x => x.ProductType.Volgnummer).ThenBy(x => x.Naam)
+                                                    .ToList();
             viewModel.Allergenen = new SelectList(_context.Allergenen.OrderBy(x => x.Omschrijving), "AllergeenID", "Omschrijving");
             viewModel.Producttypes = new SelectList(_context.ProductTypes.OrderBy(x => x.Omschrijving), "ProductTypeID", "Omschrijving");
             viewModel.BtwTypes = new SelectList(_context.BtwTypes.OrderBy(x => x.Percentage), "BtwID", "Weergave");
