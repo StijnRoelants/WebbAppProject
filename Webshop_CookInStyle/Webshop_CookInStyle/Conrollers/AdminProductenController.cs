@@ -230,6 +230,7 @@ namespace Webshop_CookInStyle.Conrollers
                 aangepastProduct.ProductTypeID = viewModel.Product.ProductTypeID;
                 aangepastProduct.BtwID = viewModel.Product.BtwID;
                 aangepastProduct.EenheidID = viewModel.Product.EenheidID;
+                aangepastProduct.BeschikbaarInWebshop = viewModel.Product.BeschikbaarInWebshop;
                 if (viewModel.GeselecteerdeAllergenen == null)
                 {
                     viewModel.GeselecteerdeAllergenen = new List<int>();
