@@ -26,6 +26,11 @@
                     <span asp-validation-for="ProductType.Omschrijving" class="text-danger"></span>
                 </div>
                 <div class="form-group">
+                    <label asp-for="ProductType.Volgnummer" class="control-label"></label>
+                    <input asp-for="ProductType.Volgnummer" class="form-control" />
+                    <span asp-validation-for="ProductType.Volgnummer" class="text-danger"></span>
+                </div>
+                <div class="form-group">
                     <input type="submit" value="Save" class="btn btn-primary" />
                 </div>
             </form>

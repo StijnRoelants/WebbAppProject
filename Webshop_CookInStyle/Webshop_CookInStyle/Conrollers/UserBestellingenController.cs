@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,6 +13,7 @@ using Webshop_CookInStyle.ViewModels;
 
 namespace Webshop_CookInStyle.Conrollers
 {
+    [Authorize]
     public class UserBestellingenController : Controller
     {
         private readonly WebshopContext _context;
@@ -19,7 +23,9 @@ namespace Webshop_CookInStyle.Conrollers
             _context = context;
         }
 
+        // Deze controller maakt gebruik van een combinatie van bestaande methodes verder uitgelegd in de controller Admin Bestellingen
 
+        #region index
         public async Task<IActionResult> Index()
         {
             IndexUserBestellingenVM viewModel = new IndexUserBestellingenVM();
@@ -35,6 +41,7 @@ namespace Webshop_CookInStyle.Conrollers
             viewModel.Orderlijnen = bestelling.Bestellijnen.ToList();
             viewModel.BeschikbareProducten = await _context.Producten
                 .Include(x => x.ProductType).Include(x => x.Allergenen).ThenInclude(x => x.Allergeen).Include(x => x.Eenheid)
+                .OrderBy(x => x.ProductType.Volgnummer).ThenBy(x => x.Naam)
                 .Where(x => x.BeschikbaarInWebshop == true).ToListAsync();
             OpbouwProductLijst(viewModel);
             return View(viewModel);
@@ -97,8 +104,9 @@ namespace Webshop_CookInStyle.Conrollers
             viewModel.NieuweBestelling = await _context.Bestellingen.Include(x => x.Bestellijnen).FirstOrDefaultAsync(x => x.Klant == klant && x.IsVoltooid == false);
             viewModel.Orderlijnen = bestelling.Bestellijnen.ToList();
             viewModel.BeschikbareProducten = await _context.Producten
-                    .Include(x => x.ProductType).Include(x => x.Allergenen).Include(x => x.Eenheid)
-                    .Where(x => x.BeschikbaarInWebshop == true).ToListAsync();
+                .Include(x => x.ProductType).Include(x => x.Allergenen).ThenInclude(x => x.Allergeen).Include(x => x.Eenheid)
+                .OrderBy(x => x.ProductType.Volgnummer).ThenBy(x => x.Naam)
+                .Where(x => x.BeschikbaarInWebshop == true).ToListAsync();
             OpbouwProductLijst(viewModel);
             return View("Index", viewModel);
         }
@@ -134,7 +142,8 @@ namespace Webshop_CookInStyle.Conrollers
                 viewModel.NieuweBestelling = await _context.Bestellingen.Include(x => x.Bestellijnen).FirstOrDefaultAsync(x => x.Klant == klant && x.IsVoltooid == false);
                 viewModel.Orderlijnen = bestelling.Bestellijnen.ToList();
                 viewModel.BeschikbareProducten = await _context.Producten
-                    .Include(x => x.ProductType).Include(x => x.Allergenen).Include(x => x.Eenheid)
+                    .Include(x => x.ProductType).Include(x => x.Allergenen).ThenInclude(x => x.Allergeen).Include(x => x.Eenheid)
+                    .OrderBy(x => x.ProductType.Volgnummer).ThenBy(x => x.Naam)
                     .Where(x => x.BeschikbaarInWebshop == true).ToListAsync();
                 OpbouwProductLijst(viewModel);
                 return View("Index", viewModel);
@@ -144,12 +153,13 @@ namespace Webshop_CookInStyle.Conrollers
             viewModel.NieuweBestelling = await _context.Bestellingen.Include(x => x.Bestellijnen).FirstOrDefaultAsync(x => x.Klant == klant && x.IsVoltooid == false);
             viewModel.Orderlijnen = bestelling.Bestellijnen.ToList();
             viewModel.BeschikbareProducten = await _context.Producten
-                .Include(x => x.ProductType).Include(x => x.Allergenen).Include(x => x.Eenheid)
+                .Include(x => x.ProductType).Include(x => x.Allergenen).ThenInclude(x => x.Allergeen).Include(x => x.Eenheid)
                 .Where(x => x.BeschikbaarInWebshop == true).ToListAsync();
             OpbouwProductLijst(viewModel);
             return View("Index", viewModel);
         }
 
+        // Om een subtitel weer te geeven van de producttypes maken we een lijst van deze die beschikbaar zijn in de webshop
         private void OpbouwProductLijst(IndexUserBestellingenVM viewModel)
         {
             viewModel.Typelijst = new List<ProductType>();
@@ -240,5 +250,104 @@ namespace Webshop_CookInStyle.Conrollers
             _context.Update(ff);
             _context.SaveChanges();
         }
+
+        #endregion
+
+        #region Bestelling afronden
+        public async Task<IActionResult> BestellingAfronden(int id)
+        {
+            if (id == 0)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            UserBestellingAfrondenVM viewModel = new UserBestellingAfrondenVM();
+            viewModel.Bestelling = await _context.Bestellingen.Where(x => x.BestellingID == id).Include(x => x.Bestellijnen).ThenInclude(x => x.Product).FirstOrDefaultAsync();
+            viewModel.Bestellijnen = viewModel.Bestelling.Bestellijnen.ToList();
+            viewModel.Klant = await _context.Klanten.Where(x => x.UserName == HttpContext.User.Identity.Name).Include(x => x.LeverAdressen).FirstOrDefaultAsync();
+            viewModel.Leveradressen = new SelectList(await _context.LeverAdressen.Where(x => x.KlantFK == viewModel.Klant.Id).Include(x => x.Postcode).Include(x => x.Land).ToListAsync(), "LeverAdresID", "Weergave");
+            viewModel.NieuwLeveradres = new LeverAdres();
+            return View(viewModel);
+        }
+
+        public async Task<IActionResult> NieuwLeveradres(int id, UserBestellingAfrondenVM viewModel)
+        {
+            if (id == 0)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            Bestelling aangepasteBestelling = await _context.Bestellingen.Where(x => x.BestellingID == id).FirstOrDefaultAsync();
+            aangepasteBestelling.Leverdatum = viewModel.Bestelling.Leverdatum;
+            aangepasteBestelling.Opmerking = viewModel.Bestelling.Opmerking;
+            aangepasteBestelling.IsVoltooid = true;
+            _context.Bestellingen.Update(aangepasteBestelling);
+            _context.SaveChanges();
+            UserBestellingAfrondenVM vm = new UserBestellingAfrondenVM();
+            vm.Bestelling = await _context.Bestellingen.Where(x => x.BestellingID == id).Include(x => x.Bestellijnen).ThenInclude(x => x.Product).FirstOrDefaultAsync();
+            vm.Postcodes = new SelectList(await _context.Postcodes.OrderBy(x => x.Nummer).ToListAsync(), "PostcodeID", "Weergave");
+            vm.Landen = new SelectList(await _context.Landen.OrderBy(x => x.Naam).ToListAsync(), "LandID", "Naam");
+            vm.NieuwLeveradres = new LeverAdres();
+            return View(vm);
+        }
+
+        public async Task<IActionResult> CheckEnAfsluiten(int? id, UserBestellingAfrondenVM viewModel)
+        {
+            Bestelling aangepasteBestelling = await _context.Bestellingen.Where(x => x.BestellingID == id).FirstOrDefaultAsync();
+            aangepasteBestelling.Leverdatum = viewModel.Bestelling.Leverdatum;
+            aangepasteBestelling.Opmerking = viewModel.Bestelling.Opmerking;
+            aangepasteBestelling.LeverAdresID = viewModel.Bestelling.LeverAdresID;
+            aangepasteBestelling.IsVoltooid = true;
+            Klant klant = await _context.Klanten.Where(x => x.Id == aangepasteBestelling.KlantFK).Include(x => x.Postcode).FirstOrDefaultAsync();
+            LeverAdres leveradres = await _context.LeverAdressen.Where(x => x.LeverAdresID == aangepasteBestelling.LeverAdresID).Include(x => x.Postcode).FirstOrDefaultAsync();
+            _context.Bestellingen.Update(aangepasteBestelling);
+            _context.SaveChanges();
+            UserBestellingDetailVM vm = new UserBestellingDetailVM();
+            vm.Bestelling = _context.Bestellingen.Where(x => x.BestellingID == id).Include(x => x.LeverAdres.Postcode).FirstOrDefault();
+            vm.Klant = klant;
+            vm.Bestellijnen = BestelijnenGenereren(id);
+            vm.LeverAdres = leveradres;
+            return View("BestellingDetail", vm);
+        }
+
+        public async Task<IActionResult> CreateAdres(UserBestellingAfrondenVM viewModel)
+        {
+            Bestelling bestelling = await _context.Bestellingen.Where(x => x.BestellingID == viewModel.Bestelling.BestellingID).FirstOrDefaultAsync();
+            Klant klant = await _context.Klanten.Where(x => x.Id == bestelling.KlantFK).Include(x => x.Postcode).FirstOrDefaultAsync();
+            if (ModelState.IsValid)
+            {
+                LeverAdres leverAdres = new LeverAdres { Omschrijving = viewModel.NieuwLeveradres.Omschrijving, Straat = viewModel.NieuwLeveradres.Straat, KlantFK = klant.Id, PostcodeID = viewModel.NieuwLeveradres.PostcodeID, LandID = viewModel.NieuwLeveradres.LandID };
+                bestelling.LeverAdres = leverAdres;
+                bestelling.IsVoltooid = true;
+                _context.LeverAdressen.Add(leverAdres);
+                _context.Bestellingen.Update(bestelling);
+                _context.SaveChanges();
+                UserBestellingDetailVM vm = new UserBestellingDetailVM();
+                vm.Bestelling = _context.Bestellingen.Where(x => x.BestellingID == bestelling.BestellingID).Include(x => x.LeverAdres.Postcode).FirstOrDefault();
+                vm.Klant = klant;
+                vm.Bestellijnen = BestelijnenGenereren(bestelling.BestellingID);
+                LeverAdres nieuw = await _context.LeverAdressen.Where(x => x.LeverAdresID == leverAdres.LeverAdresID).Include(x => x.Postcode).FirstOrDefaultAsync();
+                vm.LeverAdres = nieuw;
+                return View("BestellingDetail", vm);
+            }
+            else
+            {
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        private List<string> BestelijnenGenereren(int? id)
+        {
+            List<Bestellijn> lijnen = _context.Bestellijnen.Where(x => x.BestellingID == id).Include(x => x.Product.Eenheid).Include(x => x.Product.ProductType).OrderBy(x => x.Product.ProductType.Volgnummer).ToList();
+            List<string> Lijst = new List<string>();
+            if (lijnen != null)
+            {
+                foreach (var item in lijnen)
+                {
+                    string lijn = "";
+                    Lijst.Add(lijn = $"{item.Product.Naam}\t {item.Aantal}/{item.Product.Eenheid.Omschrijving} - € {item.Lijnprijs}");
+                }
+            }
+            return Lijst;
+        }
+        #endregion
     }
 }

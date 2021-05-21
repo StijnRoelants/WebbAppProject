@@ -87,7 +87,7 @@ namespace Webshop_CookInStyle
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=UserBestellingen}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
 

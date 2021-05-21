@@ -26,6 +26,9 @@
                 <thead class="thead-light">
                     <tr>
                         <th>
+                            @Html.DisplayNameFor(model => model.ProductTypes[0].Volgnummer)
+                        </th>
+                        <th>
                             @Html.DisplayNameFor(model => model.ProductTypes[0].Omschrijving)
                         </th>
                         <th></th>
@@ -34,15 +37,18 @@
                 <tbody>
                     @foreach (var item in Model.ProductTypes)
                     {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Omschrijving)
-                            </td>
-                            <td>
-                                <a asp-action="EditType" asp-route-id="@item.ProductTypeID">Edit</a> |
-                                <a asp-action="DeleteType" asp-route-id="@item.ProductTypeID">Delete</a>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Volgnummer)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Omschrijving)
+                        </td>
+                        <td>
+                            <a asp-action="EditType" asp-route-id="@item.ProductTypeID">Edit</a> |
+                            <a asp-action="DeleteType" asp-route-id="@item.ProductTypeID">Delete</a>
+                        </td>
+                    </tr>
                     }
                 </tbody>
             </table>
@@ -66,6 +72,12 @@
                     <label asp-for="ProductType.Omschrijving" class="control-label"></label>
                     <input asp-for="ProductType.Omschrijving" class="form-control" />
                     <span asp-validation-for="ProductType.Omschrijving" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ProductType.Volgnummer" class="control-label">Volgenummer</label><br />
+                    <small>Deze bepaald bij het ordenen welke plaats dit producttype krijgt in lijst</small>
+                    <input asp-for="ProductType.Volgnummer" class="form-control" />
+                    <span asp-validation-for="ProductType.Volgnummer" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <input type="submit" value="Create" class="btn btn-primary" />

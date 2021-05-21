@@ -12,8 +12,9 @@ namespace Webshop_CookInStyle.Models
     {
         [Key]
         public int ProductTypeID { get; set; }
-        [DisplayName("Producttype")]
+        [DisplayName("Producttype"), Required]
         public string Omschrijving { get; set; }
+        [Required]
         public int Volgnummer { get; set; }
 
         // Navprop
