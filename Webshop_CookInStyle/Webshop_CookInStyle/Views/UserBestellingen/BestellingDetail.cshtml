@@ -1,0 +1,122 @@
+﻿@model Webshop_CookInStyle.ViewModels.UserBestellingDetailVM
+
+@{
+    ViewData["Title"] = "Bestelling Afgerond";
+}
+
+@section scripts{
+    <script src="~/js/DeleteConfirm.js"></script>
+}
+
+<div class="container card">
+    <div class="row card-body">
+        <div class="col-lg-12">
+            <h1>Bedankt voor uw bestelling!</h1>
+        </div>
+    </div>
+    <div class="row card-body">
+        <div class="col-lg-12">
+            <br />
+            <h3>Bestelling: @Model.Bestelling.Bestelbonnummer</h3>
+        </div>
+    </div>
+    <div class="row card-body">
+        <div class="col-lg-4">
+            <h4>Klant gegevens</h4>
+            <hr />
+            <dl>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Klant.Voornaam)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Klant.NaamWeergaveSmall)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Klant.StraatEnNummer)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Klant.StraatEnNummer)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Klant.Postcode)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Klant.Postcode.Weergave)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Klant.Email)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Klant.Email)
+                </dd>
+            </dl>
+            <br />
+            <h4>Leveradres</h4>
+            <hr />
+            <dl>
+                <dt class="col-sm-5">
+                    @Html.DisplayNameFor(model => model.LeverAdres.Omschrijving)
+                </dt>
+                <dd class="col-sm-7">
+                    @Html.DisplayFor(model => model.LeverAdres.Omschrijving)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.LeverAdres.Straat)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.LeverAdres.Straat)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.LeverAdres.Postcode)
+                </dt>
+                <dd class="col-sm-8>
+                    @Html.DisplayFor(model => model.LeverAdres.Postcode.Weergave)
+                </dd>
+            </dl>
+        </div>
+        <div class="col-lg-1"></div>
+        <div class="col-lg-7">
+            <h4>Bestelling gegevens</h4>
+            <hr />
+            <dl>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Bestelling.BestelDatum)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Bestelling.BestelDatum)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Bestelling.Leverdatum)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Bestelling.Leverdatum)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Bestelling.Opmerking)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Bestelling.Opmerking)
+                </dd>
+                <dt class="col-sm-2">
+                    <p>Bestelling:</p>
+                </dt>
+                @foreach (var item in Model.Bestellijnen)
+                {
+                    <dt class="col-sm-2">
+                        <p><br />  </p>
+                    </dt>
+                    <dd class="col-sm-10">
+                        <p>@item</p>
+                    </dd>
+                }
+            </dl>
+        </div>
+    </div>
+    <br />
+    <br />
+    <div class="row card-body">
+        <div class="col-lg-12">
+            <a asp-action="Index" class="btn btn-primary">Terug</a>
+        </div>
+    </div>
+</div>

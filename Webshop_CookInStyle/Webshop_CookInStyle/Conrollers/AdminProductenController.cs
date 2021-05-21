@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ using Webshop_CookInStyle.ViewModels;
 
 namespace Webshop_CookInStyle.Conrollers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminProductenController : Controller
     {
         private readonly WebshopContext _context;
@@ -32,7 +34,7 @@ namespace Webshop_CookInStyle.Conrollers
             viewModel.AllergeenList = new List<Allergeen>();
             viewModel.Allergenen = new SelectList(_context.Allergenen.OrderBy(x => x.Omschrijving), "AllergeenID", "Omschrijving");
             viewModel.GeselecteerdeAllergenen = new List<int>();
-            viewModel.Producttypes = new SelectList(_context.ProductTypes.OrderBy(x => x.Omschrijving), "ProductTypeID", "Omschrijving");
+            viewModel.Producttypes = new SelectList(_context.ProductTypes.OrderBy(x => x.Volgnummer), "ProductTypeID", "Omschrijving");
             viewModel.BtwTypes = new SelectList(_context.BtwTypes.OrderBy(x => x.Percentage), "BtwID", "Weergave");
             viewModel.Eenheden = new SelectList(_context.Eenheden.OrderBy(x => x.Omschrijving), "EenheidID", "Omschrijving");
             return View(viewModel);
@@ -230,6 +232,7 @@ namespace Webshop_CookInStyle.Conrollers
                 aangepastProduct.ProductTypeID = viewModel.Product.ProductTypeID;
                 aangepastProduct.BtwID = viewModel.Product.BtwID;
                 aangepastProduct.EenheidID = viewModel.Product.EenheidID;
+                aangepastProduct.BeschikbaarInWebshop = viewModel.Product.BeschikbaarInWebshop;
                 if (viewModel.GeselecteerdeAllergenen == null)
                 {
                     viewModel.GeselecteerdeAllergenen = new List<int>();
@@ -401,7 +404,7 @@ namespace Webshop_CookInStyle.Conrollers
         {
             AddProductTypeVM viewModel = new AddProductTypeVM();
             viewModel.ProductTypes = await _context.ProductTypes
-                .OrderBy(x => x.Omschrijving)
+                .OrderBy(x => x.Volgnummer)
                 .ToListAsync();
             return View(viewModel);
         }
@@ -413,13 +416,13 @@ namespace Webshop_CookInStyle.Conrollers
             {
                 viewModel.ProductTypes = await _context.ProductTypes
                     .Where(x => x.Omschrijving.Contains(viewModel.TypeSearch))
-                    .OrderBy(x => x.Omschrijving)
+                    .OrderBy(x => x.Volgnummer)
                     .ToListAsync();
             }
             else
             {
                 viewModel.ProductTypes = await _context.ProductTypes
-                    .OrderBy(x => x.Omschrijving)
+                    .OrderBy(x => x.Volgnummer)
                     .ToListAsync();
             }
             return View("AddProductType", viewModel);

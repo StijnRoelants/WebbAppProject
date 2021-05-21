@@ -61,65 +61,67 @@
         </div>
         <div class="col-lg-1">
         </div>
-        <div class="col-lg-5">
-            <h4> Bestellling: @Model.NieuweBestelling.Bestelbonnummer </h4>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Orderlijnen[0].Product.Naam)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Orderlijnen[0].Aantal)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Orderlijnen[0].Product.Eenheidsprijs)
-                        </th>
+        <div class="col-lg-6">
+            <div class="card bg-light mb-3">
+                <div class="card-header text-center">
+                    <h5> Bestellling: @Model.NieuweBestelling.Bestelbonnummer </h5>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Orderlijnen[0].Product.Naam)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Orderlijnen[0].Aantal)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Orderlijnen[0].Product.Eenheidsprijs)
+                                </th>
 
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Orderlijnen)
-                    {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Product.Naam)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Aantal)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Lijnprijs)
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-            <div>
-            </div>
-            <div>
-                @if (Model.NieuweBestelling == null)
-                {
-                    <p>Totaal bedrag : € 0,00</p>
-                }
-                else
-                {
-                    <p>Totaal bedrag incl. btw : € @Model.NieuweBestelling.Totaalprijs.ToString("0.00")</p>
-                }
-            </div>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Orderlijnen)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Product.Naam)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Aantal)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Lijnprijs)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div>
+                    </div>
+                    <div>
+                        @if (Model.NieuweBestelling == null)
+                        {
+                            <br />
+                            <h5 class="card-title text-center">Totaal bedrag : € 0,00</h5>
+                        }
+                        else
+                        {
+                            <br />
+                            <h5 class="card-title text-center">Totaal bedrag : € @Model.NieuweBestelling.Totaalprijs.ToString("0.00")</h5>
+                        }
+                    </div>
+                    <div class="row d-flex justify-content-center">
+                        <a asp-action="AddBestellingDetails" asp-route-id="@Model.NieuweBestelling.BestellingID" class="btn btn-primary buttonFunction spacingButtonBig">Verdergaan</a>
+                    </div>
+                    <div class="row d-flex justify-content-center">
+                        <a asp-action="Annuleren" class="btn btn-warning buttonFunction spacingButtonBig">Annuleer</a>
 
-            <div class="row d-flex justify-content-center">
-                <a asp-action="AddBestellingDetails" asp-route-id="@Model.NieuweBestelling.BestellingID" class="btn btn-primary buttonFunction spacingButtonBig">Verdergaan</a>
-            </div>
-            <div class="row d-flex justify-content-center">
-                <a asp-action="Annuleren" class="btn btn-warning buttonFunction spacingButtonBig">Annuleer</a>
-
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div> 
-
-<div class="row">
-   
-</div>

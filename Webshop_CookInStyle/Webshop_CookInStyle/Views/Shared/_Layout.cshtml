@@ -32,27 +32,30 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid body-content">
-                <a asp-area="" asp-controller="Home" asp-action="Index"><img src="~/Images/LogoCis.jpg" class="logoSize" /> </a>
+                <a asp-area="" asp-controller="UserBestellingen" asp-action="Index"><img src="~/Images/LogoCis.jpg" class="logoSize" /> </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="nav justify-content-end">
+                        @if (this.User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="AdminBestellingen" asp-action="Index">Bestellingen</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="AdminProducten" asp-action="Index">Producten</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="AdminKlanten" asp-action="Index">Klanten</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="AdminSettings" asp-action="Index">Instellingen</a>
+                            </li>
+                        }
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="AdminBestellingen" asp-action="Index">Bestellingen</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="AdminProducten" asp-action="Index">Producten</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="AdminKlanten" asp-action="Index">Klanten</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="AdminSettings" asp-action="Index">Instellingen</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="UserBestellingen" asp-action="Index">Webshop</a>
                         </li>
                     </ul>
                 </div>
@@ -107,8 +110,8 @@
 
 
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/DeleteConfirm.js" asp-append-version="true"></script>
 

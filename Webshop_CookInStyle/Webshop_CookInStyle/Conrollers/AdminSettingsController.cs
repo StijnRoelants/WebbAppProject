@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,6 +12,7 @@ using Webshop_CookInStyle.ViewModels;
 
 namespace Webshop_CookInStyle.Conrollers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminSettingsController : Controller
     {
         private readonly WebshopContext _context;

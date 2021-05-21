@@ -1,8 +1,107 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model Webshop_CookInStyle.ViewModels.IndexUserBestellingenVM
+
+@{
+    ViewData["Title"] = "Welkom";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@section scripts{
+    <script src="~/js/DeleteConfirm.js"></script>
+}
+
+<style>
+    .headerStyle {
+        max-width: 60vw;
+        max-height: auto;
+    }
+
+    .headerFontStyle1 {
+        color: #575757;
+        font-family: 'Baskerville Old Face';
+    }
+
+    .headerFontStyle2 {
+        color: #2b2b2b;
+        font-family: 'Baskerville Old Face';
+        padding: 3vw;
+    }
+
+    .spacerDivs {
+        height: 5vh;
+    }
+</style>
+
+<div class="card">
+    <div class="card-body d-flex justify-content-center">
+        <div class="row" style="background: #ffcfa8; width: 70vw;">
+            <div class="col-sm-4" style="padding-top:5vh;">
+                <p class="text-center display-2 headerFontStyle1">Heerlijke Italiaanse klassiekers!</p>
+                <h4 class="headerFontStyle2">Onze fan-favorite, de Pasta Box kan je vanaf nu bestellen t.e.m. 29 mei</h4>
+            </div>
+            <div class="col-sm-8">
+                <img src="~/Images/Webshop/Header.jpg" class="img-fluid" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row spacerDivs">
+        <p></p>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <p class="display-1" style="margin-left:35px;">A La Carte</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <h4 style="margin-left:35px;">Bestel hier onze heerlijke gerechten, gratis geleverd in een straal van 25km rond Cook in Style</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 d-flex justify-content-lg-center">
+            <a asp-controller="UserBestellingen" asp-action="Index" class="btn btn-primary">log in om uw bestelling te plaatsen</a>
+        </div>
+    </div>
+    <div class="card-body d-flex justify-content-lg-start">
+        <div class="row">
+            @foreach (var type in Model.Typelijst)
+            {
+                <div class="col-sm-12">
+                    <h3 style="margin-bottom: 10px;">@type.Omschrijving</h3>
+                    @foreach (var product in Model.BeschikbareProducten)
+                    {
+                        if (product.ProductType == type)
+                        {
+                                <div class="control-label">
+                                    <label class="sizeProductFont text-center">@product.Naam - @product.ProductType.Omschrijving - € @product.Eenheidsprijs / @product.Eenheid.Omschrijving </label>
+                                    <span id="detailSpan_@product.ProductID">
+                                        <button href="#" onclick="toonDetails(true, @product.ProductID)" class="btn btn-sm btn-light">Allergenen</button>
+                                    </span>
+                                    <span id="toonDetailSpan_@product.ProductID" style="margin-left:7px; display:none">
+
+                                        @if (product.Allergenen.Count != 0)
+                                        {
+                                            @foreach (var allergeen in product.Allergenen)
+                                            {
+                                                <small>@allergeen.Allergeen.Omschrijving</small>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <small>Geen allergenen</small>
+                                        }
+
+
+                                        <button href="#" onclick="toonDetails(false, @product.ProductID)" style="margin-left:7px;" class="btn btn-sm btn-light">Verberg</button>
+                                    </span>
+                                </div>
+                                <hr />
+                        }
+                    }
+                    <br /><br /><br /><br />
+                </div>
+            }
+        </div>
+    </div>
+
 </div>
