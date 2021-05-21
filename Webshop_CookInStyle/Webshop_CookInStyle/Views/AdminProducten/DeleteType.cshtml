@@ -1,0 +1,31 @@
+﻿@model Webshop_CookInStyle.ViewModels.AddProductTypeVM
+
+@{
+    ViewData["Title"] = "Delete Confirm";
+}
+
+<div class="container card">
+    <div class="row card-body">
+        <h1>Verwijderen</h1>
+    </div>
+    <div class="row card-body">
+        <h3>Bent u zeker dat u het volgende producttype wenst te verwijderen</h3>
+    </div>
+    <div class="row card-body">
+        <dl class="row  card-body">
+            <dt class="col-lg-2">
+                @Html.DisplayNameFor(model => model.ProductType.Omschrijving)
+            </dt>
+            <dd class="col-lg-9">
+                @Html.DisplayFor(model => model.ProductType.Omschrijving)
+            </dd>
+        </dl>
+    </div>
+    <div class="row card-body">
+        <form asp-action="DeleteType">
+            <input type="hidden" asp-for="ProductType.ProductTypeID" />
+            <input type="submit" value="Delete" class="btn btn-danger" />
+            <a asp-action="Index" class="btn btn-primary">Terug</a>
+        </form>
+    </div>
+</div>

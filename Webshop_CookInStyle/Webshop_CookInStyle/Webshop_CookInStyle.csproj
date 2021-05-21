@@ -5,6 +5,36 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20210405161825_InitialCreate.cs" />
+    <Compile Remove="Migrations\20210405161825_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20210405162001_InitialCreate.cs" />
+    <Compile Remove="Migrations\20210405162001_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20210405163828_InitialCreate.cs" />
+    <Compile Remove="Migrations\20210405163828_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20210405164455_InitialCreate.cs" />
+    <Compile Remove="Migrations\20210405164455_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20210415123100_BtwFK.cs" />
+    <Compile Remove="Migrations\20210415123100_BtwFK.Designer.cs" />
+    <Compile Remove="Migrations\20210415124109_ManyToMany.cs" />
+    <Compile Remove="Migrations\20210415124109_ManyToMany.Designer.cs" />
+    <Compile Remove="Migrations\20210415124227_ManyToMany.cs" />
+    <Compile Remove="Migrations\20210415124227_ManyToMany.Designer.cs" />
+    <Compile Remove="Migrations\20210415125244_ManyToMany.cs" />
+    <Compile Remove="Migrations\20210415125244_ManyToMany.Designer.cs" />
+    <Compile Remove="Migrations\20210415125427_ManyToMany.cs" />
+    <Compile Remove="Migrations\20210415125427_ManyToMany.Designer.cs" />
+    <Compile Remove="Migrations\20210419202712_ManyToMany.cs" />
+    <Compile Remove="Migrations\20210419202712_ManyToMany.Designer.cs" />
+    <Compile Remove="Migrations\20210506175457_Leveradressen.cs" />
+    <Compile Remove="Migrations\20210506175457_Leveradressen.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.13" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.13" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.13" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.13" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.13" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.13" />
@@ -16,12 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
-    <Folder Include="Migrations\" />
-    <Folder Include="Data\" />
-    <Folder Include="Conrollers\" />
-    <Folder Include="Views\" />
-    <Folder Include="ViewModels\" />
+    <None Include="wwwroot\Images\LogoCis.jpg" />
   </ItemGroup>
 
 </Project>

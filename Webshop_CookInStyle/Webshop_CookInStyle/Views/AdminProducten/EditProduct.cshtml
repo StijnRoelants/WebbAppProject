@@ -1,0 +1,72 @@
+﻿@model Webshop_CookInStyle.ViewModels.EditProductenVM
+
+<style>
+    .textarea {
+        height: 300px;
+    }
+</style>
+
+    @{
+        ViewData["Title"] = "Edit product";
+    }
+
+<div class="container card">
+    <div class="row card-body">
+        <h1>Product aanpassen</h1>
+    </div>
+    <hr />
+    <div class="row card-body">
+        <div class="col-md-6">
+            <form asp-action="EditProduct">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Product.ProductID" />
+                <div class="form-group">
+                    <label asp-for="Product.Naam" class="control-label"></label>
+                    <input asp-for="Product.Naam" class="form-control" />
+                    <span asp-validation-for="Product.Naam" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Product.Omschrijving" class="control-label"></label>
+                    <textarea asp-for="Product.Omschrijving" class="form-control textarea"></textarea>
+                    <span asp-validation-for="Product.Omschrijving" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Product.Eenheidsprijs" class="control-label"></label>
+                    <input asp-for="Product.Eenheidsprijs" class="form-control" />
+                    <span asp-validation-for="Product.Eenheidsprijs" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Product.ProductTypeID" class="control-label">Producttype</label>
+                    <select asp-for="Product.ProductTypeID" class="form-control" asp-items="Model.ProductTypes"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Product.BtwID" class="control-label">Btw-type</label>
+                    <select asp-for="Product.BtwID" class="form-control" asp-items="Model.BtwTypes"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Product.EenheidID" class="control-label">Eenheid</label>
+                    <select asp-for="Product.EenheidID" class="form-control" asp-items="Model.Eenheden"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="GeselecteerdeAllergenen" class="control-label">Allergenen</label>
+                    <select multiple="multiple" asp-for="GeselecteerdeAllergenen" class="form-control" asp-items="Model.Allergenen"></select>
+                </div>
+                <div class="form-inline">
+                    <input asp-for="Product.BeschikbaarInWebshop" class="form-control" style="width:15px; height:15px" />
+                    <label class="form-text control-label" style="padding-left:5px" asp-for="Product.BeschikbaarInWebshop">Product beschikbaar maken in webshop</label>
+                </div>
+                <br />
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row card-body">
+        <a asp-action="Index" class="btn btn-primary">Terug</a>
+    </div>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
