@@ -17,20 +17,21 @@ using Webshop_CookInStyle.Models;
 namespace Webshop_CookInStyle.Conrollers.API
 {
     [Route("api/[controller]")]
-    [ApiController]
+    //[ApiController]
     public class UserController : ControllerBase
     {
         private readonly SignInManager<Klant> _signInManager;
         private readonly UserManager<Klant> _userManager;
         private readonly AppSettings _appSettings;
 
-        public UserController(SignInManager<Klant> signInManager, UserManager<Klant> userManager, IOptions<AppSettings> appsettings)
+        public UserController(UserManager<Klant> userManager, SignInManager<Klant> signInManager, IOptions<AppSettings> appsettings)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _appSettings = appsettings.Value;
         }
 
+        [HttpPost("authenticate")]
         public async Task<object> Authenticate([FromBody] ApiUser apiUser)
         {
             Microsoft.AspNetCore.Identity.SignInResult signInResult = await _signInManager.PasswordSignInAsync(apiUser.Username, apiUser.Password, false, false);
@@ -55,7 +56,7 @@ namespace Webshop_CookInStyle.Conrollers.API
                     new Claim(ClaimTypes.Name, klant.Id.ToString()),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 }),
-                Expires = DateTime.UtcNow.AddDays(14),
+                Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);

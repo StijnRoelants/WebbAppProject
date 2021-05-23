@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -60,6 +62,7 @@ namespace Webshop_CookInStyle.Conrollers.API
         }
 
         // GET api/Bestellings/lijst
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("ByKlantID")]
         public async Task<ActionResult<IEnumerable<Bestelling>>> GetBestellingByKlantID(string id)
         {
@@ -73,6 +76,7 @@ namespace Webshop_CookInStyle.Conrollers.API
         // PUT: api/Bestellings/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBestelling(int id, Bestelling bestelling)
         {
@@ -105,6 +109,7 @@ namespace Webshop_CookInStyle.Conrollers.API
         // POST: api/Bestellings
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
         public async Task<ActionResult<Bestelling>> PostBestelling(Bestelling bestelling)
         {
@@ -115,6 +120,7 @@ namespace Webshop_CookInStyle.Conrollers.API
         }
 
         // DELETE: api/Bestellings/5
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpDelete("{id}")]
         public async Task<ActionResult<Bestelling>> DeleteBestelling(int id)
         {
