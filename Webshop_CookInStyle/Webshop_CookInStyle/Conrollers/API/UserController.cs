@@ -10,10 +10,11 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Webshop_CookInStyle.Entities;
 using Webshop_CookInStyle.Helpers;
 using Webshop_CookInStyle.Models;
 
-namespace Webshop_CookInStyle.Entities
+namespace Webshop_CookInStyle.Conrollers.API
 {
     [Route("api/[controller]")]
     [ApiController]

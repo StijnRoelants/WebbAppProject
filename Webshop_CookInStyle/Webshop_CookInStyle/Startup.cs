@@ -65,9 +65,10 @@ namespace Webshop_CookInStyle
                });
 
             // Swagger
+            //services.AddSwaggerGen();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("V1", new OpenApiInfo { Title = "My API", Version = "V1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
 
                 var security = new Dictionary<string, IEnumerable<string>>
                 {
