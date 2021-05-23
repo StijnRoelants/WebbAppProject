@@ -477,6 +477,10 @@ namespace Webshop_CookInStyle.Conrollers
         // bestelling wordt rechtstreeks op pagina verwijderd, eerst check via Javascript
         public async Task<IActionResult> DeleteBestelling(int id)
         {
+            if (id == null)
+            {
+                NotFound();
+            }
             Bestelling teVerwijderen = await _context.Bestellingen.Where(x => x.BestellingID == id).FirstOrDefaultAsync();
             string nummerDeleted = teVerwijderen.Bestelbonnummer;
             _context.Remove(teVerwijderen);
@@ -551,10 +555,18 @@ namespace Webshop_CookInStyle.Conrollers
         // opbouw test
         public void ModelOpbouw(BestellingDetailsVM viewModel, int? id)
         {
-            viewModel.Bestelling = _context.Bestellingen.Where(x => x.BestellingID == id).Include(x => x.LeverAdres.Postcode).FirstOrDefault();
-            viewModel.Klant = _context.Klanten.Where(x => x.Id == viewModel.Bestelling.KlantFK).Include(x => x.Postcode).FirstOrDefault();
-            viewModel.Bestellijnen = BestelijnenGenereren(id);
-            viewModel.LeverAdres = viewModel.Bestelling.LeverAdres;
+            try
+            {
+                viewModel.Bestelling = _context.Bestellingen.Where(x => x.BestellingID == id).Include(x => x.LeverAdres.Postcode).FirstOrDefault();
+                viewModel.Klant = _context.Klanten.Where(x => x.Id == viewModel.Bestelling.KlantFK).Include(x => x.Postcode).FirstOrDefault();
+                viewModel.Bestellijnen = BestelijnenGenereren(id);
+                viewModel.LeverAdres = viewModel.Bestelling.LeverAdres;
+            }
+            catch (Exception)
+            {
+                NotFound();
+            }
+
         }
 
         // Lijnen omvormen naar string voor weergave in detail

@@ -36,6 +36,10 @@
     .spacerDivs {
         height: 5vh;
     }
+
+    .allergenenStyle {
+        color: #787878;
+    }
 </style>
 
 <div class="card">
@@ -91,7 +95,7 @@
                                     {
                                         @foreach (var allergeen in product.Allergenen)
                                         {
-                                            <small>@allergeen.Allergeen.Omschrijving</small>
+                                            <small class="allergenenStyle">@allergeen.Allergeen.Omschrijving</small>
                                         }
                                     }
                                     else
