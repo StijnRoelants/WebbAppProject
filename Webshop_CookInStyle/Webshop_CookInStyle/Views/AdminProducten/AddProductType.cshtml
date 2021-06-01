@@ -8,6 +8,16 @@
     <div class="row card-body">
         <h1>Product Types</h1>
     </div>
+    <div class="row card-body d-flex justify-content-center">
+        @if (Model.Melding != null)
+        {
+            <div class="row">
+                <div class="alert alert-danger text-center">
+                    <p>@Model.Melding</p>
+                </div>
+            </div>
+        }
+    </div>
     <div class="row card-body">
         <form asp-controller="AdminProducten" asp-action="TSearch" method="get">
             <div class="form-actions no-color">
@@ -37,18 +47,18 @@
                 <tbody>
                     @foreach (var item in Model.ProductTypes)
                     {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Volgnummer)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Omschrijving)
-                        </td>
-                        <td>
-                            <a asp-action="EditType" asp-route-id="@item.ProductTypeID">Edit</a> |
-                            <a asp-action="DeleteType" asp-route-id="@item.ProductTypeID">Delete</a>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Volgnummer)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Omschrijving)
+                            </td>
+                            <td>
+                                <a asp-action="EditType" asp-route-id="@item.ProductTypeID">Edit</a> |
+                                <a asp-action="DeleteType" asp-route-id="@item.ProductTypeID">Delete</a>
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>
@@ -63,7 +73,6 @@
                     <p>@ViewBag.ErrorMessage</p>
                 </div>
             }
-
 
             <br />
             <form asp-action="CreateProductType">

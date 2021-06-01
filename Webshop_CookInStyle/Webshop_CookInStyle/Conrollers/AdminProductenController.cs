@@ -381,18 +381,27 @@ namespace Webshop_CookInStyle.Conrollers
         {
             if (id != viewModel.Allergeen.AllergeenID)
             {
-                return NotFound();
-            }
-            if (ModelState.IsValid)
-            {
-                _context.Remove(viewModel.Allergeen);
-                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(AddAllergeen));
+            }
+            //Als allergenen in gebruik zijn = niet te verwijderen.
+            Allergeen check = await _context.Allergenen.Where(x => x.AllergeenID == id).FirstOrDefaultAsync();
+            if (check != null)
+            {
+                Allergeen allergeen = await _context.Allergenen.Where(x => x.AllergeenID == id).FirstOrDefaultAsync();
+                AddAllergeenVM vm = new AddAllergeenVM();
+                vm.AllergenenList = await _context.Allergenen
+                    .OrderBy(x => x.Omschrijving)
+                    .ToListAsync();
+                vm.Melding = $"{allergeen.Omschrijving}, kan niet verwijderd worden zolang er nog producten aan gekoppeld zijn.";
+                return View("AddAllergeen", vm);
             }
             else
             {
-                return RedirectToAction(nameof(AddAllergeen));
+                _context.Remove(viewModel.Allergeen);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(AddAllergeen)); 
             }
+
         }
 
         #endregion Allergenen
@@ -507,18 +516,26 @@ namespace Webshop_CookInStyle.Conrollers
         {
             if (id != viewModel.ProductType.ProductTypeID)
             {
-                return NotFound();
-            }
-            if (ModelState.IsValid)
-            {
-                _context.Remove(viewModel.ProductType);
-                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(AddProductType));
             }
-            else
-            {
-                return RedirectToAction(nameof(AddProductType));
-            }
+
+                Product check = await _context.Producten.Where(x => x.ProductTypeID == id).FirstOrDefaultAsync();
+                if (check != null)
+                {
+                    ProductType productType = await _context.ProductTypes.Where(x => x.ProductTypeID == id).FirstOrDefaultAsync();
+                    AddProductTypeVM vm = new AddProductTypeVM();
+                    vm.ProductTypes = await _context.ProductTypes
+                        .OrderBy(x => x.Volgnummer)
+                        .ToListAsync();
+                    vm.Melding = $"{productType.Omschrijving}, kan niet verwijderd worden zolang er nog producten aan gekoppeld zijn.";
+                    return View("AddProductType", vm);
+                }
+                else
+                {
+                    _context.Remove(viewModel.ProductType);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(AddProductType));
+                }
         }
 
         // Producttypes aanpassen inladen

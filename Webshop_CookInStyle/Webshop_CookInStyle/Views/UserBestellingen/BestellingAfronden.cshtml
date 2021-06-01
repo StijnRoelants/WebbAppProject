@@ -17,6 +17,18 @@
     <div class="row card-body">
         <h1>Klantgegevens invullen</h1>
     </div>
+    <div class="row card-body d-flex justify-content-center">
+        @if (Model.Melding != null)
+        {
+            {
+                <div class="row">
+                    <div class="alert alert-danger text-center">
+                        <p>@Model.Melding</p>
+                    </div>
+                </div>
+            }
+        }
+    </div>
     <div class="row card-body">
         <div class="col-lg-1"></div>
         <div class="col-lg-4">

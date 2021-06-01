@@ -17,7 +17,7 @@ namespace Webshop_CookInStyle.Models
         [Required]
         public string Naam { get; set; }
         public string Omschrijving { get; set; }
-        [Column(TypeName = "decimal(18, 2)")]
+        [Column(TypeName = "decimal(18, 2)"), Range(0,500000000, ErrorMessage ="Prijs kan geen negatief getal zijn")]
         [Required]
         public decimal Eenheidsprijs { get; set; }
         public bool BeschikbaarInWebshop { get; set; }
