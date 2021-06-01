@@ -9,6 +9,17 @@
         <h1>Allergenen</h1>
     </div>
 
+    <div class="row card-body d-flex justify-content-center">
+        @if (Model.Melding != null)
+        {
+            <div class="row">
+                <div class="alert alert-danger text-center">
+                    <p>@Model.Melding</p>
+                </div>
+            </div>
+        }
+    </div>
+
     <div class="row card-body">
         <form asp-controller="AdminProducten" asp-action="ASearch" method="get">
             <div class="form-actions no-color">

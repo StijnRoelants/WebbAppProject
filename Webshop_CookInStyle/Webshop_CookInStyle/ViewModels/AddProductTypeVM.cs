@@ -11,5 +11,6 @@ namespace Webshop_CookInStyle.ViewModels
         public ProductType ProductType { get; set; }
         public List<ProductType> ProductTypes { get; set; }
         public string TypeSearch { get; set; }
+        public string Melding { get; set; }
     }
 }

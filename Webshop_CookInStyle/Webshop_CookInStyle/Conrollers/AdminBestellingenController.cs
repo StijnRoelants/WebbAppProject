@@ -120,6 +120,8 @@ namespace Webshop_CookInStyle.Conrollers
                 return NotFound();
             }
 
+            CheckAantal(viewModel);
+
             #region inladen
 
             //AddBestellingVM viewModel = new AddBestellingVM();
@@ -261,7 +263,7 @@ namespace Webshop_CookInStyle.Conrollers
         // Aantallen voor bestelling
         private int CheckAantal(AddBestellingVM viewModel)
         {
-            if (viewModel.Aantal == 0)
+            if (viewModel.Aantal <= 0)
             {
                 return 1;
             }

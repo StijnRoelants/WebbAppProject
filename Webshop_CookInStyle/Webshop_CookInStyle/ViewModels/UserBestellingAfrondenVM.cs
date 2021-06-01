@@ -16,5 +16,6 @@ namespace Webshop_CookInStyle.ViewModels
         public LeverAdres NieuwLeveradres { get; set; }
         public SelectList Landen { get; set; }
         public SelectList Postcodes { get; set; }
+        public string Melding { get; set; }
     }
 }

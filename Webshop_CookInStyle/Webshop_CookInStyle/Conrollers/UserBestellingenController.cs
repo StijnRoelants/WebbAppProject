@@ -185,7 +185,7 @@ namespace Webshop_CookInStyle.Conrollers
         // Aantallen voor bestelling
         private int CheckAantal(IndexUserBestellingenVM viewModel)
         {
-            if (viewModel.Aantal == 0)
+            if (viewModel.Aantal <= 0)
             {
                 return 1;
             }
@@ -275,6 +275,18 @@ namespace Webshop_CookInStyle.Conrollers
             {
                 return RedirectToAction(nameof(Index));
             }
+            if (viewModel.Bestelling.Leverdatum < DateTime.Now.AddDays(1))
+            {
+                UserBestellingAfrondenVM terug = new UserBestellingAfrondenVM();
+                terug.Bestelling = await _context.Bestellingen.Where(x => x.BestellingID == id).Include(x => x.Bestellijnen).ThenInclude(x => x.Product).FirstOrDefaultAsync();
+                terug.Bestellijnen = terug.Bestelling.Bestellijnen.ToList();
+                terug.Klant = await _context.Klanten.Where(x => x.UserName == HttpContext.User.Identity.Name).Include(x => x.LeverAdressen).FirstOrDefaultAsync();
+                terug.Leveradressen = new SelectList(await _context.LeverAdressen.Where(x => x.KlantFK == terug.Klant.Id).Include(x => x.Postcode).Include(x => x.Land).ToListAsync(), "LeverAdresID", "Weergave");
+                terug.NieuwLeveradres = new LeverAdres();
+                terug.Melding = $"De leverdatum moet minstens 2 dagen in de toekomst liggen";
+                return View("BestellingAfronden", terug);
+
+            }
             Bestelling aangepasteBestelling = await _context.Bestellingen.Where(x => x.BestellingID == id).FirstOrDefaultAsync();
             aangepasteBestelling.Leverdatum = viewModel.Bestelling.Leverdatum;
             aangepasteBestelling.Opmerking = viewModel.Bestelling.Opmerking;
@@ -292,6 +304,18 @@ namespace Webshop_CookInStyle.Conrollers
         public async Task<IActionResult> CheckEnAfsluiten(int? id, UserBestellingAfrondenVM viewModel)
         {
             Bestelling aangepasteBestelling = await _context.Bestellingen.Where(x => x.BestellingID == id).FirstOrDefaultAsync();
+            if (viewModel.Bestelling.Leverdatum < DateTime.Now.AddDays(1))
+            {
+                UserBestellingAfrondenVM terug = new UserBestellingAfrondenVM();
+                terug.Bestelling = await _context.Bestellingen.Where(x => x.BestellingID == id).Include(x => x.Bestellijnen).ThenInclude(x => x.Product).FirstOrDefaultAsync();
+                terug.Bestellijnen = terug.Bestelling.Bestellijnen.ToList();
+                terug.Klant = await _context.Klanten.Where(x => x.UserName == HttpContext.User.Identity.Name).Include(x => x.LeverAdressen).FirstOrDefaultAsync();
+                terug.Leveradressen = new SelectList(await _context.LeverAdressen.Where(x => x.KlantFK == terug.Klant.Id).Include(x => x.Postcode).Include(x => x.Land).ToListAsync(), "LeverAdresID", "Weergave");
+                terug.NieuwLeveradres = new LeverAdres();
+                terug.Melding = $"De leverdatum moet minstens 2 dagen in de toekomst liggen";
+                return View("BestellingAfronden", terug);
+
+            }
             aangepasteBestelling.Leverdatum = viewModel.Bestelling.Leverdatum;
             aangepasteBestelling.Opmerking = viewModel.Bestelling.Opmerking;
             aangepasteBestelling.LeverAdresID = viewModel.Bestelling.LeverAdresID;

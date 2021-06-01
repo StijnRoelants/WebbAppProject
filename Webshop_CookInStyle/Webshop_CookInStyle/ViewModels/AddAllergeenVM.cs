@@ -11,7 +11,7 @@ namespace Webshop_CookInStyle.ViewModels
         public Allergeen Allergeen { get; set; }
         public List<Allergeen> AllergenenList { get; set; }
         public string AllergeenSearch { get; set; }
-
+        public string Melding { get; set; }
 
 
     }
