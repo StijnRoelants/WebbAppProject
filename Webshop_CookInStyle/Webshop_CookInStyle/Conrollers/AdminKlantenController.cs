@@ -69,6 +69,7 @@ namespace Webshop_CookInStyle.Conrollers
             return View(viewModel);
         }
 
+        // Admin kan users aanmaken, krijgen een standaard WW dat ze zelf kunnen aanpassen
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddKlant(AddKlantVM viewModel)
@@ -103,11 +104,10 @@ namespace Webshop_CookInStyle.Conrollers
                 LeverAdres leverAdres = new LeverAdres { Klant = nieuweKlant, KlantFK = nieuweKlant.Id, LandID = nieuweKlant.LandID, Land = nieuweKlant.Land, PostcodeID = nieuweKlant.PostcodeID, Postcode = nieuweKlant.Postcode, Straat = nieuweKlant.StraatEnNummer, Omschrijving = "Standaard" };
                 _context.Add(leverAdres);
                 _context.SaveChanges();
-                viewModel.Klant = new Klant();
-                    viewModel.Postcodes = new SelectList(_context.Postcodes.OrderBy(x => x.Nummer), "PostcodeID", "Weergave");
-                    viewModel.Landen = new SelectList(_context.Landen.OrderBy(x => x.Naam), "LandID", "Naam");
-                    return View(viewModel);
-                }
+                IndexAdminKlantenVM vm = new IndexAdminKlantenVM();
+                vm.Klanten = await _context.Klanten.Include(x => x.Postcode).Include(x => x.Land).OrderBy(x => x.Achternaam).ThenBy(x => x.Voornaam).ToListAsync();
+                return View("Index",vm);
+            }
                 else
                 {
                     viewModel.Klant = new Klant();

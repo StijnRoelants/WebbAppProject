@@ -166,7 +166,7 @@ namespace Webshop_CookInStyle
                 endpoints.MapRazorPages();
             });
 
-            //CreateUserRoles(serviceProvider).Wait();
+            CreateUserRoles(serviceProvider).Wait();
         }
 
         #region Create Roles
