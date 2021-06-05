@@ -384,7 +384,7 @@ namespace Webshop_CookInStyle.Conrollers
                 return RedirectToAction(nameof(AddAllergeen));
             }
             //Als allergenen in gebruik zijn = niet te verwijderen.
-            Allergeen check = await _context.Allergenen.Where(x => x.AllergeenID == id).FirstOrDefaultAsync();
+            AllergeenProduct check = await _context.AllergeenProducten.Where(x => x.AllergeenID == id).FirstOrDefaultAsync();
             if (check != null)
             {
                 Allergeen allergeen = await _context.Allergenen.Where(x => x.AllergeenID == id).FirstOrDefaultAsync();

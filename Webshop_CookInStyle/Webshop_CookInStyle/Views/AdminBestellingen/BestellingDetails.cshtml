@@ -17,28 +17,28 @@
             <h4>Klant gegevens</h4>
             <hr />
             <dl>
-                <dt class="col-sm-2">
+                <dt class="col-sm-6">
                     @Html.DisplayNameFor(model => model.Klant.Naam)
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="col-sm-6">
                     @Html.DisplayFor(model => model.Klant.NaamWeergaveSmall)
                 </dd>
-                <dt class="col-sm-2">
+                <dt class="col-sm-6">
                     @Html.DisplayNameFor(model => model.Klant.StraatEnNummer)
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="col-sm-6">
                     @Html.DisplayFor(model => model.Klant.StraatEnNummer)
                 </dd>
-                <dt class="col-sm-2">
+                <dt class="col-sm-6">
                     @Html.DisplayNameFor(model => model.Klant.Postcode)
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="col-sm-6">
                     @Html.DisplayFor(model => model.Klant.Postcode.Weergave)
                 </dd>
-                <dt class="col-sm-2">
+                <dt class="col-sm-6">
                     @Html.DisplayNameFor(model => model.Klant.Email)
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="col-sm-6">
                     @Html.DisplayFor(model => model.Klant.Email)
                 </dd>
             </dl>
@@ -46,22 +46,22 @@
             <h4>Leveradres</h4>
             <hr />
             <dl>
-                <dt class="col-sm-2">
+                <dt class="col-sm-6">
                     @Html.DisplayNameFor(model => model.LeverAdres.Omschrijving)
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="col-sm-6">
                     @Html.DisplayFor(model => model.LeverAdres.Omschrijving)
                 </dd>
-                <dt class="col-sm-2">
+                <dt class="col-sm-6">
                     @Html.DisplayNameFor(model => model.LeverAdres.Straat)
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="col-sm-6">
                     @Html.DisplayFor(model => model.LeverAdres.Straat)
                 </dd>
-                <dt class="col-sm-2">
+                <dt class="col-sm-6">
                     @Html.DisplayNameFor(model => model.LeverAdres.Postcode)
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="col-sm-6">
                     @Html.DisplayFor(model => model.LeverAdres.Postcode.Weergave)
                 </dd>
             </dl>
@@ -71,25 +71,25 @@
             <h4>Bestelling gegevens</h4>
             <hr />
             <dl>
-                <dt class="col-sm-2">
+                <dt class="col-sm-6">
                     @Html.DisplayNameFor(model => model.Bestelling.BestelDatum)
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="col-sm-6">
                     @Html.DisplayFor(model => model.Bestelling.BestelDatum)
                 </dd>
-                <dt class="col-sm-2">
+                <dt class="col-sm-6">
                     @Html.DisplayNameFor(model => model.Bestelling.Leverdatum)
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="col-sm-6">
                     @Html.DisplayFor(model => model.Bestelling.Leverdatum)
                 </dd>
-                <dt class="col-sm-2">
+                <dt class="col-sm-6">
                     @Html.DisplayNameFor(model => model.Bestelling.Opmerking)
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="col-sm-6">
                     @Html.DisplayFor(model => model.Bestelling.Opmerking)
                 </dd>
-                <dt class="col-sm-2">
+                <dt class="col-sm-6">
                     <p>Bestelling:</p>
                 </dt>
                 @foreach (var item in Model.Bestellijnen)

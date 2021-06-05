@@ -113,7 +113,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Product.Omschrijving" class="control-label"></label>
-                <textarea asp-for="Product.Omschrijving" class="form-control"></textarea>
+                <textarea asp-for="Product.Omschrijving" class="form-control" style="height:125px"></textarea>
                 <span asp-validation-for="Product.Omschrijving" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -135,7 +135,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="GeselecteerdeAllergenen" class="control-label">Allergenen</label>
-                <select asp-for="GeselecteerdeAllergenen" class="form-control heightBoxSetter" asp-items="Model.Allergenen"></select>
+                <select asp-for="GeselecteerdeAllergenen" class="form-control heightBoxSetter" asp-items="Model.Allergenen" style="height:125px"></select>
             </div>
             <div class="form-inline">
                 <input asp-for="Product.BeschikbaarInWebshop" class="form-control" style="width:15px; height:15px" />
@@ -143,7 +143,7 @@
             </div>
             <br />
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Toevoegen" class="btn btn-primary" />
             </div>
         </form>
         </div>
